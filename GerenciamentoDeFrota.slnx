@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="GerenciamentoDeFrota.Application/GerenciamentoDeFrota.Application.csproj" Id="5f2ddf3c-7174-46ae-a181-3fffed3bfa08" />
+  <Project Path="GerenciamentoDeFrota.Domain/GerenciamentoDeFrota.Domain.csproj" Id="c188ed50-ed58-43ea-bdde-191d49d9c69c" />
+  <Project Path="GerenciamentoDeFrota.Infraestructure/GerenciamentoDeFrota.Infraestructure.csproj" Id="7e013b7c-94dc-4b41-b5e2-0f26388e2e13" />
+  <Project Path="GerenciamentoDeFrota/GerenciamentoDeFrota.csproj" />
+</Solution>

@@ -1,4 +1,6 @@
 ﻿using System.Windows.Controls;
+using GerenciamentoDeFrota.Helpers;
+
 
 namespace GerenciamentoDeFrota.Views
 {
@@ -7,6 +9,15 @@ namespace GerenciamentoDeFrota.Views
         public VeiculosView()
         {
             InitializeComponent();
+            AplicarMascaras();
         }
+
+        private void AplicarMascaras() 
+        {
+            TxtMesEmplacamento.PreviewTextInput += InputMasks.LimitarMesEmplacamento_PreviewTextInput; ;
+
+
+        }
+
     }
 }

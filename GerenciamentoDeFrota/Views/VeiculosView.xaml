@@ -221,12 +221,17 @@
 								<TextBox x:Name="TxtMesEmplacamento" Style="{StaticResource ModernTextBox}"/>
 							</StackPanel>
 
-							<!-- Venc. Tacógrafo -->
-							<StackPanel Grid.Column="3">
-								<TextBlock Text="Venc. Tacógrafo" Style="{StaticResource FieldLabel}"/>
-								<TextBox x:Name="TxtVencTacografo" Style="{StaticResource ModernTextBox}"/>
-							</StackPanel>
-						</Grid>
+                            <!-- Venc. Tacógrafo -->
+                            <StackPanel Grid.Column="3">
+                                <TextBlock Text="Venc. Tacógrafo" Style="{StaticResource FieldLabel}"/>
+                                <DatePicker x:Name="DpVencTacografo"
+													Height="32"
+													FontSize="13"
+													BorderBrush="{StaticResource LineBrush}"
+													BorderThickness="1"
+													SelectedDateFormat="Short"/>
+                            </StackPanel>
+                        </Grid>
 
 						<!-- Observações -->
 						<StackPanel Margin="0,14,0,0">
@@ -344,7 +349,7 @@
 						<ColumnDefinition Width="320"/>
 					</Grid.ColumnDefinitions>
 
-					<StackPanel>
+					<StackPanel Margin="0,0,10,0">
 						<TextBlock Text="Lista de Veículos"
                                    FontSize="14"
                                    FontWeight="SemiBold"
@@ -362,51 +367,52 @@
 					</StackPanel>
 				</Grid>
 
-				<DataGrid x:Name="DgVeiculos"
-                          Grid.Row="2"
-                          Style="{StaticResource CleanDataGrid}">
-					<DataGrid.Columns>
+                <DataGrid x:Name="DgVeiculos"
+          Grid.Row="2"
+          Style="{StaticResource CleanDataGrid}"
+          HorizontalScrollBarVisibility="Auto"
+          VerticalScrollBarVisibility="Auto">
+                    <DataGrid.Columns>
 
-						<DataGridTextColumn Header="Código" Binding="{Binding Codigo}" Width="70"/>
-						<DataGridTextColumn Header="Fabricante" Binding="{Binding Fabricante}" Width="*"/>
-						<DataGridTextColumn Header="Modelo" Binding="{Binding Modelo}" Width="*"/>
-						<DataGridTextColumn Header="Ano modelo" Binding="{Binding AnoModelo}" Width="110"/>
-						<DataGridTextColumn Header="Ano fabricação" Binding="{Binding AnoFabricacao}" Width="120"/>
-						<DataGridTextColumn Header="Ativo" Binding="{Binding Ativo}" Width="80"/>
-						<DataGridTextColumn Header="Renavam" Binding="{Binding Renavam}" Width="140"/>
-						<DataGridTextColumn Header="Placa" Binding="{Binding Placa}" Width="110"/>
-						<DataGridTextColumn Header="Emplacamento" Binding="{Binding MesEmplacamento}" Width="120"/>
+                        <DataGridTextColumn Header="Código" Binding="{Binding Codigo}" Width="70"/>
+                        <DataGridTextColumn Header="Fabricante" Binding="{Binding Fabricante}" Width="*"/>
+                        <DataGridTextColumn Header="Modelo" Binding="{Binding Modelo}" Width="*"/>
+                        <DataGridTextColumn Header="Ano modelo" Binding="{Binding AnoModelo}" Width="110"/>
+                        <DataGridTextColumn Header="Ano fabricação" Binding="{Binding AnoFabricacao}" Width="120"/>
+                        <DataGridTextColumn Header="Ativo" Binding="{Binding Ativo}" Width="80"/>
+                        <DataGridTextColumn Header="Renavam" Binding="{Binding Renavam}" Width="140"/>
+                        <DataGridTextColumn Header="Placa" Binding="{Binding Placa}" Width="110"/>
+                        <DataGridTextColumn Header="Emplacamento" Binding="{Binding MesEmplacamento}" Width="120"/>
 
-						<!-- Ações (tipo a 2ª imagem: ícones à direita) -->
-						<DataGridTemplateColumn Header="Ações" Width="90">
-							<DataGridTemplateColumn.CellTemplate>
-								<DataTemplate>
-									<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-										<Button x:Name="BtnEditarLinha"
-                                                Width="30" Height="30"
-                                                Margin="0,0,8,0"
-                                                Background="#EEF2FF"
-                                                BorderThickness="0"
-                                                Cursor="Hand">
-											<materialDesign:PackIcon Kind="PencilOutline" Width="16" Height="16" Foreground="#4F46E5"/>
-										</Button>
+                        <DataGridTemplateColumn Header="Ações" Width="90">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button x:Name="BtnEditarLinha"
+                                Width="30" Height="30"
+                                Margin="0,0,8,0"
+                                Background="#EEF2FF"
+                                BorderThickness="0"
+                                Cursor="Hand">
+                                            <materialDesign:PackIcon Kind="PencilOutline" Width="16" Height="16" Foreground="#4F46E5"/>
+                                        </Button>
+                                        <Button x:Name="BtnExcluirLinha"
+                                Width="30" Height="30"
+                                Background="#FEE2E2"
+                                BorderThickness="0"
+                                Cursor="Hand">
+                                            <materialDesign:PackIcon Kind="TrashCanOutline" Width="16" Height="16" Foreground="#DC2626"/>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-										<Button x:Name="BtnExcluirLinha"
-                                                Width="30" Height="30"
-                                                Background="#FEE2E2"
-                                                BorderThickness="0"
-                                                Cursor="Hand">
-											<materialDesign:PackIcon Kind="TrashCanOutline" Width="16" Height="16" Foreground="#DC2626"/>
-										</Button>
-									</StackPanel>
-								</DataTemplate>
-							</DataGridTemplateColumn.CellTemplate>
-						</DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
 
-					</DataGrid.Columns>
-				</DataGrid>
 
-			</Grid>
+            </Grid>
 		</Border>
 
 	</Grid>

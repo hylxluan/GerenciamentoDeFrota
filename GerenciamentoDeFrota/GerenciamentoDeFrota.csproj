@@ -22,4 +22,11 @@
     </Resource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\" />
+    <Folder Include="Data\Gerenciadores\" />
+    <Folder Include="Data\Models\" />
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
 </Project>

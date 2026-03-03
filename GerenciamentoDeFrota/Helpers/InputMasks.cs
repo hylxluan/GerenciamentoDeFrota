@@ -12,10 +12,6 @@ namespace GerenciamentoDeFrota.Helpers
        
         public static void LimitarMesEmplacamento_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-
-        
-
-
             if (sender is TextBox mesEmplacamento)
             {
                 string newText = mesEmplacamento.Text + e.Text;
@@ -24,7 +20,10 @@ namespace GerenciamentoDeFrota.Helpers
 
                 if (int.TryParse(newText, out int mes))
                 {
-                    if (mes < 1 || mes > 12) goto bloquear;
+                    if (mes < 1 || mes > 12)
+                    {
+                        goto bloquear;
+                    }
                 }
                 else
                 {
@@ -33,7 +32,7 @@ namespace GerenciamentoDeFrota.Helpers
             }
             else
             {
-                e.Handled = true;
+                goto bloquear;
             }
 
             return;
@@ -101,14 +100,12 @@ namespace GerenciamentoDeFrota.Helpers
             {
                 if (!int.TryParse(e.Text, out _))
                 {
-                    e.Handled = true;
-                    return;
+                    goto bloquear;
                 }
 
                 if (txtAno.Text.Length >= 4)
                 {
-                    e.Handled = true;
-                    return;
+                    goto bloquear;
                 }
 
                 string newText = txtAno.Text + e.Text;
@@ -121,9 +118,11 @@ namespace GerenciamentoDeFrota.Helpers
             }
             else
             {
-                e.Handled = true;
+                goto bloquear;
             }
+            return;
+        bloquear:
+            e.Handled = true;
         }
-
     }
 }

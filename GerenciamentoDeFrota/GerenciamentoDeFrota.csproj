@@ -23,9 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\" />
     <Folder Include="Data\Gerenciadores\" />
-    <Folder Include="Data\Models\" />
   </ItemGroup>
 
 </Project>

@@ -20,11 +20,7 @@ namespace GerenciamentoDeFrota.Data.Models
         public string Nome
         {
             get => _nome ?? string.Empty;
-            set
-            {
-                _nome = value;
-                OnPropertyChanged(nameof(Nome));
-            }
+            set {_nome = value;OnPropertyChanged(nameof(Nome)); }
         }
 
 
@@ -33,7 +29,6 @@ namespace GerenciamentoDeFrota.Data.Models
         public string Observacoes
         {
             get => _observacoes ?? string.Empty;
-
             set { _observacoes = value; OnPropertyChanged(nameof(Observacoes)); }
         }
 
@@ -43,7 +38,7 @@ namespace GerenciamentoDeFrota.Data.Models
         public bool Ativo
         {
             get => _ativo ?? true;
-            set { _ativo = value; OnPropertyChanged(nameof(_ativo)); }
+            set { _ativo = value; OnPropertyChanged(nameof(Ativo)); }
         }
 
     }

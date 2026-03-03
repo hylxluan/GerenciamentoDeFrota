@@ -10,11 +10,13 @@ namespace GerenciamentoDeFrota.Commands
     {
         public event EventHandler? CanExecuteChanged;
 
-        private CentrosCustoViewModel _centrosCustoVM;
+        private CentrosCustoViewModel _centrosCustoViewModel;
+
+
 
         public CentrosCustoCommand(CentrosCustoViewModel CentrosCustoVM)
         {
-            _centrosCustoVM = CentrosCustoVM;
+            _centrosCustoViewModel = CentrosCustoVM;
         }
 
         public bool CanExecute(object? parameter)

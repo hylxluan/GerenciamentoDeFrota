@@ -1,4 +1,5 @@
 ﻿using GerenciamentoDeFrota.Commands;
+using GerenciamentoDeFrota.Interfaces.Gerenciadores;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,15 +8,18 @@ namespace GerenciamentoDeFrota.ViewModels
 {
     public class CentrosCustoViewModel : BaseViewModel
     {
+
+
         public CentrosCustoCommand CentrosCustoCommand { get; set; }
+        private readonly IGerenciadorCentrosCusto _gerenciadorCentrosCusto;
 
-
+        #region Fields
         private long _id;
 
         public long Id
         {
             get { return _id; }
-            set { _id = value; OnPropertyChanged("Id"); }
+            set { _id = value; OnPropertyChanged(nameof(Id)); }
         }
 
 
@@ -26,7 +30,7 @@ namespace GerenciamentoDeFrota.ViewModels
             set
             {
                 _nome = value;
-                OnPropertyChanged("Nome");
+                OnPropertyChanged(nameof(Nome));
             }
         }
 
@@ -36,7 +40,7 @@ namespace GerenciamentoDeFrota.ViewModels
         public string Observacoes
         {
             get { return _observacoes; }
-            set { _observacoes = value; OnPropertyChanged("Observacoes"); }
+            set { _observacoes = value; OnPropertyChanged(nameof(Observacoes)); }
         }
 
 
@@ -45,9 +49,9 @@ namespace GerenciamentoDeFrota.ViewModels
         public bool Ativo
         {
             get { return _ativo; }
-            set { _ativo = value; OnPropertyChanged("Ativo"); }
+            set { _ativo = value; OnPropertyChanged(nameof(_ativo)); }
         }
-
+        #endregion
 
 
 

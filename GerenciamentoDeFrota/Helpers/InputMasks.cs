@@ -12,25 +12,35 @@ namespace GerenciamentoDeFrota.Helpers
        
         public static void LimitarMesEmplacamento_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
+
+        
+
+
             if (sender is TextBox mesEmplacamento)
             {
                 string newText = mesEmplacamento.Text + e.Text;
 
 
+
                 if (int.TryParse(newText, out int mes))
                 {
-                    e.Handled = mes < 1 || mes > 12;
+                    if (mes < 1 || mes > 12) goto bloquear;
                 }
                 else
                 {
-                    e.Handled = true;
+                    goto bloquear;
                 }
             }
             else
             {
                 e.Handled = true;
             }
+
+            return;
+            bloquear:
+                e.Handled = true;
         }
+
 
         public static void LimitarCaracteresNumericos_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
@@ -50,7 +60,7 @@ namespace GerenciamentoDeFrota.Helpers
             if (placaFormatada.Length > 7) placaFormatada = placaFormatada.Substring(0, 7);
 
 
-            var result = "";
+            string result = string.Empty;
 
 
             for (int i = 0; i < placaFormatada.Length; i++)
@@ -77,6 +87,7 @@ namespace GerenciamentoDeFrota.Helpers
                 }
 
             }
+            
             if (placa.Text != result)
             {
                 placa.Text = result;

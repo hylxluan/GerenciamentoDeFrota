@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="GerenciamentoDeFrota.Views.CondutoresView"
+﻿<UserControl x:Class="GerenciamentoDeFrota.Views.FornecedoresView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -6,10 +6,10 @@
 
     <UserControl.Resources>
 
-        <SolidColorBrush x:Key="CardBrush"   Color="#FFFFFF"/>
-        <SolidColorBrush x:Key="TextStrong"  Color="#1F2A37"/>
-        <SolidColorBrush x:Key="TextSoft"    Color="#6B7280"/>
-        <SolidColorBrush x:Key="LineBrush"   Color="#E5E7EB"/>
+        <SolidColorBrush x:Key="CardBrush"  Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="TextStrong" Color="#1F2A37"/>
+        <SolidColorBrush x:Key="TextSoft"   Color="#6B7280"/>
+        <SolidColorBrush x:Key="LineBrush"  Color="#E5E7EB"/>
 
         <Style x:Key="ModernTextBox" TargetType="TextBox">
             <Setter Property="Height" Value="32"/>
@@ -20,19 +20,6 @@
             <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-
-        <Style x:Key="ModernTextBoxMultiline" TargetType="TextBox">
-            <Setter Property="Padding" Value="6,4"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="{StaticResource TextStrong}"/>
-            <Setter Property="Background" Value="#FFFFFF"/>
-            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="AcceptsReturn" Value="True"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
-            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="Height" Value="90"/>
         </Style>
 
         <Style x:Key="ModernComboBox" TargetType="ComboBox">
@@ -89,10 +76,10 @@
 
         <!-- Título -->
         <StackPanel Grid.Row="0" Margin="2,2,2,14">
-            <TextBlock Text="Cadastro de Condutores"
+            <TextBlock Text="Cadastro de Fornecedores"
                        FontSize="22" FontWeight="Bold"
                        Foreground="{StaticResource TextStrong}"/>
-            <TextBlock Text="Gerencie informações dos condutores e visualize a lista cadastrada."
+            <TextBlock Text="Gerencie informações dos fornecedores e visualize a lista cadastrada."
                        Margin="0,4,0,0" FontSize="12"
                        Foreground="{StaticResource TextSoft}"/>
         </StackPanel>
@@ -100,93 +87,63 @@
         <!-- FORM -->
         <StackPanel Grid.Row="1">
 
-            <!-- Card: Dados do Condutor -->
+            <!-- Card: Dados do Fornecedor -->
             <Border Style="{StaticResource Card}">
                 <StackPanel>
-                    <TextBlock Text="Dados do Condutor"
+                    <TextBlock Text="Dados do Fornecedor"
                                FontSize="14" FontWeight="SemiBold"
                                Foreground="{StaticResource TextStrong}"
                                Margin="0,0,0,14"/>
 
-                    <!-- Linha 1: Nome, Tel1, Tel2, Tel3, CNH nº, Classif. CNH, Venc. Carteira -->
+                    <!-- Linha 1: CPF/CNPJ, Nome, Tel1, Tel2, Tel3 -->
                     <Grid Margin="0,0,0,12">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.4*"/>
                             <ColumnDefinition Width="2.5*"/>
-                            <ColumnDefinition Width="1.2*"/>
-                            <ColumnDefinition Width="1.2*"/>
-                            <ColumnDefinition Width="1.2*"/>
-                            <ColumnDefinition Width="1.4*"/>
-                            <ColumnDefinition Width="1.4*"/>
-                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.3*"/>
+                            <ColumnDefinition Width="1.3*"/>
+                            <ColumnDefinition Width="1.3*"/>
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                            <TextBlock Text="Nome do Condutor" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Text="CPF / CNPJ" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="TxtCpfCnpj"
+                                     Text="{Binding CpfCnpj, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                            <TextBlock Text="Nome do Fornecedor" Style="{StaticResource FieldLabel}"/>
                             <TextBox x:Name="TxtNome"
                                      Text="{Binding Nome, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                        <StackPanel Grid.Column="2" Margin="0,0,10,0">
                             <TextBlock Text="Telefone 1" Style="{StaticResource FieldLabel}"/>
                             <TextBox x:Name="TxtTelefone1"
                                      Text="{Binding Telefone1, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                        <StackPanel Grid.Column="3" Margin="0,0,10,0">
                             <TextBlock Text="Telefone 2" Style="{StaticResource FieldLabel}"/>
                             <TextBox x:Name="TxtTelefone2"
                                      Text="{Binding Telefone2, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="3" Margin="0,0,10,0">
+                        <StackPanel Grid.Column="4">
                             <TextBlock Text="Telefone 3" Style="{StaticResource FieldLabel}"/>
                             <TextBox x:Name="TxtTelefone3"
                                      Text="{Binding Telefone3, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
-
-                        <StackPanel Grid.Column="4" Margin="0,0,10,0">
-                            <TextBlock Text="Número da CNH" Style="{StaticResource FieldLabel}"/>
-                            <TextBox x:Name="TxtNumeroCnh"
-                                     Text="{Binding NumeroCnh, UpdateSourceTrigger=PropertyChanged}"
-                                     Style="{StaticResource ModernTextBox}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="5" Margin="0,0,10,0">
-                            <TextBlock Text="Classificação da CNH" Style="{StaticResource FieldLabel}"/>
-                            <ComboBox x:Name="CmbClassificacaoCnh"
-                                      SelectedValue="{Binding ClassificacaoCnh}"
-                                      Style="{StaticResource ModernComboBox}">
-                                <ComboBoxItem Content="A"/>
-                                <ComboBoxItem Content="B"/>
-                                <ComboBoxItem Content="C"/>
-                                <ComboBoxItem Content="D"/>
-                                <ComboBoxItem Content="E"/>
-                                <ComboBoxItem Content="AB"/>
-                                <ComboBoxItem Content="AC"/>
-                                <ComboBoxItem Content="AD"/>
-                                <ComboBoxItem Content="AE"/>
-                            </ComboBox>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="6">
-                            <TextBlock Text="Venc. Carteira" Style="{StaticResource FieldLabel}"/>
-                            <DatePicker x:Name="DpVencCarteira"
-                                        SelectedDate="{Binding VencCarteira}"
-                                        Height="32" FontSize="13"
-                                        BorderBrush="{StaticResource LineBrush}"
-                                        BorderThickness="1"
-                                        SelectedDateFormat="Short"/>
-                        </StackPanel>
                     </Grid>
 
-                    <!-- Linha 2: Venc Exame Toxic, Email1, Email2, Email3, Ativo -->
+                    <!-- Linha 2: Email1, Email2, Email3, Ativo -->
                     <Grid Margin="0,0,0,12">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1.2*"/>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="2*"/>
@@ -194,37 +151,27 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                            <TextBlock Text="Venc. Exame Toxic." Style="{StaticResource FieldLabel}"/>
-                            <DatePicker x:Name="DpVencExameToxicologico"
-                                        SelectedDate="{Binding VencExameToxicologico}"
-                                        Height="32" FontSize="13"
-                                        BorderBrush="{StaticResource LineBrush}"
-                                        BorderThickness="1"
-                                        SelectedDateFormat="Short"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Margin="0,0,10,0">
                             <TextBlock Text="Email 1" Style="{StaticResource FieldLabel}"/>
                             <TextBox x:Name="TxtEmail1"
                                      Text="{Binding Email1, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                        <StackPanel Grid.Column="1" Margin="0,0,10,0">
                             <TextBlock Text="Email 2" Style="{StaticResource FieldLabel}"/>
                             <TextBox x:Name="TxtEmail2"
                                      Text="{Binding Email2, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="3" Margin="0,0,10,0">
+                        <StackPanel Grid.Column="2" Margin="0,0,10,0">
                             <TextBlock Text="Email 3" Style="{StaticResource FieldLabel}"/>
                             <TextBox x:Name="TxtEmail3"
                                      Text="{Binding Email3, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="4" VerticalAlignment="Bottom" Margin="0,0,0,4">
+                        <StackPanel Grid.Column="3" VerticalAlignment="Bottom" Margin="0,0,0,4">
                             <CheckBox x:Name="ChkAtivo"
                                       Content="Ativo?"
                                       IsChecked="{Binding Ativo}"
@@ -232,31 +179,23 @@
                         </StackPanel>
                     </Grid>
 
-                    <!-- Observações -->
-                    <StackPanel>
-                        <TextBlock Text="Observações sobre o Motorista" Style="{StaticResource FieldLabel}"/>
-                        <TextBox x:Name="TxtObservacoes"
-                                 Text="{Binding Observacoes, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBoxMultiline}"/>
-                    </StackPanel>
-
                 </StackPanel>
             </Border>
 
             <!-- Card: Endereço -->
             <Border Style="{StaticResource Card}">
                 <StackPanel>
-                    <TextBlock Text="Endereço do Condutor"
+                    <TextBlock Text="Endereço do Fornecedor"
                                FontSize="14" FontWeight="SemiBold"
                                Foreground="{StaticResource TextStrong}"
                                Margin="0,0,0,14"/>
 
+                    <!-- Linha 1: CEP, Logradouro, UF, Cidade -->
                     <Grid Margin="0,0,0,12">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="2.5*"/>
                             <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
 
@@ -309,25 +248,20 @@
                             </ComboBox>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="3" Margin="0,0,10,0">
+                        <StackPanel Grid.Column="3">
                             <TextBlock Text="Cidade" Style="{StaticResource FieldLabel}"/>
                             <TextBox x:Name="TxtCidade"
                                      Text="{Binding Cidade, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
-
-                        <StackPanel Grid.Column="4">
-                            <TextBlock Text="Complemento do Endereço" Style="{StaticResource FieldLabel}"/>
-                            <TextBox x:Name="TxtComplemento"
-                                     Text="{Binding Complemento, UpdateSourceTrigger=PropertyChanged}"
-                                     Style="{StaticResource ModernTextBox}"/>
-                        </StackPanel>
                     </Grid>
 
-                    <Grid>
+                    <!-- Linha 2: Nº Endereço, Complemento -->
+                    <Grid Margin="0,0,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="2.5*"/>
+                            <ColumnDefinition Width="3*"/>
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0" Margin="0,0,10,0">
@@ -336,12 +270,19 @@
                                      Text="{Binding NumeroEndereco, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                            <TextBlock Text="Complemento do Endereço" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="TxtComplemento"
+                                     Text="{Binding Complemento, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
                     </Grid>
 
                     <!-- Botões -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
 
-                        <Button x:Name="BtnSalvarCondutor"
+                        <Button x:Name="BtnSalvar"
                                 Command="{Binding SalvarCommand}"
                                 Height="40" Cursor="Hand"
                                 Background="#16A34A" BorderThickness="0"
@@ -364,7 +305,7 @@
                             </Button.Template>
                         </Button>
 
-                        <Button x:Name="BtnEditarCondutor"
+                        <Button x:Name="BtnEditar"
                                 Command="{Binding EditarCommand}"
                                 Height="40" Cursor="Hand"
                                 Background="#2563EB" BorderThickness="0"
@@ -387,7 +328,7 @@
                             </Button.Template>
                         </Button>
 
-                        <Button x:Name="BtnLimparCondutor"
+                        <Button x:Name="BtnLimpar"
                                 Command="{Binding LimparCommand}"
                                 Height="40" Cursor="Hand"
                                 Background="#F59E0B" BorderThickness="0"
@@ -410,7 +351,7 @@
                             </Button.Template>
                         </Button>
 
-                        <Button x:Name="BtnDeletarCondutor"
+                        <Button x:Name="BtnDeletar"
                                 Command="{Binding DeletarCommand}"
                                 Height="40" Cursor="Hand"
                                 Background="#DC2626" BorderThickness="0">
@@ -438,7 +379,7 @@
 
         </StackPanel>
 
-        <!-- Lista de Condutores -->
+        <!-- Lista de Fornecedores -->
         <Border Grid.Row="2" Style="{StaticResource Card}">
             <Grid>
                 <Grid.RowDefinitions>
@@ -447,6 +388,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
+                <!-- Header + Filtro -->
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -454,7 +396,7 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel>
-                        <TextBlock Text="Lista de Condutores"
+                        <TextBlock Text="Lista de Fornecedores"
                                    FontSize="14" FontWeight="SemiBold"
                                    Foreground="{StaticResource TextStrong}"/>
                         <TextBlock Text="Selecione um item para editar, ou use as ações da linha."
@@ -470,21 +412,21 @@
                     </StackPanel>
                 </Grid>
 
-                <DataGrid x:Name="DgCondutores"
+                <DataGrid x:Name="DgFornecedores"
                           Grid.Row="2"
                           Style="{StaticResource CleanDataGrid}"
-                          ItemsSource="{Binding Condutores}"
+                          ItemsSource="{Binding Fornecedores}"
                           HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Código"    Binding="{Binding Codigo}"    Width="70"/>
-                        <DataGridTextColumn Header="Nome"      Binding="{Binding Nome}"       Width="*"/>
-                        <DataGridTextColumn Header="Telefone"  Binding="{Binding Telefone1}"  Width="130"/>
-                        <DataGridTextColumn Header="Email"     Binding="{Binding Email1}"     Width="*"/>
-                        <DataGridTextColumn Header="CNH"       Binding="{Binding NumeroCnh}"  Width="120"/>
-                        <DataGridTextColumn Header="Categoria" Binding="{Binding ClassificacaoCnh}" Width="90"/>
-                        <DataGridTextColumn Header="Venc. CNH" Binding="{Binding VencCarteira}" Width="110"/>
-                        <DataGridTextColumn Header="Ativo"     Binding="{Binding Ativo}"      Width="70"/>
+                        <DataGridTextColumn Header="CPF/CNPJ"  Binding="{Binding CpfCnpj}"   Width="140"/>
+                        <DataGridTextColumn Header="Nome"       Binding="{Binding Nome}"       Width="*"/>
+                        <DataGridTextColumn Header="Telefone"   Binding="{Binding Telefone1}"  Width="130"/>
+                        <DataGridTextColumn Header="Email"      Binding="{Binding Email1}"     Width="*"/>
+                        <DataGridTextColumn Header="Ativo"      Binding="{Binding Ativo}"      Width="70"/>
+                        <DataGridTextColumn Header="CEP"        Binding="{Binding Cep}"        Width="100"/>
+                        <DataGridTextColumn Header="UF"         Binding="{Binding Uf}"         Width="60"/>
+                        <DataGridTextColumn Header="Cidade"     Binding="{Binding Cidade}"     Width="130"/>
 
                         <DataGridTemplateColumn Header="Ações" Width="90">
                             <DataGridTemplateColumn.CellTemplate>

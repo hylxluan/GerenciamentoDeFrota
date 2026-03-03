@@ -58,5 +58,30 @@ namespace GerenciamentoDeFrota
             if (MainContentHost == null) return;
             MainContentHost.Content = new Views.CondutoresView();
         }
+
+        private void RbCentrosCusto_Checked(object sender, RoutedEventArgs e)
+        {
+            if (MainContentHost == null) return;
+            MainContentHost.Content = new Views.CentrosCustoView();
+        }
+
+        private void RbFornecedores_Checked(object sender, RoutedEventArgs e)
+        {
+            if (MainContentHost == null) return;
+            MainContentHost.Content = new Views.FornecedoresView();
+        }
+
+        private void RbCombustivel_Checked(object sender, RoutedEventArgs e)
+        {
+            if (MainContentHost == null) return;
+            MainContentHost.Content = new Views.CombustivelView();
+        }
+
+        private void RbVeiculoCombustivel_Checked(object sender, RoutedEventArgs e)
+        {
+            if (MainContentHost == null) return;
+            MainContentHost.Content = new Views.VeiculoCombustivelView();
+        }
+
     }
 }

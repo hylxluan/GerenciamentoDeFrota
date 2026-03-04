@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <Folder Include="Data\Gerenciadores\" />
+    <Folder Include="Data\Repositories\" />
   </ItemGroup>
 
 </Project>

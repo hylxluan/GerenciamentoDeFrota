@@ -5,7 +5,7 @@ using System.Text;
 namespace GerenciamentoDeFrota.Data.Models
 {
     [Serializable]
-    public class Veiculos : BaseModel
+    public class Veiculos
     {
 
 

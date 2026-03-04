@@ -5,18 +5,23 @@ using System.Windows.Input;
 
 namespace GerenciamentoDeFrota.Commands
 {
-    public class RelayCommands : ICommand
+    public class RelayCommands<T> : ICommand
     {
-        public event EventHandler? CanExecuteChanged;
-
-        public bool CanExecute(object? parameter)
+        public event EventHandler? CanExecuteChanged
         {
-            throw new NotImplementedException();
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
         }
+        private readonly Action<T> _execute;
+        private readonly Func<Object, bool> _canExecute;
 
-        public void Execute(object? parameter)
+        public RelayCommands(Action<T> execute, Func<Object, bool> canExecute)
         {
-            throw new NotImplementedException();
+            this._execute = execute;
+            this._canExecute = canExecute;
         }
+        public bool CanExecute(object? parameter) => this._canExecute?.Invoke((T?)parameter) ?? true;
+
+        public void Execute(object? parameter) => this._execute((T?)parameter);
     }
 }

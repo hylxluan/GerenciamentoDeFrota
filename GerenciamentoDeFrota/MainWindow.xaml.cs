@@ -83,5 +83,10 @@ namespace GerenciamentoDeFrota
             MainContentHost.Content = new Views.VeiculoCombustivelView();
         }
 
+        private void RbAgendamento_Checked(object sender, RoutedEventArgs e)
+        {
+            if (MainContentHost == null) return;
+            MainContentHost.Content = new Views.AgendamentoView();
+        }
     }
 }

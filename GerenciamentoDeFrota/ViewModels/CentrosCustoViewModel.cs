@@ -93,11 +93,12 @@ namespace GerenciamentoDeFrota.ViewModels
         #endregion
 
         #region Métodos auxiliares
-        #endregion
         private void AplicarFiltro()
         {
             throw new NotImplementedException();
         }
+        #endregion
+
 
     }
 }

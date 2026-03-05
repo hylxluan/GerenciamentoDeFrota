@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GerenciamentoDeFrota.Interfaces.Gerenciadores
 {
-    public interface IGerenciadorCentrosCusto
+    public interface IServiceCentrosCusto
     {
 
     }

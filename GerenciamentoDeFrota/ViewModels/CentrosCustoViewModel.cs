@@ -61,7 +61,7 @@ namespace GerenciamentoDeFrota.ViewModels
 
 
         #region Gerenciador
-        private readonly IGerenciadorCentrosCusto _gerenciadorCentrosCusto;
+        private readonly IServiceCentrosCusto _gerenciadorCentrosCusto;
         #endregion
 
 

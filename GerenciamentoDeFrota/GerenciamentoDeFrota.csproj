@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Gerenciadores\" />
+    <Folder Include="Data\Services\" />
   </ItemGroup>
 
 </Project>

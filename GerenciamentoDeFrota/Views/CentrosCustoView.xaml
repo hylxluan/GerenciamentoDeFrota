@@ -119,6 +119,14 @@
                           Foreground="{StaticResource TextStrong}"
                           Margin="0,0,0,16"/>
 
+                <!-- Mensagens -->
+                <TextBlock Text="{Binding MensagemErro}"
+                           Foreground="#DC2626" FontSize="12"
+                           Margin="0,0,0,8"/>
+                <TextBlock Text="{Binding MensagemSucesso}"
+                           Foreground="#16A34A" FontSize="12"
+                           Margin="0,0,0,8"/>
+
                 <!-- Botões -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 
@@ -236,7 +244,7 @@
                         <TextBlock Text="Lista de Centros de Custo"
                                    FontSize="14" FontWeight="SemiBold"
                                    Foreground="{StaticResource TextStrong}"/>
-                        <TextBlock Text="Selecione um item para editar, ou use as ações da linha."
+                        <TextBlock Text="Selecione um item para editar ou deletar."
                                    Margin="0,4,0,0" FontSize="12"
                                    Foreground="{StaticResource TextSoft}"/>
                     </StackPanel>
@@ -253,35 +261,35 @@
                           Grid.Row="2"
                           Style="{StaticResource CleanDataGrid}"
                           ItemsSource="{Binding CentrosCusto}"
+                          SelectedItem="{Binding Selecionado}"
+                          IsReadOnly="True"
                           HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto">
                     <DataGrid.Columns>
 
-                        <DataGridTextColumn Header="Código"  Binding="{Binding Codigo}"      Width="70"/>
-                        <DataGridTextColumn Header="Nome"    Binding="{Binding Nome}"         Width="*"/>
-                        <DataGridTextColumn Header="Ativo"   Binding="{Binding Ativo}"        Width="80"/>
-                        <DataGridTextColumn Header="Observações" Binding="{Binding Observacoes}" Width="2*"/>
+                        <DataGridTextColumn Header="Código"
+                                            Binding="{Binding Id}"
+                                            Width="70"/>
 
-                        <DataGridTemplateColumn Header="Ações" Width="90">
+                        <DataGridTextColumn Header="Nome"
+                                            Binding="{Binding Nome}"
+                                            Width="*"/>
+
+                        <DataGridTemplateColumn Header="Ativo" Width="70">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Width="30" Height="30" Margin="0,0,8,0"
-                                                Background="#EEF2FF" BorderThickness="0" Cursor="Hand"
-                                                Command="{Binding DataContext.EditarLinhaCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                CommandParameter="{Binding}">
-                                            <materialDesign:PackIcon Kind="PencilOutline" Width="16" Height="16" Foreground="#4F46E5"/>
-                                        </Button>
-                                        <Button Width="30" Height="30"
-                                                Background="#FEE2E2" BorderThickness="0" Cursor="Hand"
-                                                Command="{Binding DataContext.ExcluirLinhaCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                CommandParameter="{Binding}">
-                                            <materialDesign:PackIcon Kind="TrashCanOutline" Width="16" Height="16" Foreground="#DC2626"/>
-                                        </Button>
-                                    </StackPanel>
+                                    <CheckBox IsChecked="{Binding Ativo, Mode=OneWay}"
+                                              IsEnabled="False"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="Observações"
+                                            Binding="{Binding Observacoes}"
+                                            Width="2*"/>
+
 
                     </DataGrid.Columns>
                 </DataGrid>

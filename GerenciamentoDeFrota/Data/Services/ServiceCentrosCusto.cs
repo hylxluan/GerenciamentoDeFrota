@@ -1,10 +1,10 @@
 ﻿using GerenciamentoDeFrota.Data.Models;
-using GerenciamentoDeFrota.Interfaces.Gerenciadores;
 using GerenciamentoDeFrota.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using GerenciamentoDeFrota.Exceptions.CustomExceptions;
+using GerenciamentoDeFrota.Interfaces.Services;
 
 namespace GerenciamentoDeFrota.Data.Services
 {

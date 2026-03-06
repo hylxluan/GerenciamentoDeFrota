@@ -1,10 +1,11 @@
 ﻿using GerenciamentoDeFrota.Commands;
 using GerenciamentoDeFrota.Data.Models;
-using GerenciamentoDeFrota.Interfaces.Gerenciadores;
+using GerenciamentoDeFrota.Exceptions.ExceptionBase;
+using GerenciamentoDeFrota.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
+using System.Linq;
 using System.Windows.Input;
 
 namespace GerenciamentoDeFrota.ViewModels
@@ -47,6 +48,19 @@ namespace GerenciamentoDeFrota.ViewModels
             set { _filtroNome = value; OnPropertyChanged(nameof(FiltroNome)); AplicarFiltro(); }
         }
 
+        private string _mensagemErro = string.Empty;
+        public string MensagemErro
+        {
+            get => _mensagemErro;
+            set { _mensagemErro = value; OnPropertyChanged(nameof(MensagemErro)); }
+        }
+
+        private string _mensagemSucesso = string.Empty;
+        public string MensagemSucesso
+        {
+            get => _mensagemSucesso;
+            set { _mensagemSucesso = value; OnPropertyChanged(nameof(MensagemSucesso)); }
+        }
         #endregion
 
         #region Listagem e Seleção
@@ -56,49 +70,135 @@ namespace GerenciamentoDeFrota.ViewModels
             get => _selecionado;
             set { _selecionado = value; OnPropertyChanged(nameof(Selecionado)); }
         }
+
         public ObservableCollection<CentrosCusto> CentrosCusto { get; } = new();
+        private List<CentrosCusto> _todosCentrosCusto = new();
         #endregion
 
-
-        #region Gerenciador
-        private readonly IServiceCentrosCusto _gerenciadorCentrosCusto;
+        #region Service
+        private readonly IServiceCentrosCusto _service;
         #endregion
 
-
-
-        public CentrosCustoViewModel() : base()
+        public CentrosCustoViewModel(IServiceCentrosCusto service) : base()
         {
+            _service = service ?? throw new ArgumentNullException(nameof(service));
 
+            SalvarCommand = new SimpleRelayCommand(Salvar);
+            EditarCommand = new SimpleRelayCommand(Editar);
+            LimparCommand = new SimpleRelayCommand(Limpar);
+            DeletarCommand = new SimpleRelayCommand(Deletar);
+
+            CarregarLista();
         }
 
         #region Transações DB
         private void Salvar()
         {
+            try
+            {
+                LimparMensagens();
+
+                var entity = Selecionado ?? new CentrosCusto();
+                entity.Nome = Nome;
+                entity.Observacoes = Observacoes;
+                entity.Ativo = Ativo;
+
+                _service.SalvarCentroCusto(entity);
+                CarregarLista();
+                Limpar();
+                MensagemSucesso = "Centro de custo salvo com sucesso!";
+            }
+            catch (GerenciamentoDeFrotaExceptions ex)
+            {
+                MensagemErro = ex.Message;
+            }
+            catch (Exception)
+            {
+                MensagemErro = "Erro inesperado ao salvar. Contate o suporte.";
+            }
         }
 
         private void Editar()
         {
+            if (Selecionado == null)
+            {
+                MensagemErro = "Selecione um registro para editar.";
+                return;
+            }
+            CarregarFormulario(Selecionado);
         }
 
         private void Limpar()
         {
+            Selecionado = null;
+            Nome = string.Empty;
+            Observacoes = string.Empty;
+            Ativo = true;
+            LimparMensagens();
         }
 
         private void Deletar()
         {
+            try
+            {
+                LimparMensagens();
+
+                if (Selecionado == null)
+                {
+                    MensagemErro = "Selecione um registro para deletar.";
+                    return;
+                }
+
+                _service.DeletarCentroCusto(Selecionado.Id);
+                CarregarLista();
+                Limpar();
+                MensagemSucesso = "Centro de custo removido com sucesso!";
+            }
+            catch (GerenciamentoDeFrotaExceptions ex)
+            {
+                MensagemErro = ex.Message;
+            }
+            catch (Exception)
+            {
+                MensagemErro = "Erro inesperado ao deletar. Contate o suporte.";
+            }
         }
         #endregion
 
-        #region Validações
-        #endregion
 
         #region Métodos auxiliares
+        private void CarregarLista()
+        {
+            _todosCentrosCusto = _service.ListarCentrosCustos();
+            AplicarFiltro();
+        }
+
+        private void CarregarFormulario(CentrosCusto item)
+        {
+            Nome = item.Nome;
+            Observacoes = item.Observacoes ?? string.Empty;
+            Ativo = item.Ativo;
+        }
+
         private void AplicarFiltro()
         {
-            throw new NotImplementedException();
+            CentrosCusto.Clear();
+
+            var lista = string.IsNullOrWhiteSpace(FiltroNome)
+                ? _todosCentrosCusto
+                : _todosCentrosCusto
+                    .Where(c => c.Nome.Contains(FiltroNome, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+            foreach (var item in lista)
+                CentrosCusto.Add(item);
+        }
+
+        private void LimparMensagens()
+        {
+            MensagemErro = string.Empty;
+            MensagemSucesso = string.Empty;
         }
         #endregion
-
-
     }
 }

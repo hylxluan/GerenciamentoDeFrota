@@ -20,6 +20,13 @@ namespace GerenciamentoDeFrota.Commands
             this._execute = execute;
             this._canExecute = canExecute;
         }
+
+        public RelayCommands(Action<T> execute) 
+        { 
+            _execute = execute;
+            _canExecute = _ => true;
+            
+        }
         public bool CanExecute(object? parameter) => this._canExecute?.Invoke((T?)parameter) ?? true;
 
         public void Execute(object? parameter) => this._execute((T?)parameter);

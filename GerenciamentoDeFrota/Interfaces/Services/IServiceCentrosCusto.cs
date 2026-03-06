@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 
-namespace GerenciamentoDeFrota.Interfaces.Gerenciadores
+namespace GerenciamentoDeFrota.Interfaces.Services
 {
     public interface IServiceCentrosCusto
     {

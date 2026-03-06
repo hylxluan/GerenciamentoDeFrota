@@ -14,6 +14,7 @@ using GerenciamentoDeFrota.Data.Repositories;
 using GerenciamentoDeFrota.Data.Services;
 using GerenciamentoDeFrota.Views;
 using GerenciamentoDeFrota.ViewModels;
+using GerenciamentoDeFrota.Helpers;
 
 namespace GerenciamentoDeFrota
 {
@@ -104,6 +105,11 @@ namespace GerenciamentoDeFrota
         {
             if (MainContentHost == null) return;
             MainContentHost.Content = new  AgendamentoView();
+        }
+
+        private void BtnFechar_Click(object sender, RoutedEventArgs e)
+        { if (MainContentHost == null) return;
+            WindowHandler.Fechar(this);
         }
 
     }

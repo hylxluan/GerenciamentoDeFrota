@@ -26,7 +26,6 @@
             <GradientStop Color="#8CE7B7" Offset="1"/>
         </LinearGradientBrush>
 
-        <!-- Item de nav principal (ex: Dashboard) -->
         <Style x:Key="NavItemStyle" TargetType="RadioButton">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -69,7 +68,6 @@
             </Setter>
         </Style>
 
-        <!-- Sub-item dentro do grupo expansível -->
         <Style x:Key="SubNavItemStyle" TargetType="RadioButton">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -113,7 +111,6 @@
             </Setter>
         </Style>
 
-        <!-- Botão de grupo expansível -->
         <Style x:Key="GroupToggleStyle" TargetType="ToggleButton">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -191,209 +188,240 @@
 
     </Window.Resources>
 
+    <!-- Border raiz com o botão fechar sobreposto via Grid -->
     <Border CornerRadius="25"
             Background="{StaticResource AppSurfaceBrush}"
             MouseDown="Border_MouseDown"
             MouseLeftButtonDown="Border_MouseLeftButtonDown">
-
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="260"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
 
-            <!-- SIDEBAR -->
-            <Border Grid.Column="0"
-                    Background="{StaticResource SidebarBrush}"
-                    CornerRadius="25,0,0,25">
-
-                <Grid Margin="18">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="18"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="12"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <!-- LOGO + NOME -->
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top">
-                        <Border Width="66" Height="66" CornerRadius="33"
-                                Background="{StaticResource LogoHolderBrush}">
-                            <Ellipse Margin="8">
-                                <Ellipse.Fill>
-                                    <ImageBrush ImageSource="pack://application:,,,/Assets/Images/logo_ecofrota.png"
-                                                Stretch="UniformToFill"/>
-                                </Ellipse.Fill>
-                            </Ellipse>
+            <!-- Botão fechar — ZIndex alto para ficar sobre tudo -->
+            <Button x:Name="BtnFechar"
+                    Click="BtnFechar_Click"
+                    Width="32" Height="32"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0,12,12,0"
+                    Panel.ZIndex="99"
+                    Background="#FFEBEB"
+                    BorderThickness="0"
+                    Cursor="Hand" RenderTransformOrigin="0.844,-0.125">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                            <materialDesign:PackIcon Kind="Close" Width="16" Height="16"
+                                                     Foreground="#DC2626"
+                                                     HorizontalAlignment="Center"
+                                                     VerticalAlignment="Center"/>
                         </Border>
-                        <StackPanel Margin="12,6,0,0">
-                            <TextBlock x:Name="TxtEmpresa" Text="ECOFROTA"
-                                       Foreground="{StaticResource SidebarTitleBrush}"
-                                       FontSize="16" FontWeight="Bold"/>
-                            <TextBlock Text="Gerenciamento de Frota"
-                                       Foreground="{StaticResource SidebarSubTitleBrush}"
-                                       FontSize="12"/>
-                        </StackPanel>
-                    </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FCA5A5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
 
-                    <Border Grid.Row="2" Height="1" Background="#22FFFFFF"/>
+            <!-- Layout principal -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="260"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                    <!-- MENU -->
-                    <StackPanel Grid.Row="4" x:Name="MenuContainer" Margin="0,18,0,0">
+                <!-- SIDEBAR -->
+                <Border Grid.Column="0"
+                        Background="{StaticResource SidebarBrush}"
+                        CornerRadius="25,0,0,25">
 
-                        <!-- Dashboard -->
-                        <RadioButton x:Name="RbDashboard"
-                                     GroupName="Nav"
-                                     Style="{StaticResource NavItemStyle}"
-                                     Tag="Dashboard"
-                                     IsChecked="True"
-                                     Checked="RbDashboard_Checked"
-                                     Margin="0,0,0,6">
-                            <materialDesign:PackIcon Kind="ViewDashboard" Width="22" Height="22"
-                                                     Foreground="{StaticResource SidebarTitleBrush}"/>
-                        </RadioButton>
+                    <Grid Margin="18">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="18"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="12"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                        <!-- Grupo Cadastros Gerais -->
-                        <ToggleButton x:Name="TglCadastros"
-                                      Style="{StaticResource GroupToggleStyle}"
-                                      Margin="0,0,0,2"/>
-
-                        <!-- Sub-itens -->
-                        <StackPanel Margin="16,0,0,6">
-                            <StackPanel.Style>
-                                <Style TargetType="StackPanel">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsChecked, ElementName=TglCadastros}" Value="True">
-                                            <DataTrigger.EnterActions>
-                                                <BeginStoryboard>
-                                                    <Storyboard>
-                                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
-                                                        </ObjectAnimationUsingKeyFrames>
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </DataTrigger.EnterActions>
-                                            <DataTrigger.ExitActions>
-                                                <BeginStoryboard>
-                                                    <Storyboard>
-                                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
-                                                        </ObjectAnimationUsingKeyFrames>
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </DataTrigger.ExitActions>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </StackPanel.Style>
-
-                            <!-- Linha vertical + sub-itens -->
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Border Grid.Column="0" Background="#44FFFFFF" CornerRadius="1" Margin="8,4,0,4"/>
-
-                                <StackPanel Grid.Column="1" Margin="6,0,0,0">
-
-                                    <RadioButton x:Name="RbVeiculos"
-                                                 GroupName="Nav"
-                                                 Style="{StaticResource SubNavItemStyle}"
-                                                 Tag="Veículos"
-                                                 Checked="RbVeiculos_Checked">
-                                        <materialDesign:PackIcon Kind="CarOutline" Width="16" Height="16"
-                                                                 Foreground="{StaticResource SidebarTitleBrush}"/>
-                                    </RadioButton>
-
-                                    <RadioButton x:Name="RbCondutores"
-                                                 GroupName="Nav"
-                                                 Style="{StaticResource SubNavItemStyle}"
-                                                 Tag="Condutores"
-                                                 Checked="RbCondutores_Checked">
-                                        <materialDesign:PackIcon Kind="AccountTieOutline" Width="16" Height="16"
-                                                                 Foreground="{StaticResource SidebarTitleBrush}"/>
-                                    </RadioButton>
-
-                                    <RadioButton x:Name="RbCentrosCusto"
-                                                 GroupName="Nav"
-                                                 Style="{StaticResource SubNavItemStyle}"
-                                                 Tag="Centros de Custo"
-                                                 Checked="RbCentrosCusto_Checked">
-                                        <materialDesign:PackIcon Kind="CurrencyUsd" Width="16" Height="16"
-                                                                 Foreground="{StaticResource SidebarTitleBrush}"/>
-                                    </RadioButton>
-
-                                    <RadioButton x:Name="RbFornecedores"
-                                                 GroupName="Nav"
-                                                 Style="{StaticResource SubNavItemStyle}"
-                                                 Tag="Fornecedores"
-                                                 Checked="RbFornecedores_Checked">
-                                        <materialDesign:PackIcon Kind="TruckOutline" Width="16" Height="16"
-                                                                 Foreground="{StaticResource SidebarTitleBrush}"/>
-                                    </RadioButton>
-
-                                    <RadioButton x:Name="RbCombustivel"
-                                                 GroupName="Nav"
-                                                 Style="{StaticResource SubNavItemStyle}"
-                                                 Tag="Combustíveis"
-                                                 Checked="RbCombustivel_Checked">
-                                        <materialDesign:PackIcon Kind="GasStation" Width="16" Height="16"
-                                                                 Foreground="{StaticResource SidebarTitleBrush}"/>
-                                    </RadioButton>
-
-                                    <RadioButton x:Name="RbVeiculoCombustivel"
-                                                 GroupName="Nav"
-                                                 Style="{StaticResource SubNavItemStyle}"
-                                                 Tag="Veículo/Combustível"
-                                                 Checked="RbVeiculoCombustivel_Checked">
-                                        <materialDesign:PackIcon Kind="CarCog" Width="16" Height="16"
-                                                                 Foreground="{StaticResource SidebarTitleBrush}"/>
-                                    </RadioButton>
-                                </StackPanel>
-                                
-                            </Grid>
+                        <!-- LOGO + NOME -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top">
+                            <Border Width="66" Height="66" CornerRadius="33"
+                                    Background="{StaticResource LogoHolderBrush}">
+                                <Ellipse Margin="8">
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="pack://application:,,,/Assets/Images/logo_ecofrota.png"
+                                                    Stretch="UniformToFill"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                            </Border>
+                            <StackPanel Margin="12,6,0,0">
+                                <TextBlock x:Name="TxtEmpresa" Text="ECOFROTA"
+                                           Foreground="{StaticResource SidebarTitleBrush}"
+                                           FontSize="16" FontWeight="Bold"/>
+                                <TextBlock Text="Gerenciamento de Frota"
+                                           Foreground="{StaticResource SidebarSubTitleBrush}"
+                                           FontSize="12"/>
+                            </StackPanel>
                         </StackPanel>
 
-                        <!-- Agendamento — item principal, logo abaixo de Cadastros Gerais -->
-                        <RadioButton x:Name="RbAgendamento"
-                                       GroupName="Nav"
-                                       Style="{StaticResource NavItemStyle}"
-                                       Tag="Agendamento"
-                                       Checked="RbAgendamento_Checked"
-                                       Margin="0,6,0,0">
-                            <materialDesign:PackIcon Kind="CalendarClock" Width="22" Height="22"
-                                                     Foreground="{StaticResource SidebarTitleBrush}"/>
-                        </RadioButton>
+                        <Border Grid.Row="2" Height="1" Background="#22FFFFFF"/>
 
-                    </StackPanel>
+                        <!-- MENU -->
+                        <StackPanel Grid.Row="4" x:Name="MenuContainer" Margin="0,18,0,0">
 
-                    <StackPanel Grid.Row="5" x:Name="SidebarFooter"/>
-                </Grid>
-            </Border>
+                            <!-- Dashboard -->
+                            <RadioButton x:Name="RbDashboard"
+                                         GroupName="Nav"
+                                         Style="{StaticResource NavItemStyle}"
+                                         Tag="Dashboard"
+                                         IsChecked="True"
+                                         Checked="RbDashboard_Checked"
+                                         Margin="0,0,0,6">
+                                <materialDesign:PackIcon Kind="ViewDashboard" Width="22" Height="22"
+                                                         Foreground="{StaticResource SidebarTitleBrush}"/>
+                            </RadioButton>
 
-            <!-- ÁREA PRINCIPAL (DIREITA) -->
-            <Border Grid.Column="1"
-                    Background="{StaticResource AppSurfaceBrush}"
-                    CornerRadius="0,25,25,0"
-                    Padding="22">
-                <Border Background="{StaticResource PanelBrush}"
-                        CornerRadius="18" Padding="18">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                  HorizontalScrollBarVisibility="Disabled">
-                        <ContentControl x:Name="MainContentHost"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch"
-                                        HorizontalContentAlignment="Stretch"
-                                        VerticalContentAlignment="Stretch"/>
-                    </ScrollViewer>
+                            <!-- Grupo Cadastros Gerais -->
+                            <ToggleButton x:Name="TglCadastros"
+                                          Style="{StaticResource GroupToggleStyle}"
+                                          Margin="0,0,0,2"/>
+
+                            <!-- Sub-itens -->
+                            <StackPanel Margin="16,0,0,6">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsChecked, ElementName=TglCadastros}" Value="True">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                                <DataTrigger.ExitActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.ExitActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Column="0" Background="#44FFFFFF" CornerRadius="1" Margin="8,4,0,4"/>
+
+                                    <StackPanel Grid.Column="1" Margin="6,0,0,0">
+
+                                        <RadioButton x:Name="RbVeiculos"
+                                                     GroupName="Nav"
+                                                     Style="{StaticResource SubNavItemStyle}"
+                                                     Tag="Veículos"
+                                                     Checked="RbVeiculos_Checked">
+                                            <materialDesign:PackIcon Kind="CarOutline" Width="16" Height="16"
+                                                                     Foreground="{StaticResource SidebarTitleBrush}"/>
+                                        </RadioButton>
+
+                                        <RadioButton x:Name="RbCondutores"
+                                                     GroupName="Nav"
+                                                     Style="{StaticResource SubNavItemStyle}"
+                                                     Tag="Condutores"
+                                                     Checked="RbCondutores_Checked">
+                                            <materialDesign:PackIcon Kind="AccountTieOutline" Width="16" Height="16"
+                                                                     Foreground="{StaticResource SidebarTitleBrush}"/>
+                                        </RadioButton>
+
+                                        <RadioButton x:Name="RbCentrosCusto"
+                                                     GroupName="Nav"
+                                                     Style="{StaticResource SubNavItemStyle}"
+                                                     Tag="Centros de Custo"
+                                                     Checked="RbCentrosCusto_Checked">
+                                            <materialDesign:PackIcon Kind="CurrencyUsd" Width="16" Height="16"
+                                                                     Foreground="{StaticResource SidebarTitleBrush}"/>
+                                        </RadioButton>
+
+                                        <RadioButton x:Name="RbFornecedores"
+                                                     GroupName="Nav"
+                                                     Style="{StaticResource SubNavItemStyle}"
+                                                     Tag="Fornecedores"
+                                                     Checked="RbFornecedores_Checked">
+                                            <materialDesign:PackIcon Kind="TruckOutline" Width="16" Height="16"
+                                                                     Foreground="{StaticResource SidebarTitleBrush}"/>
+                                        </RadioButton>
+
+                                        <RadioButton x:Name="RbCombustivel"
+                                                     GroupName="Nav"
+                                                     Style="{StaticResource SubNavItemStyle}"
+                                                     Tag="Combustíveis"
+                                                     Checked="RbCombustivel_Checked">
+                                            <materialDesign:PackIcon Kind="GasStation" Width="16" Height="16"
+                                                                     Foreground="{StaticResource SidebarTitleBrush}"/>
+                                        </RadioButton>
+
+                                        <RadioButton x:Name="RbVeiculoCombustivel"
+                                                     GroupName="Nav"
+                                                     Style="{StaticResource SubNavItemStyle}"
+                                                     Tag="Veículo/Combustível"
+                                                     Checked="RbVeiculoCombustivel_Checked">
+                                            <materialDesign:PackIcon Kind="CarCog" Width="16" Height="16"
+                                                                     Foreground="{StaticResource SidebarTitleBrush}"/>
+                                        </RadioButton>
+
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+
+                            <!-- Agendamento -->
+                            <RadioButton x:Name="RbAgendamento"
+                                         GroupName="Nav"
+                                         Style="{StaticResource NavItemStyle}"
+                                         Tag="Agendamento"
+                                         Checked="RbAgendamento_Checked"
+                                         Margin="0,6,0,0">
+                                <materialDesign:PackIcon Kind="CalendarClock" Width="22" Height="22"
+                                                         Foreground="{StaticResource SidebarTitleBrush}"/>
+                            </RadioButton>
+
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="5" x:Name="SidebarFooter"/>
+                    </Grid>
                 </Border>
-            </Border>
 
+                <!-- ÁREA PRINCIPAL (DIREITA) -->
+                <Border Grid.Column="1"
+                        Background="{StaticResource AppSurfaceBrush}"
+                        CornerRadius="0,25,25,0"
+                        Padding="22">
+                    <Border Background="{StaticResource PanelBrush}"
+                            CornerRadius="18" Padding="18">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <ContentControl x:Name="MainContentHost"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"/>
+                        </ScrollViewer>
+                    </Border>
+                </Border>
+
+            </Grid>
         </Grid>
     </Border>
 </Window>

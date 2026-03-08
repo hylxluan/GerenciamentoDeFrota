@@ -8,9 +8,9 @@ namespace GerenciamentoDeFrota.Data.Models
     public class CentrosCusto
     {
         public long Id { get; set; }
-        public string Nome { get; set; } = string.Empty;
-        public string Observacoes { get; set; } = string.Empty;
-        public bool Ativo { get; set; } = true;
-        public DateTime DataCriacao { get; set; } = DateTime.UtcNow.Date;
+        public string? Nome { get; set; } = string.Empty;
+        public string? Observacoes { get; set; } = string.Empty;
+        public bool? Ativo { get; set; } = true;
+        public DateTime? DataCriacao { get; set; } = DateTime.UtcNow.Date;
     }
 }

@@ -175,9 +175,9 @@ namespace GerenciamentoDeFrota.ViewModels
 
         private void CarregarFormulario(CentrosCusto item)
         {
-            Nome = item.Nome;
+            Nome = item.Nome ?? string.Empty;
             Observacoes = item.Observacoes ?? string.Empty;
-            Ativo = item.Ativo;
+            Ativo = item.Ativo ?? true;
         }
 
         private void AplicarFiltro()

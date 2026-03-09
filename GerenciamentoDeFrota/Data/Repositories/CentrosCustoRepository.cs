@@ -20,8 +20,8 @@ namespace GerenciamentoDeFrota.Data.Repositories
 
         public void AddCentroCusto(CentrosCusto centroCusto)
         {
-            _context.CentrosCusto.Add(centroCusto);
-            _context.SaveChanges();
+            this._context.CentrosCusto.Add(centroCusto);
+            this._context.SaveChanges();
         }
 
         public void DeleteCentroCusto(long id)
@@ -29,8 +29,8 @@ namespace GerenciamentoDeFrota.Data.Repositories
             var entity = GetCentroCustoById(id);
             if (entity != null) 
             {
-                _context.CentrosCusto.Remove(entity);
-                _context.SaveChanges();
+                this._context.CentrosCusto.Remove(entity);
+                this._context.SaveChanges();
             }
             else
             {
@@ -40,15 +40,15 @@ namespace GerenciamentoDeFrota.Data.Repositories
         }
 
         public CentrosCusto? GetCentroCustoById(long id) => 
-            _context.CentrosCusto.FirstOrDefault(c => c.Id == id);
+            this._context.CentrosCusto.FirstOrDefault(c => c.Id == id);
 
         public List<CentrosCusto> GetCentrosCustos() =>
-            _context.CentrosCusto.OrderBy(c => c.Nome).ThenByDescending(c => c.DataCriacao).ToList();
+            this._context.CentrosCusto.OrderBy(c => c.Nome).ThenByDescending(c => c.DataCriacao).ToList();
 
         public void UpdateCentroCusto(CentrosCusto centroCusto)
         {
-            _context.CentrosCusto.Update(centroCusto);
-            _context.SaveChanges();
+            this._context.CentrosCusto.Update(centroCusto);
+            this._context.SaveChanges();
         }
 
         

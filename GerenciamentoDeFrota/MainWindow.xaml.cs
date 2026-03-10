@@ -56,9 +56,7 @@ namespace GerenciamentoDeFrota
         private void RbVeiculos_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContentHost == null) return;
-
-            var view = new VeiculosView();
-            MainContentHost.Content = view;      
+            MainContentHost.Content = new VeiculosView();
         }
 
         private void RbCondutores_Checked(object sender, RoutedEventArgs e)

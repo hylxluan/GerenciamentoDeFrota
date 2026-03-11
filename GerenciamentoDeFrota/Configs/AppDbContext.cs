@@ -12,7 +12,6 @@ namespace GerenciamentoDeFrota.Configs
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // Só configura se não foi configurado externamente (ex: pela Factory em design-time)
             if (!optionsBuilder.IsConfigured)
             {
                 IConfigurationRoot config = new ConfigurationBuilder()

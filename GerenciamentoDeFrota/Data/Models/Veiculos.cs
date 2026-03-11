@@ -21,7 +21,7 @@ namespace GerenciamentoDeFrota.Data.Models
         public string? Cor { get; set; } = string.Empty;
         public string? Observacoes { get; set; } = string.Empty;
         public DateTime? DataCriacao { get; set; } = DateTime.UtcNow.Date;
-
+        public string VeiculoDescricao => $"{Placa} — {Modelo}";
 
     }
 }

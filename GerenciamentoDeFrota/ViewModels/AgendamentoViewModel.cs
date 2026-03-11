@@ -178,7 +178,7 @@ namespace GerenciamentoDeFrota.ViewModels
 
             var agendamentosDia = _serviceAgendamento.ListarPorData(_dataSelecionada.Date);
 
-            for (int hora = 7; hora <= 23; hora++)
+            for (int hora = 1; hora <= 23; hora++)
             {
                 var slot = new AgendamentoSlot
                 {

@@ -49,6 +49,8 @@ namespace GerenciamentoDeFrota.Configs
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Fabricante).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Modelo).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Tipo).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.KmAtual).IsRequired();
                 entity.Property(e => e.AnoModelo).IsRequired(false);
                 entity.Property(e => e.AnoFabricacao).IsRequired(false);
                 entity.Property(e => e.Ativo).IsRequired().HasDefaultValue(true);
@@ -77,8 +79,6 @@ namespace GerenciamentoDeFrota.Configs
                 entity.Property(e => e.Servico).IsRequired().HasMaxLength(1000);
                 entity.Property(e => e.Observacoes).HasMaxLength(1000).IsRequired(false);
                 entity.Property(e => e.DataCriacao).IsRequired();
-
-                // Ignora as propriedades computadas — EF não mapeia
                 entity.Ignore(e => e.VeiculoDescricao);
                 entity.Ignore(e => e.HoraFormatada);
             });

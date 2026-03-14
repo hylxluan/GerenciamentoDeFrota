@@ -10,6 +10,8 @@ namespace GerenciamentoDeFrota.Data.Models
         public long Id { get; set; }
         public string? Fabricante { get; set; } = string.Empty;
         public string? Modelo { get; set; } = string.Empty;
+        public string? Tipo { get; set; } = string.Empty;
+        public int? KmAtual { get; set; }
         public int? AnoModelo { get; set; }
         public int? AnoFabricacao { get; set; }
         public bool? Ativo { get; set; } = true;

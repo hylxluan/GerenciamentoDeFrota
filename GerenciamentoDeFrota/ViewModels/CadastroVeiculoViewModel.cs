@@ -2,6 +2,7 @@
 using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Exceptions.ExceptionBase;
 using GerenciamentoDeFrota.Interfaces.Services;
+using System.Globalization;
 using System.Windows.Input;
 
 namespace GerenciamentoDeFrota.ViewModels
@@ -16,6 +17,73 @@ namespace GerenciamentoDeFrota.ViewModels
         public ICommand SalvarCommand { get; set; }
         public ICommand LimparCommand { get; set; }
         public ICommand CancelarCommand { get; set; }
+        #endregion
+
+        #region Tipos de Veículo
+        public List<string> TiposVeiculo { get; } =
+        [
+            // ── Veículos Leves ──────────────────────────────────────────────
+            "Automóvel / Carro de Passeio",
+            "Caminhonete (Pick-up)",
+            "SUV / Utilitário Esportivo",
+            "Van / Minivan",
+            "Furgão",
+
+            // ── Motocicletas ─────────────────────────────────────────────────
+            "Motocicleta / Moto",
+            "Triciclo Motorizado",
+            "Quadriciclo",
+
+            // ── Transporte Coletivo ──────────────────────────────────────────
+            "Micro-ônibus",
+            "Ônibus Urbano",
+            "Ônibus Rodoviário",
+
+            // ── Caminhões ────────────────────────────────────────────────────
+            "Caminhão Leve (até 7,5t)",
+            "Caminhão Médio (7,5t a 16t)",
+            "Caminhão Pesado (16t a 40t)",
+            "Caminhão Extrapesado (acima de 40t)",
+            "Cavalo Mecânico / Caminhão-Trator",
+            "Caminhão Basculante",
+            "Caminhão Betoneira",
+            "Caminhão Tanque",
+            "Caminhão Frigorífico",
+            "Caminhão Cegonha",
+            "Caminhão Plataforma / Prancha",
+            "Caminhão Guincho",
+
+            // ── Máquinas Agrícolas ───────────────────────────────────────────
+            "Trator Agrícola",
+            "Colheitadeira / Combinada",
+            "Pulverizador Autopropelido",
+            "Plantadeira",
+
+            // ── Máquinas de Construção / Pesadas ─────────────────────────────
+            "Trator de Esteira",
+            "Escavadeira Hidráulica",
+            "Retroescavadeira",
+            "Pá Carregadeira (Loader)",
+            "Motoniveladora (Patrol)",
+            "Rolo Compactador",
+            "Mini Carregadeira (Bobcat / Skid Steer)",
+            "Guindaste / Munck",
+            "Empilhadeira",
+            "Perfuratriz / Sonda",
+
+            // ── Veículos Especiais ───────────────────────────────────────────
+            "Ambulância",
+            "Viatura Policial",
+            "Caminhão de Bombeiros",
+            "Veículo Blindado",
+
+            // ── Reboques ─────────────────────────────────────────────────────
+            "Reboque",
+            "Semirreboque / Carreta",
+
+            // ── Outros ───────────────────────────────────────────────────────
+            "Outros"
+        ];
         #endregion
 
         #region Fields
@@ -47,6 +115,21 @@ namespace GerenciamentoDeFrota.ViewModels
         {
             get => _renavam;
             set { _renavam = value; OnPropertyChanged(nameof(Renavam)); }
+        }
+
+        private string? _tipo;
+        public string? Tipo
+        {
+            get => _tipo;
+            set { _tipo = value; OnPropertyChanged(nameof(Tipo)); }
+        }
+
+        // Armazenado formatado (ex.: "1.234") — convertido para int? no Salvar
+        private string _kmAtual = string.Empty;
+        public string KmAtual
+        {
+            get => _kmAtual;
+            set { _kmAtual = value; OnPropertyChanged(nameof(KmAtual)); }
         }
 
         private string _anoModelo = string.Empty;
@@ -106,7 +189,6 @@ namespace GerenciamentoDeFrota.ViewModels
         }
         #endregion
 
-        // Evento disparado após salvar com sucesso → code-behind fecha a window
         public event Action? SalvoComSucesso;
         public event Action? CancelamentoSolicitado;
 
@@ -134,6 +216,12 @@ namespace GerenciamentoDeFrota.ViewModels
                 entity.Modelo = Modelo;
                 entity.Placa = Placa.ToUpper();
                 entity.Renavam = Renavam;
+                entity.Tipo = Tipo;
+
+                // Remove separadores de milhar antes de parsear
+                var kmDigits = KmAtual.Replace(".", string.Empty);
+                entity.KmAtual = int.TryParse(kmDigits, out var km) ? km : null;
+
                 entity.AnoModelo = int.TryParse(AnoModelo, out var am) ? am : null;
                 entity.AnoFabricacao = int.TryParse(AnoFabricacao, out var af) ? af : null;
                 entity.MesEmplacamento = int.TryParse(MesEmplacamento, out var me) ? me : null;
@@ -160,7 +248,8 @@ namespace GerenciamentoDeFrota.ViewModels
         {
             _veiculoEditando = null;
             Fabricante = Modelo = Placa = Renavam = AnoModelo =
-            AnoFabricacao = MesEmplacamento = Cor = Observacoes = string.Empty;
+            AnoFabricacao = MesEmplacamento = Cor = Observacoes = KmAtual = string.Empty;
+            Tipo = null;
             DataTacografo = null;
             Ativo = true;
             MensagemErro = string.Empty;
@@ -174,6 +263,13 @@ namespace GerenciamentoDeFrota.ViewModels
             Modelo = v.Modelo ?? string.Empty;
             Placa = v.Placa ?? string.Empty;
             Renavam = v.Renavam ?? string.Empty;
+            Tipo = v.Tipo;
+
+            // Formata o KM com separador de milhar pt-BR ao carregar
+            KmAtual = v.KmAtual.HasValue
+                ? v.KmAtual.Value.ToString("N0", new CultureInfo("pt-BR"))
+                : string.Empty;
+
             AnoModelo = v.AnoModelo?.ToString() ?? string.Empty;
             AnoFabricacao = v.AnoFabricacao?.ToString() ?? string.Empty;
             MesEmplacamento = v.MesEmplacamento?.ToString() ?? string.Empty;

@@ -40,6 +40,18 @@
             <Setter Property="Height" Value="80"/>
         </Style>
 
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="{StaticResource TextStrong}"/>
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="IsEditable" Value="False"/>
+        </Style>
+
         <Style x:Key="FieldLabel" TargetType="TextBlock">
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="Foreground" Value="{StaticResource TextSoft}"/>
@@ -105,6 +117,8 @@
                            FontSize="13" FontWeight="SemiBold"
                            Foreground="{StaticResource TextStrong}"
                            Margin="0,0,0,12"/>
+
+                <!-- Linha 1: Fabricante | Modelo | Placa | Renavam -->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
@@ -139,9 +153,36 @@
                                  PreviewTextInput="TxtRenavam_PreviewTextInput"/>
                     </StackPanel>
                 </Grid>
+
+                <!-- Linha 2: Tipo de Veículo | KM Atual -->
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                        <TextBlock Text="Tipo de Veículo" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox ItemsSource="{Binding TiposVeiculo}"
+                                  SelectedItem="{Binding Tipo, UpdateSourceTrigger=PropertyChanged}"
+                                  Style="{StaticResource ModernComboBox}"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                        <TextBlock Text="KM Atual" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding KmAtual, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource ModernTextBox}"
+                                 PreviewTextInput="TxtKmAtual_PreviewTextInput"
+                                 TextChanged="TxtKmAtual_TextChanged"/>
+                    </StackPanel>
+
+                    <!-- Coluna vazia para equilíbrio visual -->
+                    <Grid Grid.Column="2"/>
+                </Grid>
             </StackPanel>
 
-            <!-- Informações complementares -->
+            <!-- Informações Complementares -->
             <StackPanel Grid.Row="4">
                 <TextBlock Text="Informações Complementares"
                            FontSize="13" FontWeight="SemiBold"

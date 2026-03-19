@@ -4,9 +4,9 @@ namespace GerenciamentoDeFrota.Interfaces.Services
 {
     public interface IServiceVeiculos
     {
-        List<Veiculos> ListarVeiculos();
-        Veiculos? RecuperarVeiculoById(long id);
-        void SalvarVeiculo(Veiculos veiculo);
-        void DeletarVeiculo(long id);
+        Task<List<Veiculos>> ListarVeiculosAsync();
+        Task<Veiculos?> RecuperarVeiculoByIdAsync(long id);
+        Task SalvarVeiculoAsync(Veiculos veiculo);
+        Task DeletarVeiculoAsync(long id);
     }
 }

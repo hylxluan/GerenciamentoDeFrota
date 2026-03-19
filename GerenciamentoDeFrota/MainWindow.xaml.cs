@@ -1,14 +1,5 @@
-﻿using System.Text;
-using System.Windows;
-using System.Collections.ObjectModel;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using GerenciamentoDeFrota.Configs;
 using GerenciamentoDeFrota.Data.Repositories;
 using GerenciamentoDeFrota.Data.Services;
@@ -18,97 +9,109 @@ using GerenciamentoDeFrota.Helpers;
 
 namespace GerenciamentoDeFrota
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        #region Cache de Views
+        private DashboardView? _dashboardView;
+        private VeiculosView? _veiculosView;
+        private CondutoresView? _condutoresView;
+        private CentrosCustoView? _centrosCustoView;
+        private FornecedoresView? _fornecedoresView;
+        private CombustivelView? _combustivelView;
+        private VeiculoCombustivelView? _veiculoCombustivelView;
+        private AgendamentoView? _agendamentoView;
+        #endregion
+
         public MainWindow()
         {
             InitializeComponent();
         }
 
-
-
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
-            {
-                this.DragMove();
-            }
-
+                DragMove();
         }
+
         private bool IsMaximized = false;
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
-            {
                 WindowState = IsMaximized ? WindowState.Normal : WindowState.Maximized;
-            }
-
         }
+
         private void RbDashboard_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContentHost == null) return;
-            MainContentHost.Content = new DashboardView();
+            _dashboardView ??= new DashboardView();
+            MainContentHost.Content = _dashboardView;
         }
 
         private void RbVeiculos_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContentHost == null) return;
-            MainContentHost.Content = new VeiculosView();
+            _veiculosView ??= new VeiculosView();
+            MainContentHost.Content = _veiculosView;
         }
 
         private void RbCondutores_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContentHost == null) return;
-            MainContentHost.Content = new CondutoresView();
+            _condutoresView ??= new CondutoresView();
+            MainContentHost.Content = _condutoresView;
         }
 
         private void RbCentrosCusto_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContentHost == null) return;
 
-            var context = new AppDbContext();
-            var repository = new CentrosCustoRepository(context);
-            var services = new ServiceCentrosCusto(repository);
-
-            MainContentHost.Content = new CentrosCustoView
+            if (_centrosCustoView == null)
             {
+                var context = new AppDbContext();
+                var repository = new CentrosCustoRepository(context);
+                var services = new ServiceCentrosCusto(repository);
 
-                DataContext = new CentrosCustoViewModel(services)
+                _centrosCustoView = new CentrosCustoView
+                {
+                    DataContext = new CentrosCustoViewModel(services)
+                };
+            }
 
-            };
+            MainContentHost.Content = _centrosCustoView;
         }
 
         private void RbFornecedores_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContentHost == null) return;
-            MainContentHost.Content = new FornecedoresView();
+            _fornecedoresView ??= new FornecedoresView();
+            MainContentHost.Content = _fornecedoresView;
         }
 
         private void RbCombustivel_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContentHost == null) return;
-            MainContentHost.Content = new CombustivelView();
+            _combustivelView ??= new CombustivelView();
+            MainContentHost.Content = _combustivelView;
         }
 
         private void RbVeiculoCombustivel_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContentHost == null) return;
-            MainContentHost.Content = new VeiculoCombustivelView();
+            _veiculoCombustivelView ??= new VeiculoCombustivelView();
+            MainContentHost.Content = _veiculoCombustivelView;
         }
 
         private void RbAgendamento_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContentHost == null) return;
-            MainContentHost.Content = new  AgendamentoView();
+            _agendamentoView ??= new AgendamentoView();
+            MainContentHost.Content = _agendamentoView;
         }
 
         private void BtnFechar_Click(object sender, RoutedEventArgs e)
-        { if (MainContentHost == null) return;
+        {
+            if (MainContentHost == null) return;
             WindowHandler.Fechar(this);
         }
-
     }
 }

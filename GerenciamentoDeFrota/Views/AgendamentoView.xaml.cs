@@ -8,7 +8,7 @@ namespace GerenciamentoDeFrota.Views
 {
     public partial class AgendamentoView : UserControl
     {
-        private AgendamentoViewModel _viewModel;
+        private readonly AgendamentoViewModel _viewModel;
 
         public AgendamentoView()
         {
@@ -23,11 +23,10 @@ namespace GerenciamentoDeFrota.Views
             _viewModel = new AgendamentoViewModel(serviceAgendamento, serviceVeiculos);
             DataContext = _viewModel;
 
-            // Assina o evento do ViewModel para abrir a window modal
             _viewModel.AbrirAgendamentoRequested += AbrirCadastroAgendamento;
         }
 
-        private void AbrirCadastroAgendamento()
+        private async void AbrirCadastroAgendamento()
         {
             var context = new AppDbContext();
             var agendamentoRepository = new AgendamentoRepository(context);
@@ -36,12 +35,9 @@ namespace GerenciamentoDeFrota.Views
             var serviceVeiculos = new ServiceVeiculos(veiculosRepository);
 
             var window = new CadastroAgendamentoWindow(serviceAgendamento, serviceVeiculos);
-
-            // ShowDialog() bloqueia a MainWindow até fechar
             window.ShowDialog();
 
-            // Após fechar, recarrega calendário e slots do dia
-            _viewModel.CarregarDados();
+            await _viewModel.CarregarDadosAsync();
         }
     }
 }

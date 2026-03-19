@@ -56,7 +56,6 @@ namespace GerenciamentoDeFrota.ViewModels
         public ObservableCollection<AgendamentoSlot> Slots { get; } = new();
         #endregion
 
-        // Evento para o code-behind abrir a window modal
         public event Action? AbrirAgendamentoRequested;
 
         public AgendamentoViewModel(
@@ -66,44 +65,44 @@ namespace GerenciamentoDeFrota.ViewModels
             _serviceAgendamento = serviceAgendamento ?? throw new ArgumentNullException(nameof(serviceAgendamento));
             _serviceVeiculos = serviceVeiculos ?? throw new ArgumentNullException(nameof(serviceVeiculos));
 
-            MesAnteriorCommand = new SimpleRelayCommand(IrMesAnterior);
-            ProximoMesCommand = new SimpleRelayCommand(IrProximoMes);
-            SelecionarDiaCommand = new RelayCommands<DiaCalendario>(SelecionarDia);
+            MesAnteriorCommand = new SimpleRelayCommand(async () => await IrMesAnteriorAsync());
+            ProximoMesCommand = new SimpleRelayCommand(async () => await IrProximoMesAsync());
+            SelecionarDiaCommand = new RelayCommands<DiaCalendario>(async d => await SelecionarDiaAsync(d));
             NovoAgendamentoCommand = new SimpleRelayCommand(AbrirAgendamento);
 
-            CarregarDados();
+            _ = CarregarDadosAsync();
         }
 
         #region Métodos públicos
-        public void CarregarDados()
+        public async Task CarregarDadosAsync()
         {
-            GerarGradeMensal();
-            CarregarSlots();
+            await GerarGradeMensalAsync();
+            await CarregarSlotsAsync();
         }
         #endregion
 
         #region Navegação de mês
-        private void IrMesAnterior()
+        private async Task IrMesAnteriorAsync()
         {
             _mesAtual = _mesAtual.AddMonths(-1);
-            GerarGradeMensal();
-            CarregarSlots();
+            await GerarGradeMensalAsync();
+            await CarregarSlotsAsync();
         }
 
-        private void IrProximoMes()
+        private async Task IrProximoMesAsync()
         {
             _mesAtual = _mesAtual.AddMonths(1);
-            GerarGradeMensal();
-            CarregarSlots();
+            await GerarGradeMensalAsync();
+            await CarregarSlotsAsync();
         }
         #endregion
 
         #region Calendário
-        private void GerarGradeMensal()
+        private async Task GerarGradeMensalAsync()
         {
             MesAnoAtual = _mesAtual.ToString("MMMM yyyy").ToUpper();
 
-            var agendamentos = _serviceAgendamento.ListarAgendamentos();
+            var agendamentos = await _serviceAgendamento.ListarAgendamentosAsync();
             var diasComAgendamento = agendamentos
                 .Where(a => a.DataAgendamento.HasValue)
                 .Select(a => a.DataAgendamento!.Value.Date)
@@ -111,11 +110,9 @@ namespace GerenciamentoDeFrota.ViewModels
 
             DiasDoMes.Clear();
 
-            // Primeiro dia do mês e seu dia da semana (0=Dom)
             int primeiroDiaSemana = (int)_mesAtual.DayOfWeek;
             int diasNoMes = DateTime.DaysInMonth(_mesAtual.Year, _mesAtual.Month);
 
-            // Dias do mês anterior para completar a primeira semana
             var mesAnterior = _mesAtual.AddMonths(-1);
             int diasMesAnterior = DateTime.DaysInMonth(mesAnterior.Year, mesAnterior.Month);
 
@@ -125,14 +122,12 @@ namespace GerenciamentoDeFrota.ViewModels
                 DiasDoMes.Add(CriarDia(data, false, diasComAgendamento));
             }
 
-            // Dias do mês atual
             for (int d = 1; d <= diasNoMes; d++)
             {
                 var data = new DateTime(_mesAtual.Year, _mesAtual.Month, d);
                 DiasDoMes.Add(CriarDia(data, true, diasComAgendamento));
             }
 
-            // Completar até 42 células
             var mesSeguinte = _mesAtual.AddMonths(1);
             int diaExtra = 1;
             while (DiasDoMes.Count < 42)
@@ -162,21 +157,22 @@ namespace GerenciamentoDeFrota.ViewModels
             };
         }
 
-        private void SelecionarDia(DiaCalendario dia)
+        private async Task SelecionarDiaAsync(DiaCalendario dia)
         {
             _dataSelecionada = dia.Data;
-            DataSelecionadaLabel = dia.Data.ToString("dddd, dd 'de' MMMM", new System.Globalization.CultureInfo("pt-BR"));
-            GerarGradeMensal();
-            CarregarSlots();
+            DataSelecionadaLabel = dia.Data.ToString("dddd, dd 'de' MMMM",
+                new System.Globalization.CultureInfo("pt-BR"));
+            await GerarGradeMensalAsync();
+            await CarregarSlotsAsync();
         }
         #endregion
 
         #region Timeline
-        private void CarregarSlots()
+        private async Task CarregarSlotsAsync()
         {
             Slots.Clear();
 
-            var agendamentosDia = _serviceAgendamento.ListarPorData(_dataSelecionada.Date);
+            var agendamentosDia = await _serviceAgendamento.ListarPorDataAsync(_dataSelecionada.Date);
 
             for (int hora = 1; hora <= 23; hora++)
             {

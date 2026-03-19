@@ -22,24 +22,17 @@ namespace GerenciamentoDeFrota.ViewModels
         #region Tipos de Veículo
         public List<string> TiposVeiculo { get; } =
         [
-            // ── Veículos Leves ──────────────────────────────────────────────
             "Automóvel / Carro de Passeio",
             "Caminhonete (Pick-up)",
             "SUV / Utilitário Esportivo",
             "Van / Minivan",
             "Furgão",
-
-            // ── Motocicletas ─────────────────────────────────────────────────
             "Motocicleta / Moto",
             "Triciclo Motorizado",
             "Quadriciclo",
-
-            // ── Transporte Coletivo ──────────────────────────────────────────
             "Micro-ônibus",
             "Ônibus Urbano",
             "Ônibus Rodoviário",
-
-            // ── Caminhões ────────────────────────────────────────────────────
             "Caminhão Leve (até 7,5t)",
             "Caminhão Médio (7,5t a 16t)",
             "Caminhão Pesado (16t a 40t)",
@@ -52,14 +45,10 @@ namespace GerenciamentoDeFrota.ViewModels
             "Caminhão Cegonha",
             "Caminhão Plataforma / Prancha",
             "Caminhão Guincho",
-
-            // ── Máquinas Agrícolas ───────────────────────────────────────────
             "Trator Agrícola",
             "Colheitadeira / Combinada",
             "Pulverizador Autopropelido",
             "Plantadeira",
-
-            // ── Máquinas de Construção / Pesadas ─────────────────────────────
             "Trator de Esteira",
             "Escavadeira Hidráulica",
             "Retroescavadeira",
@@ -70,18 +59,12 @@ namespace GerenciamentoDeFrota.ViewModels
             "Guindaste / Munck",
             "Empilhadeira",
             "Perfuratriz / Sonda",
-
-            // ── Veículos Especiais ───────────────────────────────────────────
             "Ambulância",
             "Viatura Policial",
             "Caminhão de Bombeiros",
             "Veículo Blindado",
-
-            // ── Reboques ─────────────────────────────────────────────────────
             "Reboque",
             "Semirreboque / Carreta",
-
-            // ── Outros ───────────────────────────────────────────────────────
             "Outros"
         ];
         #endregion
@@ -124,7 +107,6 @@ namespace GerenciamentoDeFrota.ViewModels
             set { _tipo = value; OnPropertyChanged(nameof(Tipo)); }
         }
 
-        // Armazenado formatado (ex.: "1.234") — convertido para int? no Salvar
         private string _kmAtual = string.Empty;
         public string KmAtual
         {
@@ -197,7 +179,7 @@ namespace GerenciamentoDeFrota.ViewModels
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _veiculoEditando = veiculoEditando;
 
-            SalvarCommand = new SimpleRelayCommand(Salvar);
+            SalvarCommand = new SimpleRelayCommand(async () => await SalvarAsync());
             LimparCommand = new SimpleRelayCommand(Limpar);
             CancelarCommand = new SimpleRelayCommand(Cancelar);
 
@@ -205,7 +187,7 @@ namespace GerenciamentoDeFrota.ViewModels
                 CarregarFormulario(_veiculoEditando);
         }
 
-        private void Salvar()
+        private async Task SalvarAsync()
         {
             try
             {
@@ -218,7 +200,6 @@ namespace GerenciamentoDeFrota.ViewModels
                 entity.Renavam = Renavam;
                 entity.Tipo = Tipo;
 
-                // Remove separadores de milhar antes de parsear
                 var kmDigits = KmAtual.Replace(".", string.Empty);
                 entity.KmAtual = int.TryParse(kmDigits, out var km) ? km : null;
 
@@ -231,7 +212,7 @@ namespace GerenciamentoDeFrota.ViewModels
                 entity.Ativo = Ativo;
                 entity.DataCriacao = entity.DataCriacao ?? DateTime.UtcNow;
 
-                _service.SalvarVeiculo(entity);
+                await _service.SalvarVeiculoAsync(entity);
                 SalvoComSucesso?.Invoke();
             }
             catch (GerenciamentoDeFrotaExceptions ex)
@@ -265,7 +246,6 @@ namespace GerenciamentoDeFrota.ViewModels
             Renavam = v.Renavam ?? string.Empty;
             Tipo = v.Tipo;
 
-            // Formata o KM com separador de milhar pt-BR ao carregar
             KmAtual = v.KmAtual.HasValue
                 ? v.KmAtual.Value.ToString("N0", new CultureInfo("pt-BR"))
                 : string.Empty;

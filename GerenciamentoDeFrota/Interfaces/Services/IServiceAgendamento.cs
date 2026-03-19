@@ -4,10 +4,10 @@ namespace GerenciamentoDeFrota.Interfaces.Services
 {
     public interface IServiceAgendamento
     {
-        List<AgendamentoManutencao> ListarAgendamentos();
-        List<AgendamentoManutencao> ListarPorData(DateTime data);
-        AgendamentoManutencao? RecuperarPorId(long id);
-        void SalvarAgendamento(AgendamentoManutencao agendamento);
-        void DeletarAgendamento(long id);
+        Task<List<AgendamentoManutencao>> ListarAgendamentosAsync();
+        Task<List<AgendamentoManutencao>> ListarPorDataAsync(DateTime data);
+        Task<AgendamentoManutencao?> RecuperarPorIdAsync(long id);
+        Task SalvarAgendamentoAsync(AgendamentoManutencao agendamento);
+        Task DeletarAgendamentoAsync(long id);
     }
 }

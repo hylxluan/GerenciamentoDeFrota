@@ -15,57 +15,46 @@ namespace GerenciamentoDeFrota.Data.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public List<AgendamentoManutencao> GetAgendamentos()
-        {
-            return _context.AgendamentosManutencao
+        public async Task<List<AgendamentoManutencao>> GetAgendamentosAsync() =>
+            await _context.AgendamentosManutencao
                 .Include(a => a.Veiculo)
                 .OrderBy(a => a.DataAgendamento)
                 .ThenBy(a => a.HorarioAgendamento)
-                .ToList();
-        }
+                .ToListAsync();
 
-        public List<AgendamentoManutencao> GetAgendamentosPorData(DateTime data)
-        {
-            return _context.AgendamentosManutencao
+        public async Task<List<AgendamentoManutencao>> GetAgendamentosPorDataAsync(DateTime data) =>
+            await _context.AgendamentosManutencao
                 .Include(a => a.Veiculo)
                 .Where(a => a.DataAgendamento.HasValue &&
                             a.DataAgendamento.Value.Date == data.Date)
                 .OrderBy(a => a.HorarioAgendamento)
-                .ToList();
-        }
+                .ToListAsync();
 
-        public AgendamentoManutencao? GetAgendamentoById(long id)
-        {
-            return _context.AgendamentosManutencao
+        public async Task<AgendamentoManutencao?> GetAgendamentoByIdAsync(long id) =>
+            await _context.AgendamentosManutencao
                 .Include(a => a.Veiculo)
-                .FirstOrDefault(a => a.Id == id);
-        }
+                .FirstOrDefaultAsync(a => a.Id == id);
 
-        public void AddAgendamento(AgendamentoManutencao agendamento)
+        public async Task AddAgendamentoAsync(AgendamentoManutencao agendamento)
         {
-            if (agendamento == null)
-                throw new ArgumentNullException(nameof(agendamento));
-
             _context.AgendamentosManutencao.Add(agendamento);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateAgendamento(AgendamentoManutencao agendamento)
+        public async Task UpdateAgendamentoAsync(AgendamentoManutencao agendamento)
         {
-            if (agendamento == null)
-                throw new ArgumentNullException(nameof(agendamento));
-
             _context.AgendamentosManutencao.Update(agendamento);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteAgendamento(long id)
+        public async Task DeleteAgendamentoAsync(long id)
         {
-            var registro = _context.AgendamentosManutencao.FirstOrDefault(a => a.Id == id)
-                ?? throw new RegisterNotFoundException(string.Empty);
+            var registro = await _context.AgendamentosManutencao
+                               .FirstOrDefaultAsync(a => a.Id == id)
+                           ?? throw new RegisterNotFoundException(string.Empty);
 
             _context.AgendamentosManutencao.Remove(registro);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

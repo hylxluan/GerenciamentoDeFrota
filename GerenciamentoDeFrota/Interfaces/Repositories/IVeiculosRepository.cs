@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GerenciamentoDeFrota.Data.Models;
+﻿using GerenciamentoDeFrota.Data.Models;
+
 namespace GerenciamentoDeFrota.Interfaces.Repositories
 {
     public interface IVeiculosRepository
     {
-        List<Veiculos> GetVeiculos();
-        Veiculos? GetVeiculoById(long id);
-
-        void AddVeiculo(Veiculos veiculo);
-        void UpdateVeiculo(Veiculos veiculo);
-        void DeleteVeiculo(long id);
+        Task<List<Veiculos>> GetVeiculosAsync();
+        Task<Veiculos?> GetVeiculoByIdAsync(long id);
+        Task AddVeiculoAsync(Veiculos veiculo);
+        Task UpdateVeiculoAsync(Veiculos veiculo);
+        Task DeleteVeiculoAsync(long id);
     }
 }

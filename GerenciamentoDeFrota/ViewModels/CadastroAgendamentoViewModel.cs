@@ -76,27 +76,28 @@ namespace GerenciamentoDeFrota.ViewModels
             _serviceAgendamento = serviceAgendamento ?? throw new ArgumentNullException(nameof(serviceAgendamento));
             _serviceVeiculos = serviceVeiculos ?? throw new ArgumentNullException(nameof(serviceVeiculos));
 
-            SalvarCommand = new SimpleRelayCommand(Salvar);
+            SalvarCommand = new SimpleRelayCommand(async () => await SalvarAsync());
             LimparCommand = new SimpleRelayCommand(Limpar);
             CancelarCommand = new SimpleRelayCommand(Cancelar);
 
-            CarregarVeiculos();
+            // async void aceitável aqui — é chamada de inicialização, não um command
+            _ = CarregarVeiculosAsync();
         }
 
-        private void CarregarVeiculos()
+        private async Task CarregarVeiculosAsync()
         {
+            var lista = await _serviceVeiculos.ListarVeiculosAsync();
             Veiculos.Clear();
-            foreach (var v in _serviceVeiculos.ListarVeiculos())
+            foreach (var v in lista)
                 Veiculos.Add(v);
         }
 
-        private void Salvar()
+        private async Task SalvarAsync()
         {
             try
             {
                 MensagemErro = string.Empty;
 
-                // Converte horário "HH:mm" para DateTime
                 DateTime? horarioParsed = null;
                 if (!string.IsNullOrWhiteSpace(Horario) &&
                     TimeSpan.TryParse(Horario, out var ts))
@@ -114,7 +115,7 @@ namespace GerenciamentoDeFrota.ViewModels
                     DataCriacao = DateTime.UtcNow
                 };
 
-                _serviceAgendamento.SalvarAgendamento(entity);
+                await _serviceAgendamento.SalvarAgendamentoAsync(entity);
                 SalvoComSucesso?.Invoke();
             }
             catch (GerenciamentoDeFrotaExceptions ex)

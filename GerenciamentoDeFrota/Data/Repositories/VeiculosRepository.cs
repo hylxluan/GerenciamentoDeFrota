@@ -2,9 +2,7 @@
 using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Exceptions.CustomExceptions;
 using GerenciamentoDeFrota.Interfaces.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace GerenciamentoDeFrota.Data.Repositories
 {
@@ -12,42 +10,44 @@ namespace GerenciamentoDeFrota.Data.Repositories
     {
         private readonly AppDbContext _context;
 
-        public VeiculosRepository(AppDbContext context) 
-        { 
-            this._context = context;
-        } 
-
-        public void AddVeiculo(Veiculos veiculo)
+        public VeiculosRepository(AppDbContext context)
         {
-            this._context.Veiculos.Add(veiculo);
-            this._context.SaveChanges();
+            _context = context;
         }
 
-        public void DeleteVeiculo(long id)
+        public async Task<List<Veiculos>> GetVeiculosAsync() =>
+            await _context.Veiculos
+                          .OrderByDescending(v => v.DataCriacao)
+                          .ToListAsync();
+
+        public async Task<Veiculos?> GetVeiculoByIdAsync(long id) =>
+            await _context.Veiculos.FirstOrDefaultAsync(e => e.Id == id);
+
+        public async Task AddVeiculoAsync(Veiculos veiculo)
         {
-            var entity = GetVeiculoById(id);
+            _context.Veiculos.Add(veiculo);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateVeiculoAsync(Veiculos veiculo)
+        {
+            _context.Veiculos.Update(veiculo);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteVeiculoAsync(long id)
+        {
+            var entity = await GetVeiculoByIdAsync(id);
+
             if (entity != null)
             {
-                this._context.Veiculos.Remove(entity);
-                this._context.SaveChanges();
-
+                _context.Veiculos.Remove(entity);
+                await _context.SaveChangesAsync();
             }
-            else 
+            else
             {
                 throw new RegisterNotFoundException("Veículo não encontrado para exclusão!");
             }
-        }
-
-        public Veiculos? GetVeiculoById(long id) => 
-            this._context.Veiculos.FirstOrDefault(e => e.Id == id);
-
-        public List<Veiculos> GetVeiculos() => 
-            this._context.Veiculos.OrderByDescending(v => v.DataCriacao).ToList();
-
-        public void UpdateVeiculo(Veiculos veiculo)
-        {
-            this._context.Veiculos.Update(veiculo);
-            this._context.SaveChanges();
         }
     }
 }

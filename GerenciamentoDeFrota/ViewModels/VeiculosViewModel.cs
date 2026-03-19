@@ -35,7 +35,12 @@ namespace GerenciamentoDeFrota.ViewModels
         public string FiltroPlaca
         {
             get => _filtroPlaca;
-            set { _filtroPlaca = value; OnPropertyChanged(nameof(FiltroPlaca)); AplicarFiltro(); }
+            set
+            {
+                _filtroPlaca = value;
+                OnPropertyChanged(nameof(FiltroPlaca));
+                AplicarFiltro();
+            }
         }
         #endregion
 
@@ -55,26 +60,24 @@ namespace GerenciamentoDeFrota.ViewModels
         }
         #endregion
 
+        #region Eventos para o code-behind
+        public event Action? AbrirCadastroRequested;
+        #endregion
+
         public VeiculosViewModel(IServiceVeiculos service) : base()
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
 
             NovoVeiculoCommand = new SimpleRelayCommand(AbrirCadastro);
-            DeletarCommand = new SimpleRelayCommand(Deletar);
+            DeletarCommand = new SimpleRelayCommand(async () => await DeletarAsync());
 
-            CarregarLista();
+            _ = CarregarListaAsync();
         }
 
         #region Ações
-        private void AbrirCadastro()
-        {
-            // A View chama esse command e abre a window modal
-            // A abertura real é feita no code-behind da VeiculosView
-            // via AbrirCadastroRequested event
-            AbrirCadastroRequested?.Invoke();
-        }
+        private void AbrirCadastro() => AbrirCadastroRequested?.Invoke();
 
-        private void Deletar()
+        private async Task DeletarAsync()
         {
             try
             {
@@ -86,8 +89,8 @@ namespace GerenciamentoDeFrota.ViewModels
                     return;
                 }
 
-                _service.DeletarVeiculo(Selecionado.Id);
-                CarregarLista();
+                await _service.DeletarVeiculoAsync(Selecionado.Id);
+                await CarregarListaAsync();
                 Selecionado = null;
                 MensagemSucesso = "Veículo removido com sucesso!";
             }
@@ -103,9 +106,9 @@ namespace GerenciamentoDeFrota.ViewModels
         #endregion
 
         #region Métodos auxiliares
-        public void CarregarLista()
+        public async Task CarregarListaAsync()
         {
-            _todosVeiculos = _service.ListarVeiculos();
+            _todosVeiculos = await _service.ListarVeiculosAsync();
             AplicarFiltro();
         }
 
@@ -129,11 +132,6 @@ namespace GerenciamentoDeFrota.ViewModels
             MensagemErro = string.Empty;
             MensagemSucesso = string.Empty;
         }
-        #endregion
-
-        #region Eventos para o code-behind
-        // A View assina esse evento para abrir a Window modal
-        public event Action? AbrirCadastroRequested;
         #endregion
     }
 }

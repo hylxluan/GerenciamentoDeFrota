@@ -14,39 +14,40 @@ namespace GerenciamentoDeFrota.Data.Services
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public List<AgendamentoManutencao> ListarAgendamentos() =>
-            _repository.GetAgendamentos();
+        public async Task<List<AgendamentoManutencao>> ListarAgendamentosAsync() =>
+            await _repository.GetAgendamentosAsync();
 
-        public List<AgendamentoManutencao> ListarPorData(DateTime data) =>
-            _repository.GetAgendamentosPorData(data);
+        public async Task<List<AgendamentoManutencao>> ListarPorDataAsync(DateTime data) =>
+            await _repository.GetAgendamentosPorDataAsync(data);
 
-        public AgendamentoManutencao? RecuperarPorId(long id) =>
-            _repository.GetAgendamentoById(id) ?? throw new RegisterNotFoundException(string.Empty);
+        public async Task<AgendamentoManutencao?> RecuperarPorIdAsync(long id) =>
+            await _repository.GetAgendamentoByIdAsync(id)
+            ?? throw new RegisterNotFoundException(string.Empty);
 
-        public void SalvarAgendamento(AgendamentoManutencao agendamento)
+        public async Task SalvarAgendamentoAsync(AgendamentoManutencao agendamento)
         {
-            if (agendamento == null)
+            if (agendamento is null)
                 throw new ArgumentNullException(nameof(agendamento));
 
             if (agendamento.VeiculoId == 0)
                 throw new ErrorOnValidationException("Selecione um veículo para o agendamento!");
 
-            if (agendamento.DataAgendamento == null)
+            if (agendamento.DataAgendamento is null)
                 throw new ErrorOnValidationException("A data do agendamento é obrigatória!");
 
-            if (agendamento.HorarioAgendamento == null)
+            if (agendamento.HorarioAgendamento is null)
                 throw new ErrorOnValidationException("O horário do agendamento é obrigatório!");
 
             if (string.IsNullOrWhiteSpace(agendamento.Servico))
                 throw new ErrorOnValidationException("O serviço a realizar é obrigatório!");
 
             if (agendamento.Id == 0)
-                _repository.AddAgendamento(agendamento);
+                await _repository.AddAgendamentoAsync(agendamento);
             else
-                _repository.UpdateAgendamento(agendamento);
+                await _repository.UpdateAgendamentoAsync(agendamento);
         }
 
-        public void DeletarAgendamento(long id) =>
-            _repository.DeleteAgendamento(id);
+        public async Task DeletarAgendamentoAsync(long id) =>
+            await _repository.DeleteAgendamentoAsync(id);
     }
 }

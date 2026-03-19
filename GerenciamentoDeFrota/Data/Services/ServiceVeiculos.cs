@@ -14,14 +14,16 @@ namespace GerenciamentoDeFrota.Data.Services
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public List<Veiculos> ListarVeiculos() => _repository.GetVeiculos();
+        public async Task<List<Veiculos>> ListarVeiculosAsync() =>
+            await _repository.GetVeiculosAsync();
 
-        public Veiculos? RecuperarVeiculoById(long id)
+        public async Task<Veiculos?> RecuperarVeiculoByIdAsync(long id)
         {
-            return _repository.GetVeiculoById(id) ?? throw new RegisterNotFoundException(string.Empty);
+            return await _repository.GetVeiculoByIdAsync(id)
+                ?? throw new RegisterNotFoundException("Veículo não encontrado!");
         }
 
-        public void SalvarVeiculo(Veiculos veiculo)
+        public async Task SalvarVeiculoAsync(Veiculos veiculo)
         {
             if (veiculo == null)
                 throw new ArgumentNullException(nameof(veiculo));
@@ -36,11 +38,12 @@ namespace GerenciamentoDeFrota.Data.Services
                 throw new ErrorOnValidationException("O modelo do veículo é obrigatório!");
 
             if (veiculo.Id == 0)
-                _repository.AddVeiculo(veiculo);
+                await _repository.AddVeiculoAsync(veiculo);
             else
-                _repository.UpdateVeiculo(veiculo);
+                await _repository.UpdateVeiculoAsync(veiculo);
         }
 
-        public void DeletarVeiculo(long id) => _repository.DeleteVeiculo(id);
+        public async Task DeletarVeiculoAsync(long id) =>
+            await _repository.DeleteVeiculoAsync(id);
     }
 }

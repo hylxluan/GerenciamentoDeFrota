@@ -15,6 +15,7 @@ namespace GerenciamentoDeFrota.ViewModels
 
         #region Commands
         public ICommand NovoVeiculoCommand { get; set; }
+        public ICommand EditarCommand { get; set; }
         public ICommand DeletarCommand { get; set; }
         #endregion
 
@@ -62,6 +63,7 @@ namespace GerenciamentoDeFrota.ViewModels
 
         #region Eventos para o code-behind
         public event Action? AbrirCadastroRequested;
+        public event Action<Veiculos>? EditarRequested;
         #endregion
 
         public VeiculosViewModel(IServiceVeiculos service) : base()
@@ -69,6 +71,7 @@ namespace GerenciamentoDeFrota.ViewModels
             _service = service ?? throw new ArgumentNullException(nameof(service));
 
             NovoVeiculoCommand = new SimpleRelayCommand(AbrirCadastro);
+            EditarCommand = new SimpleRelayCommand(Editar);
             DeletarCommand = new SimpleRelayCommand(async () => await DeletarAsync());
 
             _ = CarregarListaAsync();
@@ -77,13 +80,24 @@ namespace GerenciamentoDeFrota.ViewModels
         #region Ações
         private void AbrirCadastro() => AbrirCadastroRequested?.Invoke();
 
+        private void Editar()
+        {
+            if (Selecionado is null)
+            {
+                MensagemErro = "Selecione um veículo para editar.";
+                return;
+            }
+            LimparMensagens();
+            EditarRequested?.Invoke(Selecionado);
+        }
+
         private async Task DeletarAsync()
         {
             try
             {
                 LimparMensagens();
 
-                if (Selecionado == null)
+                if (Selecionado is null)
                 {
                     MensagemErro = "Selecione um veículo para deletar.";
                     return;
@@ -119,7 +133,7 @@ namespace GerenciamentoDeFrota.ViewModels
             var lista = string.IsNullOrWhiteSpace(FiltroPlaca)
                 ? _todosVeiculos
                 : _todosVeiculos
-                    .Where(v => v.Placa != null &&
+                    .Where(v => v.Placa is not null &&
                                 v.Placa.Contains(FiltroPlaca, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 

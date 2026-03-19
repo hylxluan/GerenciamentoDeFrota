@@ -17,6 +17,7 @@ namespace GerenciamentoDeFrota.ViewModels
         public ICommand SalvarCommand { get; set; }
         public ICommand LimparCommand { get; set; }
         public ICommand CancelarCommand { get; set; }
+        public ICommand DeletarCommand { get; set; }
         #endregion
 
         #region Tipos de Veículo
@@ -67,6 +68,15 @@ namespace GerenciamentoDeFrota.ViewModels
             "Semirreboque / Carreta",
             "Outros"
         ];
+        #endregion
+
+        #region Modo edição
+        private bool _emModoEdicao;
+        public bool EmModoEdicao
+        {
+            get => _emModoEdicao;
+            set { _emModoEdicao = value; OnPropertyChanged(nameof(EmModoEdicao)); }
+        }
         #endregion
 
         #region Fields
@@ -173,17 +183,20 @@ namespace GerenciamentoDeFrota.ViewModels
 
         public event Action? SalvoComSucesso;
         public event Action? CancelamentoSolicitado;
+        public event Action? DeletarSolicitado;  // code-behind exibe o MessageBox
 
         public CadastroVeiculoViewModel(IServiceVeiculos service, Veiculos? veiculoEditando = null) : base()
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _veiculoEditando = veiculoEditando;
+            EmModoEdicao = veiculoEditando is not null;
 
             SalvarCommand = new SimpleRelayCommand(async () => await SalvarAsync());
             LimparCommand = new SimpleRelayCommand(Limpar);
             CancelarCommand = new SimpleRelayCommand(Cancelar);
+            DeletarCommand = new SimpleRelayCommand(() => DeletarSolicitado?.Invoke());
 
-            if (_veiculoEditando != null)
+            if (_veiculoEditando is not null)
                 CarregarFormulario(_veiculoEditando);
         }
 
@@ -228,6 +241,7 @@ namespace GerenciamentoDeFrota.ViewModels
         private void Limpar()
         {
             _veiculoEditando = null;
+            EmModoEdicao = false;
             Fabricante = Modelo = Placa = Renavam = AnoModelo =
             AnoFabricacao = MesEmplacamento = Cor = Observacoes = KmAtual = string.Empty;
             Tipo = null;
@@ -237,6 +251,8 @@ namespace GerenciamentoDeFrota.ViewModels
         }
 
         private void Cancelar() => CancelamentoSolicitado?.Invoke();
+
+        public long GetIdEditando() => _veiculoEditando?.Id ?? 0;
 
         private void CarregarFormulario(Veiculos v)
         {

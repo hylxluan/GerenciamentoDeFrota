@@ -1,4 +1,5 @@
 ﻿using GerenciamentoDeFrota.Configs;
+using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Data.Repositories;
 using GerenciamentoDeFrota.Data.Services;
 using GerenciamentoDeFrota.ViewModels;
@@ -22,19 +23,31 @@ namespace GerenciamentoDeFrota.Views
             DataContext = _viewModel;
 
             _viewModel.AbrirCadastroRequested += AbrirCadastroVeiculo;
+            _viewModel.EditarRequested += AbrirEdicaoVeiculo;
         }
 
-        // async void é correto aqui — é um event handler
         private async void AbrirCadastroVeiculo()
+        {
+            var service = CriarService();
+            var window = new CadastroVeiculoWindow(service);
+            window.ShowDialog();
+            await _viewModel.CarregarListaAsync();
+        }
+
+        private async void AbrirEdicaoVeiculo(Veiculos veiculo)
+        {
+            var service = CriarService();
+            var window = new CadastroVeiculoWindow(service, veiculo);
+            window.ShowDialog();
+            await _viewModel.CarregarListaAsync();
+        }
+
+        // Evita repetir a instanciação em dois lugares
+        private static ServiceVeiculos CriarService()
         {
             var context = new AppDbContext();
             var repository = new VeiculosRepository(context);
-            var service = new ServiceVeiculos(repository);
-
-            var window = new CadastroVeiculoWindow(service);
-            window.ShowDialog();
-
-            await _viewModel.CarregarListaAsync();
+            return new ServiceVeiculos(repository);
         }
     }
 }

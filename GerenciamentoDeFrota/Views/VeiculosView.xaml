@@ -91,35 +91,38 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="240"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Text="Lista de Veículos"
-                                       FontSize="14" FontWeight="SemiBold"
-                                       Foreground="{StaticResource TextStrong}"/>
+                   FontSize="14" FontWeight="SemiBold"
+                   Foreground="{StaticResource TextStrong}"/>
                             <TextBlock Text="Selecione um item para editar ou deletar."
-                                       Margin="0,4,0,0" FontSize="12"
-                                       Foreground="{StaticResource TextSoft}"/>
+                   Margin="0,4,0,0" FontSize="12"
+                   Foreground="{StaticResource TextSoft}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Margin="0,0,12,0">
                             <TextBlock Text="Filtrar por Placa" Style="{StaticResource FieldLabel}"/>
                             <TextBox Text="{Binding FiltroPlaca, UpdateSourceTrigger=PropertyChanged}"
-                                     Style="{StaticResource ModernTextBox}"/>
+                 Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
 
+                        <!-- Novo Veículo -->
                         <Button Grid.Column="2"
-                                Command="{Binding NovoVeiculoCommand}"
-                                Height="40" Cursor="Hand"
-                                Background="#16A34A" BorderThickness="0"
-                                VerticalAlignment="Bottom">
+            Command="{Binding NovoVeiculoCommand}"
+            Height="40" Cursor="Hand"
+            Background="#16A34A" BorderThickness="0"
+            VerticalAlignment="Bottom" Margin="0,0,8,0">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border CornerRadius="10" Background="{TemplateBinding Background}">
                                         <StackPanel Orientation="Horizontal" Margin="16,0">
                                             <materialDesign:PackIcon Kind="Plus" Width="16" Height="16"
-                                                                     Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                            <TextBlock Text="Novo Veículo" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
+                                                 Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <TextBlock Text="Novo" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>
                                     <ControlTemplate.Triggers>
@@ -130,7 +133,56 @@
                                 </ControlTemplate>
                             </Button.Template>
                         </Button>
+
+                        <!-- Editar -->
+                        <Button Grid.Column="3"
+            Command="{Binding EditarCommand}"
+            Height="40" Cursor="Hand"
+            Background="#2563EB" BorderThickness="0"
+            VerticalAlignment="Bottom" Margin="0,0,8,0">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                                        <StackPanel Orientation="Horizontal" Margin="16,0">
+                                            <materialDesign:PackIcon Kind="Pencil" Width="16" Height="16"
+                                                 Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <TextBlock Text="Editar" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#1D4ED8"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
+                        <!-- Deletar -->
+                        <Button Grid.Column="4"
+            Command="{Binding DeletarCommand}"
+            Height="40" Cursor="Hand"
+            Background="#DC2626" BorderThickness="0"
+            VerticalAlignment="Bottom">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                                        <StackPanel Orientation="Horizontal" Margin="16,0">
+                                            <materialDesign:PackIcon Kind="TrashCanOutline" Width="16" Height="16"
+                                                 Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <TextBlock Text="Deletar" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#B91C1C"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
                     </Grid>
+
 
                     <!-- Mensagens -->
                     <StackPanel Grid.Row="2">

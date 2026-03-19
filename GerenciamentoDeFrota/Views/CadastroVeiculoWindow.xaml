@@ -15,6 +15,7 @@
         <SolidColorBrush x:Key="TextStrong" Color="#1F2A37"/>
         <SolidColorBrush x:Key="TextSoft"   Color="#6B7280"/>
         <SolidColorBrush x:Key="LineBrush"  Color="#E5E7EB"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
         <Style x:Key="ModernTextBox" TargetType="TextBox">
             <Setter Property="Height" Value="32"/>
@@ -253,6 +254,30 @@
 
             <!-- Botões -->
             <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Command="{Binding DeletarCommand}"
+                        Height="40" Cursor="Hand"
+                        Background="#DC2626" BorderThickness="0"
+                        Margin="0,0,8,0"
+                        Visibility="{Binding EmModoEdicao, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                                <StackPanel Orientation="Horizontal" Margin="16,0">
+                                    <materialDesign:PackIcon Kind="TrashCanOutline" Width="16" Height="16"
+                                             Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Deletar" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#B91C1C"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+
 
                 <Button Command="{Binding CancelarCommand}"
                         Height="40" Cursor="Hand"

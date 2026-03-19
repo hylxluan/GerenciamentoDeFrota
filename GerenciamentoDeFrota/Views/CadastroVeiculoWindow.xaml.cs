@@ -9,18 +9,43 @@ namespace GerenciamentoDeFrota.Views
 {
     public partial class CadastroVeiculoWindow : Window
     {
-        public CadastroVeiculoWindow(IServiceVeiculos serviceVeiculos, Veiculos? veiculoEditando = null)
+        private readonly IServiceVeiculos _service;
+        private readonly CadastroVeiculoViewModel _vm;
+
+        public CadastroVeiculoWindow(IServiceVeiculos service, Veiculos? veiculoEditando = null)
         {
             InitializeComponent();
-            CadastroVeiculoViewModel viewModel = new CadastroVeiculoViewModel(serviceVeiculos, veiculoEditando);
-            viewModel.SalvoComSucesso += () =>
-            {
-                MessageBox.Show("Veículo salvo com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
-                WindowHandler.Fechar(this);
-            };
-            viewModel.CancelamentoSolicitado += () => WindowHandler.Fechar(this);
 
-            DataContext = viewModel;
+            _service = service;
+            _vm = new CadastroVeiculoViewModel(service, veiculoEditando);
+
+            _vm.SalvoComSucesso += () => WindowHandler.Fechar(this);
+            _vm.CancelamentoSolicitado += () => WindowHandler.Fechar(this);
+            _vm.DeletarSolicitado += ConfirmarEDeletar;
+
+            DataContext = _vm;
+        }
+
+        private async void ConfirmarEDeletar()
+        {
+            var resultado = MessageBox.Show(
+                "Tem certeza que deseja excluir este veículo?\nEssa ação não pode ser desfeita.",
+                "Confirmar Exclusão",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (resultado is not MessageBoxResult.Yes) return;
+
+            try
+            {
+                await _service.DeletarVeiculoAsync(_vm.GetIdEditando());
+                WindowHandler.Fechar(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao deletar: {ex.Message}", "Erro",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)

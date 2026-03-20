@@ -17,15 +17,13 @@ namespace GerenciamentoDeFrota.Data.Services
         public async Task<List<Veiculos>> ListarVeiculosAsync() =>
             await _repository.GetVeiculosAsync();
 
-        public async Task<Veiculos?> RecuperarVeiculoByIdAsync(long id)
-        {
-            return await _repository.GetVeiculoByIdAsync(id)
-                ?? throw new RegisterNotFoundException("Veículo não encontrado!");
-        }
+        public async Task<Veiculos?> RecuperarVeiculoByIdAsync(long id) =>
+            await _repository.GetVeiculoByIdAsync(id)
+            ?? throw new RegisterNotFoundException("Veículo não encontrado!");
 
         public async Task SalvarVeiculoAsync(Veiculos veiculo)
         {
-            if (veiculo == null)
+            if (veiculo is null)
                 throw new ArgumentNullException(nameof(veiculo));
 
             if (string.IsNullOrWhiteSpace(veiculo.Placa))
@@ -43,7 +41,18 @@ namespace GerenciamentoDeFrota.Data.Services
                 await _repository.UpdateVeiculoAsync(veiculo);
         }
 
-        public async Task DeletarVeiculoAsync(long id) =>
+        public async Task DeletarVeiculoAsync(long id)
+        {
+
+            var totalVinculos = await _repository.ContarVinculosAsync(id);
+
+            if (totalVinculos > 0)
+                throw new VeiculoPossuiVinculosException(totalVinculos);
+
             await _repository.DeleteVeiculoAsync(id);
+        }
+
+        public async Task DeletarVeiculoComVinculosAsync(long id) =>
+            await _repository.DeletarComVinculosAsync(id);
     }
 }

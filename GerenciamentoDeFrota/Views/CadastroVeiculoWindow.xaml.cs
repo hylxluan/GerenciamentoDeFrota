@@ -1,4 +1,5 @@
 ﻿using GerenciamentoDeFrota.Data.Models;
+using GerenciamentoDeFrota.Exceptions.CustomExceptions;
 using GerenciamentoDeFrota.Helpers;
 using GerenciamentoDeFrota.Interfaces.Services;
 using GerenciamentoDeFrota.ViewModels;
@@ -28,22 +29,45 @@ namespace GerenciamentoDeFrota.Views
 
         private async void ConfirmarEDeletar()
         {
-            var resultado = MessageBox.Show(
+
+            var confirmar = MessageBox.Show(
                 "Tem certeza que deseja excluir este veículo?\nEssa ação não pode ser desfeita.",
                 "Confirmar Exclusão",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning);
 
-            if (resultado is not MessageBoxResult.Yes) return;
+            if (confirmar is not MessageBoxResult.Yes) return;
 
             try
             {
                 await _service.DeletarVeiculoAsync(_vm.GetIdEditando());
                 WindowHandler.Fechar(this);
             }
+            catch (VeiculoPossuiVinculosException ex)
+            {
+
+                var confirmarCascata = MessageBox.Show(
+                    $"{ex.Message}\n\nDeseja excluir o veículo junto com todos os registros vinculados?\n\nEssa ação é irreversível.",
+                    "Veículo com vínculos",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (confirmarCascata is not MessageBoxResult.Yes) return;
+
+                try
+                {
+                    await _service.DeletarVeiculoComVinculosAsync(_vm.GetIdEditando());
+                    WindowHandler.Fechar(this);
+                }
+                catch (Exception innerEx)
+                {
+                    MessageBox.Show($"Erro ao excluir: {innerEx.Message}", "Erro",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao deletar: {ex.Message}", "Erro",
+                MessageBox.Show($"Erro ao excluir: {ex.Message}", "Erro",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

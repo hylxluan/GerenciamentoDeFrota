@@ -1,8 +1,10 @@
 ﻿using GerenciamentoDeFrota.Commands;
 using GerenciamentoDeFrota.Data.Models;
+using GerenciamentoDeFrota.Exceptions.CustomExceptions;
 using GerenciamentoDeFrota.Exceptions.ExceptionBase;
 using GerenciamentoDeFrota.Interfaces.Services;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace GerenciamentoDeFrota.ViewModels
@@ -103,10 +105,43 @@ namespace GerenciamentoDeFrota.ViewModels
                     return;
                 }
 
+                // 1ª confirmação
+                var confirmar = MessageBox.Show(
+                    $"Tem certeza que deseja excluir o veículo \"{Selecionado.Modelo} — {Selecionado.Placa}\"?\nEssa ação não pode ser desfeita.",
+                    "Confirmar Exclusão",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (confirmar is not MessageBoxResult.Yes) return;
+
                 await _service.DeletarVeiculoAsync(Selecionado.Id);
+
                 await CarregarListaAsync();
                 Selecionado = null;
                 MensagemSucesso = "Veículo removido com sucesso!";
+            }
+            catch (VeiculoPossuiVinculosException ex)
+            {
+                // 2ª confirmação — tem vínculos, pergunta se quer tudo
+                var confirmarCascata = MessageBox.Show(
+                    $"{ex.Message}\n\nDeseja excluir o veículo junto com todos os registros vinculados?\n\nEssa ação é irreversível.",
+                    "Veículo com vínculos",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (confirmarCascata is not MessageBoxResult.Yes) return;
+
+                try
+                {
+                    await _service.DeletarVeiculoComVinculosAsync(Selecionado!.Id);
+                    await CarregarListaAsync();
+                    Selecionado = null;
+                    MensagemSucesso = "Veículo e registros vinculados removidos com sucesso!";
+                }
+                catch (Exception innerEx)
+                {
+                    MensagemErro = $"Erro ao excluir: {innerEx.Message}";
+                }
             }
             catch (GerenciamentoDeFrotaExceptions ex)
             {

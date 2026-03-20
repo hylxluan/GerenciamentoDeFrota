@@ -9,5 +9,11 @@ namespace GerenciamentoDeFrota.Interfaces.Repositories
         Task AddVeiculoAsync(Veiculos veiculo);
         Task UpdateVeiculoAsync(Veiculos veiculo);
         Task DeleteVeiculoAsync(long id);
+
+        /// <summary>Retorna quantos agendamentos estão vinculados ao veículo.</summary>
+        Task<int> ContarVinculosAsync(long veiculoId);
+
+        /// <summary>Deleta agendamentos vinculados e depois o veículo, tudo numa transação.</summary>
+        Task DeletarComVinculosAsync(long veiculoId);
     }
 }

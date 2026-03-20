@@ -42,7 +42,7 @@ namespace GerenciamentoDeFrota.Views
             await _viewModel.CarregarListaAsync();
         }
 
-        // Evita repetir a instanciação em dois lugares
+
         private static ServiceVeiculos CriarService()
         {
             var context = new AppDbContext();

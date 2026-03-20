@@ -1,6 +1,7 @@
 ﻿using GerenciamentoDeFrota.Configs;
 using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Exceptions.CustomExceptions;
+using GerenciamentoDeFrota.Exceptions.ExceptionBase;
 using GerenciamentoDeFrota.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,18 +36,46 @@ namespace GerenciamentoDeFrota.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<int> ContarVinculosAsync(long veiculoId) =>
+            await _context.AgendamentosManutencao
+                          .CountAsync(a => a.VeiculoId == veiculoId);
+
         public async Task DeleteVeiculoAsync(long id)
         {
-            var entity = await GetVeiculoByIdAsync(id);
+            var entity = await GetVeiculoByIdAsync(id)
+                ?? throw new RegisterNotFoundException("Veículo não encontrado para exclusão!");
 
-            if (entity != null)
+            _context.Veiculos.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeletarComVinculosAsync(long veiculoId)
+        {
+            var entity = await GetVeiculoByIdAsync(veiculoId)
+                ?? throw new RegisterNotFoundException("Veículo não encontrado para exclusão!");
+
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
             {
+
+                var agendamentos = await _context.AgendamentosManutencao
+                    .Where(a => a.VeiculoId == veiculoId)
+                    .ToListAsync();
+
+                _context.AgendamentosManutencao.RemoveRange(agendamentos);
+                await _context.SaveChangesAsync();
+
+
                 _context.Veiculos.Remove(entity);
                 await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
             }
-            else
+            catch
             {
-                throw new RegisterNotFoundException("Veículo não encontrado para exclusão!");
+                await transaction.RollbackAsync();
+                throw new GerenciamentoDeFrotaExceptions();
             }
         }
     }

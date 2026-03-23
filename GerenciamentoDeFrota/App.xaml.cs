@@ -9,6 +9,22 @@ namespace GerenciamentoDeFrota
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            DispatcherUnhandledException += (s, ex) =>
+            {
+                MessageBox.Show(
+                    ex.Exception?.InnerException?.Message ?? ex.Exception?.Message,
+                    "Erro",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                ex.Handled = true;
+            };
+
+            base.OnStartup(e);
+        }
+
+
     }
 
 }

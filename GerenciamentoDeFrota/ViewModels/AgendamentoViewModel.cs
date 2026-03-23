@@ -1,7 +1,11 @@
 ﻿using GerenciamentoDeFrota.Commands;
 using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Interfaces.Services;
+using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace GerenciamentoDeFrota.ViewModels
@@ -73,7 +77,7 @@ namespace GerenciamentoDeFrota.ViewModels
             _ = CarregarDadosAsync();
         }
 
-        #region Métodos públicos
+        #region Público
         public async Task CarregarDadosAsync()
         {
             await GerarGradeMensalAsync();
@@ -160,8 +164,7 @@ namespace GerenciamentoDeFrota.ViewModels
         private async Task SelecionarDiaAsync(DiaCalendario dia)
         {
             _dataSelecionada = dia.Data;
-            DataSelecionadaLabel = dia.Data.ToString("dddd, dd 'de' MMMM",
-                new System.Globalization.CultureInfo("pt-BR"));
+            DataSelecionadaLabel = dia.Data.ToString("dddd, dd 'de' MMMM", new CultureInfo("pt-BR"));
             await GerarGradeMensalAsync();
             await CarregarSlotsAsync();
         }
@@ -189,7 +192,12 @@ namespace GerenciamentoDeFrota.ViewModels
                             TipoServico = a.Servico ?? string.Empty,
                             Fornecedor = string.Empty,
                             Responsavel = string.Empty,
-                            Cor = "#2563EB"
+                            Cor = "#2563EB",
+
+                            // ── KM agendado — exibido como badge no card da timeline
+                            KmFormatado = a.KmAtualAgendamento.HasValue
+                                ? a.KmAtualAgendamento.Value.ToString("N0", new CultureInfo("pt-BR")) + " km"
+                                : string.Empty
                         })
                         .ToList()
                 };
@@ -198,8 +206,7 @@ namespace GerenciamentoDeFrota.ViewModels
             }
 
             TotalAgendamentosDia = agendamentosDia.Count;
-            DataSelecionadaLabel = _dataSelecionada.ToString("dddd, dd 'de' MMMM",
-                new System.Globalization.CultureInfo("pt-BR"));
+            DataSelecionadaLabel = _dataSelecionada.ToString("dddd, dd 'de' MMMM", new CultureInfo("pt-BR"));
         }
         #endregion
 

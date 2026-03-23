@@ -4,437 +4,284 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              Background="Transparent">
 
-	<UserControl.Resources>
-		<SolidColorBrush x:Key="TextStrong" Color="#1F2A37"/>
-		<SolidColorBrush x:Key="TextSoft"   Color="#6B7280"/>
-		<SolidColorBrush x:Key="LineBrush"  Color="#E5E7EB"/>
-		<SolidColorBrush x:Key="CardBrush"  Color="#FFFFFF"/>
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="TextStrong" Color="#1F2A37"/>
+        <SolidColorBrush x:Key="TextSoft"   Color="#6B7280"/>
+        <SolidColorBrush x:Key="LineBrush"  Color="#E5E7EB"/>
+        <SolidColorBrush x:Key="CardBrush"  Color="#FFFFFF"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
-		<!-- Botão de nav mês (◀ ▶) -->
-		<Style x:Key="NavBtn" TargetType="Button">
-			<Setter Property="Width"           Value="30"/>
-			<Setter Property="Height"          Value="30"/>
-			<Setter Property="Background"      Value="Transparent"/>
-			<Setter Property="BorderThickness" Value="0"/>
-			<Setter Property="Cursor"          Value="Hand"/>
-			<Setter Property="FontSize"        Value="14"/>
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Button">
-						<Border Background="{TemplateBinding Background}" CornerRadius="6">
-							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-						</Border>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsMouseOver" Value="True">
-								<Setter Property="Background" Value="#F3F4F6"/>
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
+        <Style x:Key="NavBtn" TargetType="Button">
+            <Setter Property="Width"           Value="30"/>
+            <Setter Property="Height"          Value="30"/>
+            <Setter Property="Background"      Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="FontSize"        Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F3F4F6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-		<!-- Card branco arredondado -->
-		<Style x:Key="Card" TargetType="Border">
-			<Setter Property="Background"      Value="{StaticResource CardBrush}"/>
-			<Setter Property="CornerRadius"    Value="16"/>
-			<Setter Property="BorderBrush"     Value="{StaticResource LineBrush}"/>
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="Padding"         Value="16"/>
-			<Setter Property="Margin"          Value="0,0,0,14"/>
-		</Style>
-	</UserControl.Resources>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background"      Value="{StaticResource CardBrush}"/>
+            <Setter Property="CornerRadius"    Value="16"/>
+            <Setter Property="BorderBrush"     Value="{StaticResource LineBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding"         Value="16"/>
+            <Setter Property="Margin"          Value="0,0,0,14"/>
+        </Style>
+    </UserControl.Resources>
 
-	<!--
-    ════════════════════════════════════════════════
-    LAYOUT PRINCIPAL: 2 colunas
-      Col 0 (340px) → Calendário mensal completo
-      Col 1 (*)     → Timeline do dia selecionado
-    ════════════════════════════════════════════════
-    -->
-	<Grid Background="Transparent">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<!-- Título -->
-			<RowDefinition Height="*"/>
-			<!-- Conteúdo -->
-		</Grid.RowDefinitions>
+    <Grid Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-		<!-- ══ TÍTULO ══ -->
-		<StackPanel Grid.Row="0" Margin="2,2,2,14">
-			<TextBlock Text="Calendário de Manutenções"
+        <StackPanel Grid.Row="0" Margin="2,2,2,14">
+            <TextBlock Text="Calendário de Manutenções"
                        FontSize="22" FontWeight="Bold"
                        Foreground="{StaticResource TextStrong}"/>
-		</StackPanel>
+        </StackPanel>
 
-		<!-- ══ CONTEÚDO (calendário + timeline lado a lado) ══ -->
-		<Grid Grid.Row="1">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="320"/>
-				<!-- Calendário mensal -->
-				<ColumnDefinition Width="14"/>
-				<!-- Espaço -->
-				<ColumnDefinition Width="*"/>
-				<!-- Timeline -->
-			</Grid.ColumnDefinitions>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="320"/>
+                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-			<!-- ════════════════════════
-                 COL 0 — CALENDÁRIO MENSAL
-                 ════════════════════════ -->
-			<Border Grid.Column="0" Style="{StaticResource Card}" Padding="14">
-				<StackPanel>
+            <!-- ════ CALENDÁRIO MENSAL ════ -->
+            <Border Grid.Column="0" Style="{StaticResource Card}" Padding="14">
+                <StackPanel>
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="◀" Style="{StaticResource NavBtn}" Command="{Binding MesAnteriorCommand}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding MesAnoAtual}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextStrong}"/>
+                        <Button Grid.Column="2" Content="▶" Style="{StaticResource NavBtn}" Command="{Binding ProximoMesCommand}"/>
+                    </Grid>
 
-					<!-- Navegação mês/ano -->
-					<Grid Margin="0,0,0,12">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto"/>
-							<ColumnDefinition Width="*"/>
-							<ColumnDefinition Width="Auto"/>
-						</Grid.ColumnDefinitions>
+                    <UniformGrid Rows="1" Columns="7" Margin="0,0,0,4">
+                        <TextBlock Text="Dom" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
+                        <TextBlock Text="Seg" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
+                        <TextBlock Text="Ter" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
+                        <TextBlock Text="Qua" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
+                        <TextBlock Text="Qui" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
+                        <TextBlock Text="Sex" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
+                        <TextBlock Text="Sáb" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
+                    </UniformGrid>
+                    <Border Height="1" Background="{StaticResource LineBrush}" Margin="0,0,0,6"/>
 
-						<!--
-                            Binding: MesAnteriorCommand → IrMesAnterior() no ViewModel
-                        -->
-						<Button Grid.Column="0" Content="◀"
-                                Style="{StaticResource NavBtn}"
-                                Command="{Binding MesAnteriorCommand}"/>
-
-						<!--
-                            Binding: MesAnoAtual → string "MARÇO 2026"
-                        -->
-						<TextBlock Grid.Column="1"
-                                   Text="{Binding MesAnoAtual}"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   FontSize="13" FontWeight="SemiBold"
-                                   Foreground="{StaticResource TextStrong}"/>
-
-						<!--
-                            Binding: ProximoMesCommand → IrProximoMes() no ViewModel
-                        -->
-						<Button Grid.Column="2" Content="▶"
-                                Style="{StaticResource NavBtn}"
-                                Command="{Binding ProximoMesCommand}"/>
-					</Grid>
-
-					<!-- Cabeçalho dos dias da semana -->
-					<UniformGrid Rows="1" Columns="7" Margin="0,0,0,4">
-						<TextBlock Text="Dom" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
-						<TextBlock Text="Seg" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
-						<TextBlock Text="Ter" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
-						<TextBlock Text="Qua" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
-						<TextBlock Text="Qui" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
-						<TextBlock Text="Sex" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
-						<TextBlock Text="Sáb" HorizontalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSoft}"/>
-					</UniformGrid>
-
-					<!-- Linha separadora -->
-					<Border Height="1" Background="{StaticResource LineBrush}" Margin="0,0,0,6"/>
-
-					<!--
-                        ══ GRADE MENSAL (42 células = 6 semanas × 7 dias) ══
-
-                        Binding: ItemsSource="{Binding DiasDoMes}"
-                        → ObservableCollection<DiaCalendario> no ViewModel
-                        → GerarGradeMensal() preenche 42 células começando no domingo
-
-                        Cada célula binda:
-                          FundoCirculo   → cor do círculo (azul=selecionado, verde=hoje, transparente=normal)
-                          TextoNumero    → cor do número (branco se destacado, cinza se outro mês)
-                          OpacidadeCelula → dias de outro mês ficam mais apagados
-                          TemAgendamentos → bool que exibe o ponto indicador
-                          Numero         → número do dia (1-31)
-                    -->
-					<ItemsControl ItemsSource="{Binding DiasDoMes}">
-						<ItemsControl.ItemsPanel>
-							<ItemsPanelTemplate>
-								<UniformGrid Rows="6" Columns="7"/>
-							</ItemsPanelTemplate>
-						</ItemsControl.ItemsPanel>
-						<ItemsControl.ItemTemplate>
-							<DataTemplate>
-								<!--
-                                    Cada célula da grade = 1 DiaCalendario
-                                    Binding: SelecionarDiaCommand + CommandParameter={Binding}
-                                    → SelecionarDia(DiaCalendario dia) no ViewModel
-                                -->
-								<Button Background="Transparent" BorderThickness="0"
-                                        Cursor="Hand" Margin="1"
-                                        Command="{Binding DataContext.SelecionarDiaCommand,
-                                                  RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    <ItemsControl ItemsSource="{Binding DiasDoMes}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="6" Columns="7"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Background="Transparent" BorderThickness="0" Cursor="Hand" Margin="1"
+                                        Command="{Binding DataContext.SelecionarDiaCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         CommandParameter="{Binding}">
-									<Button.Template>
-										<ControlTemplate TargetType="Button">
-											<ContentPresenter/>
-										</ControlTemplate>
-									</Button.Template>
-
-									<!--
-                                        Binding: OpacidadeCelula → 1.0 mês atual, 0.4 outro mês
-                                    -->
-									<StackPanel HorizontalAlignment="Center"
-                                                Opacity="{Binding OpacidadeCelula}">
-
-										<!--
-                                            Círculo do número
-                                            Binding: FundoCirculo → "#2563EB" selecionado | "#16A34A" hoje | "Transparent" normal
-                                        -->
-										<Border Width="30" Height="30" CornerRadius="15"
-                                                Background="{Binding FundoCirculo}"
-                                                HorizontalAlignment="Center">
-											<!--
-                                                Binding: Numero → int dia do mês
-                                                Binding: TextoNumero → "#FFFFFF" destacado | "#1F2A37" normal | "#C0C0C0" outro mês
-                                            -->
-											<TextBlock Text="{Binding Numero}"
-                                                       Foreground="{Binding TextoNumero}"
-                                                       HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center"
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <ContentPresenter/>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <StackPanel HorizontalAlignment="Center" Opacity="{Binding OpacidadeCelula}">
+                                        <Border Width="30" Height="30" CornerRadius="15"
+                                                Background="{Binding FundoCirculo}" HorizontalAlignment="Center">
+                                            <TextBlock Text="{Binding Numero}" Foreground="{Binding TextoNumero}"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"
                                                        FontSize="12" FontWeight="SemiBold"/>
-										</Border>
+                                        </Border>
+                                        <Ellipse Width="5" Height="5" HorizontalAlignment="Center" Margin="0,2,0,0" Fill="#2563EB">
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding TemAgendamentos}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
 
-										<!--
-                                            Ponto indicador de agendamentos
-                                            Binding: TemAgendamentos → bool
-                                            Visível só se True (via DataTrigger)
-                                            Cor verde = tem agendamento nesse dia
-                                        -->
-										<Ellipse Width="5" Height="5"
-                                                 HorizontalAlignment="Center"
-                                                 Margin="0,2,0,0"
-                                                 Fill="#2563EB">
-											<Ellipse.Style>
-												<Style TargetType="Ellipse">
-													<Setter Property="Visibility" Value="Collapsed"/>
-													<Style.Triggers>
-														<DataTrigger Binding="{Binding TemAgendamentos}" Value="True">
-															<Setter Property="Visibility" Value="Visible"/>
-														</DataTrigger>
-													</Style.Triggers>
-												</Style>
-											</Ellipse.Style>
-										</Ellipse>
+            <!-- ════ TIMELINE DO DIA ════ -->
+            <Border Grid.Column="2" Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-									</StackPanel>
-								</Button>
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
-
-				</StackPanel>
-			</Border>
-
-			<!-- ════════════════════════
-                 COL 2 — TIMELINE DO DIA
-                 ════════════════════════ -->
-			<Border Grid.Column="2" Style="{StaticResource Card}">
-				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto"/>
-						<!-- Cabeçalho -->
-						<RowDefinition Height="8"/>
-						<RowDefinition Height="*"/>
-						<!-- Timeline -->
-					</Grid.RowDefinitions>
-
-					<!-- Cabeçalho da timeline -->
-					<Grid Grid.Row="0">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="*"/>
-							<ColumnDefinition Width="Auto"/>
-						</Grid.ColumnDefinitions>
-
-						<StackPanel Grid.Column="0">
-							<!--
-                                Binding: DataSelecionadaLabel → "Segunda-Feira, 04 De Março"
-                            -->
-							<TextBlock Text="{Binding DataSelecionadaLabel}"
-                                       FontSize="14" FontWeight="SemiBold"
-                                       Foreground="{StaticResource TextStrong}"/>
-
-							<!-- Badge com total de agendamentos do dia -->
-							<StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-								<TextBlock Text="Agendamentos do dia" FontSize="12"
-                                           Foreground="{StaticResource TextSoft}"/>
-								<!--
-                                    Binding: TotalAgendamentosDia → int soma de todos os slots
-                                    Visível só se > 0
-                                -->
-								<Border Background="#DBEAFE" CornerRadius="10"
-                                        Padding="8,2" Margin="8,0,0,0">
-									<Border.Style>
-										<Style TargetType="Border">
-											<Setter Property="Visibility" Value="Collapsed"/>
-											<Style.Triggers>
-												<DataTrigger Binding="{Binding TotalAgendamentosDia}" Value="0">
-													<Setter Property="Visibility" Value="Collapsed"/>
-												</DataTrigger>
-											</Style.Triggers>
-										</Style>
-									</Border.Style>
-									<TextBlock Text="{Binding TotalAgendamentosDia}"
-                                               Foreground="#2563EB"
-                                               FontSize="11" FontWeight="SemiBold"/>
-								</Border>
-							</StackPanel>
-						</StackPanel>
-
-						<!--
-                            Botão Agendar
-                            Binding: NovoAgendamentoCommand → você implementa com ShowDialog()
-                        -->
-						<Button Grid.Column="1"
-                                x:Name="BtnAgendar"
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{Binding DataSelecionadaLabel}"
+                                       FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextStrong}"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <TextBlock Text="Agendamentos do dia" FontSize="12" Foreground="{StaticResource TextSoft}"/>
+                                <Border Background="#DBEAFE" CornerRadius="10" Padding="8,2" Margin="8,0,0,0">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TotalAgendamentosDia}" Value="0">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding TotalAgendamentosDia}"
+                                               Foreground="#2563EB" FontSize="11" FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                        <Button Grid.Column="1" x:Name="BtnAgendar"
                                 Command="{Binding NovoAgendamentoCommand}"
-                                Height="38" Cursor="Hand"
-                                Background="#16A34A" BorderThickness="0">
-							<Button.Template>
-								<ControlTemplate TargetType="Button">
-									<Border CornerRadius="10"
-                                            Background="{TemplateBinding Background}"
-                                            Padding="14,0">
-										<StackPanel Orientation="Horizontal">
-											<materialDesign:PackIcon Kind="CalendarPlus"
-                                                                     Width="16" Height="16"
-                                                                     Foreground="White"
-                                                                     VerticalAlignment="Center"
-                                                                     Margin="0,0,6,0"/>
-											<TextBlock Text="Agendar"
-                                                       Foreground="White" FontSize="13"
-                                                       VerticalAlignment="Center"/>
-										</StackPanel>
-									</Border>
-									<ControlTemplate.Triggers>
-										<Trigger Property="IsMouseOver" Value="True">
-											<Setter Property="Background" Value="#15803D"/>
-										</Trigger>
-										<Trigger Property="IsPressed" Value="True">
-											<Setter Property="Background" Value="#166534"/>
-										</Trigger>
-									</ControlTemplate.Triggers>
-								</ControlTemplate>
-							</Button.Template>
-						</Button>
+                                Height="38" Cursor="Hand" Background="#16A34A" BorderThickness="0">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border CornerRadius="10" Background="{TemplateBinding Background}" Padding="14,0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="CalendarPlus" Width="16" Height="16"
+                                                                     Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <TextBlock Text="Agendar" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#15803D"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed"   Value="True">
+                                            <Setter Property="Background" Value="#166534"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
 
-					</Grid>
+                    <Border Grid.Row="1" Background="{StaticResource LineBrush}" Height="1" Margin="0,4"/>
 
-					<!-- Separador -->
-					<Border Grid.Row="1" Background="{StaticResource LineBrush}" Height="1" Margin="0,4"/>
+                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding Slots}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid MinHeight="48" Margin="0,0,0,1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
 
-					<!--
-                        ══ TIMELINE COM SCROLL ══
-
-                        Binding: Slots → ObservableCollection<AgendamentoSlot> no ViewModel
-                        CarregarSlots() popula de 07:00 até 20:00
-
-                        Cada slot:
-                          HoraLabel    → string "07:00"
-                          Agendamentos → List<AgendamentoManutencao>
-
-                        Cada AgendamentoManutencao:
-                          Cor          → hex automático por TipoServico
-                          HoraFormatada → "08:00"
-                          Veiculo      → "ABC-1234 — Ford Cargo"
-                          TipoServico  → "Preventiva" | "Corretiva" | "Urgência" | "Revisão"
-                          Fornecedor   → nome do fornecedor
-                          Responsavel  → nome do responsável
-                    -->
-					<ScrollViewer Grid.Row="2"
-                                  VerticalScrollBarVisibility="Auto"
-                                  HorizontalScrollBarVisibility="Disabled">
-						<ItemsControl ItemsSource="{Binding Slots}">
-							<ItemsControl.ItemTemplate>
-								<DataTemplate>
-									<Grid MinHeight="48" Margin="0,0,0,1">
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="50"/>
-											<ColumnDefinition Width="*"/>
-										</Grid.ColumnDefinitions>
-
-										<!-- HoraLabel → "07:00" -->
-										<TextBlock Grid.Column="0"
-                                                   Text="{Binding HoraLabel}"
-                                                   VerticalAlignment="Top"
-                                                   Foreground="{StaticResource TextSoft}"
+                                        <TextBlock Grid.Column="0" Text="{Binding HoraLabel}"
+                                                   VerticalAlignment="Top" Foreground="{StaticResource TextSoft}"
                                                    FontSize="11" Margin="0,6,6,0"/>
+                                        <Border Grid.Column="0" Grid.ColumnSpan="2"
+                                                BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0"
+                                                VerticalAlignment="Top" Margin="50,0,0,0"/>
 
-										<!-- Linha de separação de hora -->
-										<Border Grid.Column="0" Grid.ColumnSpan="2"
-                                                BorderBrush="{StaticResource LineBrush}"
-                                                BorderThickness="0,1,0,0"
-                                                VerticalAlignment="Top"
-                                                Margin="50,0,0,0"/>
+                                        <ItemsControl Grid.Column="1" ItemsSource="{Binding Agendamentos}" Margin="0,4,0,4">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="{Binding Cor}" CornerRadius="8"
+                                                            Padding="12,8" Margin="0,0,0,4" Cursor="Hand">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                            </Grid.ColumnDefinitions>
 
-										<!-- Cards de agendamentos do slot -->
-										<ItemsControl Grid.Column="1"
-                                                      ItemsSource="{Binding Agendamentos}"
-                                                      Margin="0,4,0,4">
-											<ItemsControl.ItemTemplate>
-												<DataTemplate>
-													<!--
-                                                        Card do agendamento
-                                                        Binding: Cor → "#DC2626" Urgência | "#F59E0B" Corretiva
-                                                                       "#16A34A" Preventiva | "#2563EB" Revisão
-                                                    -->
-													<Border Background="{Binding Cor}"
-                                                            CornerRadius="8"
-                                                            Padding="12,8"
-                                                            Margin="0,0,0,4"
-                                                            Cursor="Hand">
-														<Grid>
-															<Grid.ColumnDefinitions>
-																<ColumnDefinition Width="*"/>
-																<ColumnDefinition Width="Auto"/>
-															</Grid.ColumnDefinitions>
+                                                            <StackPanel Grid.Column="0">
 
-															<StackPanel Grid.Column="0">
-																<!-- Hora + Placa/Veículo -->
-																<StackPanel Orientation="Horizontal">
-																	<!-- HoraFormatada → "08:00" -->
-																	<TextBlock Text="{Binding HoraFormatada}"
+                                                                <!-- ── Linha 1: hora + veículo + badge KM ── -->
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <TextBlock Text="{Binding HoraFormatada}"
                                                                                FontWeight="Bold" Foreground="White" FontSize="13"/>
-																	<TextBlock Text="  " FontSize="13"/>
-																	<!-- Veiculo → "ABC-1234 — Ford Cargo" -->
-																	<TextBlock Text="{Binding Veiculo}"
+                                                                    <TextBlock Text="  " FontSize="13"/>
+                                                                    <TextBlock Text="{Binding Veiculo}"
                                                                                FontWeight="Bold" Foreground="White" FontSize="13"/>
-																</StackPanel>
 
-																<!-- TipoServico -->
-																<TextBlock Text="{Binding TipoServico}"
+                                                                    <!-- Badge KM — visível só se TemKm = True -->
+                                                                    <Border Background="#22FFFFFF"
+                                                                            CornerRadius="6" Padding="6,2"
+                                                                            Margin="8,0,0,0" VerticalAlignment="Center"
+                                                                            Visibility="{Binding TemKm, Converter={StaticResource BoolToVis}}">
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <materialDesign:PackIcon
+                                                                                Kind="Speedometer"
+                                                                                Width="12" Height="12"
+                                                                                Foreground="White"
+                                                                                VerticalAlignment="Center"
+                                                                                Margin="0,0,4,0"/>
+                                                                            <TextBlock Text="{Binding KmFormatado}"
+                                                                                       Foreground="White"
+                                                                                       FontSize="11"
+                                                                                       FontWeight="SemiBold"
+                                                                                       VerticalAlignment="Center"/>
+                                                                        </StackPanel>
+                                                                    </Border>
+                                                                </StackPanel>
+
+                                                                <!-- ── Linha 2: serviço ── -->
+                                                                <TextBlock Text="{Binding TipoServico}"
                                                                            Foreground="White" FontSize="11"
                                                                            Opacity="0.9" Margin="0,3,0,0"/>
 
-																<!-- Fornecedor -->
-																<TextBlock Text="{Binding Fornecedor}"
+                                                                <!-- ── Linha 3: fornecedor ── -->
+                                                                <TextBlock Text="{Binding Fornecedor}"
                                                                            Foreground="White" FontSize="11"
                                                                            Opacity="0.75" Margin="0,1,0,0"/>
-															</StackPanel>
+                                                            </StackPanel>
 
-															<!-- Responsavel alinhado à direita -->
-															<Border Grid.Column="1"
-                                                                    Background="#22FFFFFF"
-                                                                    CornerRadius="6"
-                                                                    Padding="8,4"
-                                                                    VerticalAlignment="Center">
-																<TextBlock Text="{Binding Responsavel}"
-                                                                           Foreground="White" FontSize="11"
-                                                                           FontWeight="SemiBold"/>
-															</Border>
-														</Grid>
-													</Border>
-												</DataTemplate>
-											</ItemsControl.ItemTemplate>
-										</ItemsControl>
-
-									</Grid>
-								</DataTemplate>
-							</ItemsControl.ItemTemplate>
-						</ItemsControl>
-					</ScrollViewer>
-
-				</Grid>
-			</Border>
-
-		</Grid>
-	</Grid>
+                                                            <Border Grid.Column="1" Background="#22FFFFFF"
+                                                                    CornerRadius="6" Padding="8,4" VerticalAlignment="Center">
+                                                                <TextBlock Text="{Binding Responsavel}"
+                                                                           Foreground="White" FontSize="11" FontWeight="SemiBold"/>
+                                                            </Border>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
 </UserControl>

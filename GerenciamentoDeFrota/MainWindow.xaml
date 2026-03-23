@@ -186,42 +186,103 @@
             </Setter>
         </Style>
 
+        <!-- ===== ESTILOS DOS BOTÕES DE CONTROLE DA JANELA ===== -->
+
+        <Style x:Key="WinCtrlBtnStyle" TargetType="Button">
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
     </Window.Resources>
 
-    <!-- Border raiz com o botão fechar sobreposto via Grid -->
     <Border CornerRadius="25"
             Background="{StaticResource AppSurfaceBrush}"
             MouseDown="Border_MouseDown"
             MouseLeftButtonDown="Border_MouseLeftButtonDown">
         <Grid>
 
-            <!-- Botão fechar — ZIndex alto para ficar sobre tudo -->
-            <Button x:Name="BtnFechar"
-                    Click="BtnFechar_Click"
-                    Width="32" Height="32"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Margin="0,12,12,0"
-                    Panel.ZIndex="99"
-                    Background="#FFEBEB"
-                    BorderThickness="0"
-                    Cursor="Hand" RenderTransformOrigin="0.844,-0.125">
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="10" Background="{TemplateBinding Background}">
-                            <materialDesign:PackIcon Kind="Close" Width="16" Height="16"
-                                                     Foreground="#DC2626"
-                                                     HorizontalAlignment="Center"
-                                                     VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FCA5A5"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
+            <!-- ===== BOTÕES DE CONTROLE DA JANELA (Minimizar / Maximizar / Fechar) ===== -->
+            <StackPanel HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Orientation="Horizontal"
+                        Margin="0,12,12,0"
+                        Panel.ZIndex="99">
+
+                <!-- Minimizar -->
+                <Button x:Name="BtnMinimizar"
+                        Click="BtnMinimizar_Click"
+                        Style="{StaticResource WinCtrlBtnStyle}"
+                        Background="#F3F4F6"
+                        Margin="0,0,6,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                                <materialDesign:PackIcon Kind="WindowMinimize"
+                                                         Width="16" Height="16"
+                                                         Foreground="#374151"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#E5E7EB"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Maximizar / Restaurar -->
+                <Button x:Name="BtnMaximizar"
+                        Click="BtnMaximizar_Click"
+                        Style="{StaticResource WinCtrlBtnStyle}"
+                        Background="#EFF6FF"
+                        Margin="0,0,6,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                                <materialDesign:PackIcon x:Name="IcoMax"
+                                                         Kind="WindowMaximize"
+                                                         Width="16" Height="16"
+                                                         Foreground="#2563EB"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#DBEAFE"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Fechar -->
+                <Button x:Name="BtnFechar"
+                        Click="BtnFechar_Click"
+                        Style="{StaticResource WinCtrlBtnStyle}"
+                        Background="#FFEBEB">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                                <materialDesign:PackIcon Kind="Close"
+                                                         Width="16" Height="16"
+                                                         Foreground="#DC2626"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FCA5A5"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+            </StackPanel>
 
             <!-- Layout principal -->
             <Grid>

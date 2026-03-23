@@ -27,19 +27,32 @@ namespace GerenciamentoDeFrota
             InitializeComponent();
         }
 
+        #region Arrastar janela
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
                 DragMove();
         }
 
-        private bool IsMaximized = false;
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
-                WindowState = IsMaximized ? WindowState.Normal : WindowState.Maximized;
+                WindowHandler.Maximizar(this);
         }
+        #endregion
 
+        #region Controles da janela
+        private void BtnMinimizar_Click(object sender, RoutedEventArgs e)
+            => WindowHandler.Minimmizar(this);
+
+        private void BtnMaximizar_Click(object sender, RoutedEventArgs e)
+            => WindowHandler.Maximizar(this);
+
+        private void BtnFechar_Click(object sender, RoutedEventArgs e)
+            => WindowHandler.Fechar(this);
+        #endregion
+
+        #region Navegação
         private void RbDashboard_Checked(object sender, RoutedEventArgs e)
         {
             if (MainContentHost == null) return;
@@ -107,11 +120,6 @@ namespace GerenciamentoDeFrota
             _agendamentoView ??= new AgendamentoView();
             MainContentHost.Content = _agendamentoView;
         }
-
-        private void BtnFechar_Click(object sender, RoutedEventArgs e)
-        {
-            if (MainContentHost == null) return;
-            WindowHandler.Fechar(this);
-        }
+        #endregion
     }
 }

@@ -15,45 +15,53 @@
         <SolidColorBrush x:Key="TextStrong" Color="#1F2A37"/>
         <SolidColorBrush x:Key="TextSoft"   Color="#6B7280"/>
         <SolidColorBrush x:Key="LineBrush"  Color="#E5E7EB"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
         <Style x:Key="ModernTextBox" TargetType="TextBox">
-            <Setter Property="Height" Value="32"/>
-            <Setter Property="Padding" Value="6,4"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="{StaticResource TextStrong}"/>
-            <Setter Property="Background" Value="#FFFFFF"/>
-            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height"                Value="32"/>
+            <Setter Property="Padding"               Value="6,4"/>
+            <Setter Property="FontSize"              Value="13"/>
+            <Setter Property="Foreground"            Value="{StaticResource TextStrong}"/>
+            <Setter Property="Background"            Value="#FFFFFF"/>
+            <Setter Property="BorderBrush"           Value="{StaticResource LineBrush}"/>
+            <Setter Property="BorderThickness"       Value="1"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
 
         <Style x:Key="ModernTextBoxMultiline" TargetType="TextBox">
-            <Setter Property="Padding" Value="6,4"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="{StaticResource TextStrong}"/>
-            <Setter Property="Background" Value="#FFFFFF"/>
-            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="AcceptsReturn" Value="True"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Padding"               Value="6,4"/>
+            <Setter Property="FontSize"              Value="13"/>
+            <Setter Property="Foreground"            Value="{StaticResource TextStrong}"/>
+            <Setter Property="Background"            Value="#FFFFFF"/>
+            <Setter Property="BorderBrush"           Value="{StaticResource LineBrush}"/>
+            <Setter Property="BorderThickness"       Value="1"/>
+            <Setter Property="AcceptsReturn"         Value="True"/>
+            <Setter Property="TextWrapping"          Value="Wrap"/>
             <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="Height" Value="80"/>
-        </Style>
-
-        <Style x:Key="ModernComboBox" TargetType="ComboBox">
-            <Setter Property="Height" Value="32"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="{StaticResource TextStrong}"/>
-            <Setter Property="Background" Value="#FFFFFF"/>
-            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="6,0"/>
+            <Setter Property="Height"                Value="70"/>
         </Style>
 
         <Style x:Key="FieldLabel" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontSize"   Value="12"/>
             <Setter Property="Foreground" Value="{StaticResource TextSoft}"/>
-            <Setter Property="Margin" Value="0,0,0,4"/>
+            <Setter Property="Margin"     Value="0,0,0,4"/>
+        </Style>
+
+        <!-- Item do autocomplete -->
+        <Style x:Key="AutocompleteItem" TargetType="ListBoxItem">
+            <Setter Property="Padding"     Value="10,8"/>
+            <Setter Property="FontSize"    Value="13"/>
+            <Setter Property="Foreground"  Value="{StaticResource TextStrong}"/>
+            <Setter Property="Background"  Value="Transparent"/>
+            <Setter Property="Cursor"      Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F0FDF4"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#DCFCE7"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
@@ -65,19 +73,34 @@
         <Grid Margin="24">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <!-- 0  Header         -->
                 <RowDefinition Height="16"/>
+                <!-- 1  sep            -->
                 <RowDefinition Height="Auto"/>
+                <!-- 2  Veículo        -->
                 <RowDefinition Height="14"/>
+                <!-- 3  gap            -->
                 <RowDefinition Height="Auto"/>
+                <!-- 4  Data + Horário -->
                 <RowDefinition Height="14"/>
+                <!-- 5  gap            -->
                 <RowDefinition Height="Auto"/>
+                <!-- 6  Serviço        -->
+                <RowDefinition Height="Auto"/>
+                <!-- 7  KM (condicional)-->
                 <RowDefinition Height="14"/>
+                <!-- 8  gap            -->
                 <RowDefinition Height="Auto"/>
+                <!-- 9  Observações    -->
+                <RowDefinition Height="Auto"/>
+                <!-- 10 Erro           -->
                 <RowDefinition Height="16"/>
+                <!-- 11 gap botões     -->
                 <RowDefinition Height="Auto"/>
+                <!-- 12 Botões         -->
             </Grid.RowDefinitions>
 
-            <!-- Header -->
+            <!-- ── HEADER ──────────────────────────────────────────────────── -->
             <Grid Grid.Row="0">
                 <StackPanel>
                     <TextBlock Text="Novo Agendamento"
@@ -111,16 +134,60 @@
 
             <Border Grid.Row="1" Height="1" Background="{StaticResource LineBrush}" Margin="0,8,0,0"/>
 
-            <!-- Veículo -->
+            <!-- ── VEÍCULO (autocomplete) ──────────────────────────────────── -->
             <StackPanel Grid.Row="2">
                 <TextBlock Text="Veículo *" Style="{StaticResource FieldLabel}"/>
-                <ComboBox ItemsSource="{Binding Veiculos}"
-                          SelectedItem="{Binding VeiculoSelecionado}"
-                          Style="{StaticResource ModernComboBox}"
-                          DisplayMemberPath="VeiculoDescricao"/>
+
+                <!-- Container relativo para o Popup ficar ancorado -->
+                <Grid x:Name="GridVeiculo">
+                    <TextBox x:Name="TxtBuscaVeiculo"
+                             Text="{Binding TextoBuscaVeiculo, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource ModernTextBox}"
+                             GotFocus="TxtBuscaVeiculo_GotFocus"
+                             PreviewKeyDown="TxtBuscaVeiculo_PreviewKeyDown"/>
+
+                    <!-- Ícone de busca dentro do TextBox -->
+                    <materialDesign:PackIcon Kind="Magnify"
+                                             Width="16" Height="16"
+                                             Foreground="{StaticResource TextSoft}"
+                                             HorizontalAlignment="Right"
+                                             VerticalAlignment="Center"
+                                             Margin="0,0,8,0"
+                                             IsHitTestVisible="False"/>
+
+                    <!-- Popup de sugestões -->
+                    <Popup x:Name="PopupSugestoes"
+                           IsOpen="{Binding PopupVeiculoAberto, Mode=TwoWay}"
+                           PlacementTarget="{Binding ElementName=TxtBuscaVeiculo}"
+                           Placement="Bottom"
+                           StaysOpen="True"
+                           AllowsTransparency="True"
+                           PopupAnimation="Slide"
+                           Width="{Binding ActualWidth, ElementName=GridVeiculo}">
+                        <Border Background="White"
+                                BorderBrush="{StaticResource LineBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Margin="0,2,0,0">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="8" ShadowDepth="2"
+                                                  Opacity="0.12" Direction="270"/>
+                            </Border.Effect>
+                            <ListBox x:Name="ListSugestoes"
+                                     ItemsSource="{Binding VeiculosFiltrados}"
+                                     SelectedItem="{Binding VeiculoSelecionado}"
+                                     ItemContainerStyle="{StaticResource AutocompleteItem}"
+                                     DisplayMemberPath="VeiculoDescricao"
+                                     MaxHeight="200"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     PreviewMouseLeftButtonDown="ListSugestoes_PreviewMouseLeftButtonDown"/>
+                        </Border>
+                    </Popup>
+                </Grid>
             </StackPanel>
 
-            <!-- Data e Horário -->
+            <!-- ── DATA + HORÁRIO ──────────────────────────────────────────── -->
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -146,27 +213,74 @@
                 </StackPanel>
             </Grid>
 
-            <!-- Serviço -->
-            <StackPanel Grid.Row="6">
+            <!-- ── SERVIÇO ─────────────────────────────────────────────────── -->
+            <StackPanel Grid.Row="6" Margin="0,0,0,14">
                 <TextBlock Text="Serviço a Realizar *" Style="{StaticResource FieldLabel}"/>
                 <TextBox Text="{Binding Servico, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource ModernTextBox}"/>
             </StackPanel>
 
-            <!-- Observações -->
-            <StackPanel Grid.Row="8">
+            <!-- ── KM / HORÍMETRO — só aparece após selecionar veículo ──────── -->
+            <StackPanel Grid.Row="7"
+                        Margin="0,0,0,14"
+                        Visibility="{Binding VeiculoFoiSelecionado, Converter={StaticResource BoolToVis}}">
+                <TextBlock Style="{StaticResource FieldLabel}">
+                    <Run Text="KM / Horímetro Atual"/>
+                    <Run Text="  (leitura no momento do agendamento)"
+                         Foreground="#9CA3AF" FontSize="11"/>
+                </TextBlock>
+
+                <!-- Campo com prefixo "KM" e máscara de milhar -->
+                <Border CornerRadius="6"
+                        BorderBrush="#86EFAC" BorderThickness="1"
+                        Background="#F0FDF4"
+                        Height="32">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0"
+                                Background="#DCFCE7"
+                                CornerRadius="5,0,0,5"
+                                Padding="10,0">
+                            <TextBlock Text="KM" FontSize="12" FontWeight="Bold"
+                                       Foreground="#16A34A"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+
+                        <TextBox Grid.Column="1"
+                                 x:Name="TxtKmAtualAgendamento"
+                                 Text="{Binding KmAtualDisplay, UpdateSourceTrigger=PropertyChanged}"
+                                 Padding="6,4"
+                                 FontSize="13" FontWeight="SemiBold"
+                                 Foreground="#166534"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 VerticalContentAlignment="Center"
+                                 PreviewTextInput="TxtKmAtualAgendamento_PreviewTextInput"
+                                 TextChanged="TxtKmAtualAgendamento_TextChanged"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <!-- ── OBSERVAÇÕES ─────────────────────────────────────────────── -->
+            <StackPanel Grid.Row="9">
                 <TextBlock Text="Observações" Style="{StaticResource FieldLabel}"/>
                 <TextBox Text="{Binding Observacoes, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource ModernTextBoxMultiline}"/>
             </StackPanel>
 
-            <!-- Mensagem de erro -->
-            <TextBlock Grid.Row="9"
+            <!-- ── MENSAGEM ERRO ───────────────────────────────────────────── -->
+            <TextBlock Grid.Row="10"
                        Text="{Binding MensagemErro}"
-                       Foreground="#DC2626" FontSize="12"/>
+                       Foreground="#DC2626" FontSize="12"
+                       Margin="0,8,0,0"
+                       Visibility="{Binding TemErro, Converter={StaticResource BoolToVis}}"/>
 
-            <!-- Botões -->
-            <StackPanel Grid.Row="10" Orientation="Horizontal" HorizontalAlignment="Right">
+            <!-- ── BOTÕES ──────────────────────────────────────────────────── -->
+            <StackPanel Grid.Row="12" Orientation="Horizontal" HorizontalAlignment="Right">
 
                 <Button Command="{Binding CancelarCommand}"
                         Height="40" Cursor="Hand"

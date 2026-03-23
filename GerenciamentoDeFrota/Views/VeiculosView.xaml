@@ -11,53 +11,51 @@
         <SolidColorBrush x:Key="LineBrush"  Color="#E5E7EB"/>
 
         <Style x:Key="ModernTextBox" TargetType="TextBox">
-            <Setter Property="Height" Value="32"/>
-            <Setter Property="Padding" Value="6,4"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="{StaticResource TextStrong}"/>
-            <Setter Property="Background" Value="#FFFFFF"/>
-            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height"                   Value="32"/>
+            <Setter Property="Padding"                  Value="6,4"/>
+            <Setter Property="FontSize"                 Value="13"/>
+            <Setter Property="Foreground"               Value="{StaticResource TextStrong}"/>
+            <Setter Property="Background"               Value="#FFFFFF"/>
+            <Setter Property="BorderBrush"              Value="{StaticResource LineBrush}"/>
+            <Setter Property="BorderThickness"          Value="1"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
 
         <Style x:Key="FieldLabel" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontSize"   Value="12"/>
             <Setter Property="Foreground" Value="{StaticResource TextSoft}"/>
-            <Setter Property="Margin" Value="0,0,0,6"/>
+            <Setter Property="Margin"     Value="0,0,0,6"/>
         </Style>
 
         <Style x:Key="Card" TargetType="Border">
-            <Setter Property="Background" Value="{StaticResource CardBrush}"/>
-            <Setter Property="CornerRadius" Value="16"/>
-            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
+            <Setter Property="Background"      Value="{StaticResource CardBrush}"/>
+            <Setter Property="CornerRadius"    Value="16"/>
+            <Setter Property="BorderBrush"     Value="{StaticResource LineBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="18"/>
-            <Setter Property="Margin" Value="0,0,0,14"/>
+            <Setter Property="Padding"         Value="18"/>
+            <Setter Property="Margin"          Value="0,0,0,14"/>
         </Style>
 
         <Style x:Key="CleanDataGrid" TargetType="DataGrid">
-            <Setter Property="AutoGenerateColumns" Value="False"/>
-            <Setter Property="HeadersVisibility" Value="Column"/>
-            <Setter Property="RowHeight" Value="42"/>
-            <Setter Property="ColumnHeaderHeight" Value="42"/>
-            <Setter Property="GridLinesVisibility" Value="None"/>
-            <Setter Property="RowBackground" Value="#FFFFFF"/>
+            <Setter Property="AutoGenerateColumns"      Value="False"/>
+            <Setter Property="HeadersVisibility"        Value="Column"/>
+            <Setter Property="RowHeight"                Value="42"/>
+            <Setter Property="ColumnHeaderHeight"       Value="42"/>
+            <Setter Property="GridLinesVisibility"      Value="None"/>
+            <Setter Property="RowBackground"            Value="#FFFFFF"/>
             <Setter Property="AlternatingRowBackground" Value="#FBFBFD"/>
-            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Background" Value="#FFFFFF"/>
-            <Setter Property="CanUserAddRows" Value="False"/>
-            <Setter Property="CanUserResizeRows" Value="False"/>
-            <Setter Property="SelectionMode" Value="Single"/>
-            <Setter Property="SelectionUnit" Value="FullRow"/>
-            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="BorderBrush"              Value="{StaticResource LineBrush}"/>
+            <Setter Property="BorderThickness"          Value="1"/>
+            <Setter Property="Background"               Value="#FFFFFF"/>
+            <Setter Property="CanUserAddRows"           Value="False"/>
+            <Setter Property="CanUserResizeRows"        Value="False"/>
+            <Setter Property="SelectionMode"            Value="Single"/>
+            <Setter Property="SelectionUnit"            Value="FullRow"/>
+            <Setter Property="IsReadOnly"               Value="True"/>
         </Style>
     </UserControl.Resources>
 
-    <!-- ScrollViewer externo para a view inteira -->
-    <ScrollViewer VerticalScrollBarVisibility="Auto"
-                  HorizontalScrollBarVisibility="Disabled">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <Grid Background="Transparent">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -85,7 +83,7 @@
                         <RowDefinition Height="400"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Toolbar: título + filtro + botão novo -->
+                    <!-- Toolbar -->
                     <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -97,31 +95,28 @@
 
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Text="Lista de Veículos"
-                   FontSize="14" FontWeight="SemiBold"
-                   Foreground="{StaticResource TextStrong}"/>
+                                       FontSize="14" FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextStrong}"/>
                             <TextBlock Text="Selecione um item para editar ou deletar."
-                   Margin="0,4,0,0" FontSize="12"
-                   Foreground="{StaticResource TextSoft}"/>
+                                       Margin="0,4,0,0" FontSize="12"
+                                       Foreground="{StaticResource TextSoft}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Margin="0,0,12,0">
                             <TextBlock Text="Filtrar por Placa" Style="{StaticResource FieldLabel}"/>
                             <TextBox Text="{Binding FiltroPlaca, UpdateSourceTrigger=PropertyChanged}"
-                 Style="{StaticResource ModernTextBox}"/>
+                                     Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
 
-                        <!-- Novo Veículo -->
-                        <Button Grid.Column="2"
-            Command="{Binding NovoVeiculoCommand}"
-            Height="40" Cursor="Hand"
-            Background="#16A34A" BorderThickness="0"
-            VerticalAlignment="Bottom" Margin="0,0,8,0">
+                        <Button Grid.Column="2" Command="{Binding NovoVeiculoCommand}"
+                                Height="40" Cursor="Hand" Background="#16A34A"
+                                BorderThickness="0" VerticalAlignment="Bottom" Margin="0,0,8,0">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border CornerRadius="10" Background="{TemplateBinding Background}">
                                         <StackPanel Orientation="Horizontal" Margin="16,0">
                                             <materialDesign:PackIcon Kind="Plus" Width="16" Height="16"
-                                                 Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                                     Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                             <TextBlock Text="Novo" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>
@@ -134,18 +129,15 @@
                             </Button.Template>
                         </Button>
 
-                        <!-- Editar -->
-                        <Button Grid.Column="3"
-            Command="{Binding EditarCommand}"
-            Height="40" Cursor="Hand"
-            Background="#2563EB" BorderThickness="0"
-            VerticalAlignment="Bottom" Margin="0,0,8,0">
+                        <Button Grid.Column="3" Command="{Binding EditarCommand}"
+                                Height="40" Cursor="Hand" Background="#2563EB"
+                                BorderThickness="0" VerticalAlignment="Bottom" Margin="0,0,8,0">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border CornerRadius="10" Background="{TemplateBinding Background}">
                                         <StackPanel Orientation="Horizontal" Margin="16,0">
                                             <materialDesign:PackIcon Kind="Pencil" Width="16" Height="16"
-                                                 Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                                     Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                             <TextBlock Text="Editar" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>
@@ -158,18 +150,15 @@
                             </Button.Template>
                         </Button>
 
-                        <!-- Deletar -->
-                        <Button Grid.Column="4"
-            Command="{Binding DeletarCommand}"
-            Height="40" Cursor="Hand"
-            Background="#DC2626" BorderThickness="0"
-            VerticalAlignment="Bottom">
+                        <Button Grid.Column="4" Command="{Binding DeletarCommand}"
+                                Height="40" Cursor="Hand" Background="#DC2626"
+                                BorderThickness="0" VerticalAlignment="Bottom">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border CornerRadius="10" Background="{TemplateBinding Background}">
                                         <StackPanel Orientation="Horizontal" Margin="16,0">
                                             <materialDesign:PackIcon Kind="TrashCanOutline" Width="16" Height="16"
-                                                 Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                                     Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                             <TextBlock Text="Deletar" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>
@@ -183,14 +172,13 @@
                         </Button>
                     </Grid>
 
-
                     <!-- Mensagens -->
                     <StackPanel Grid.Row="2">
                         <TextBlock Text="{Binding MensagemErro}"    Foreground="#DC2626" FontSize="12"/>
                         <TextBlock Text="{Binding MensagemSucesso}" Foreground="#16A34A" FontSize="12"/>
                     </StackPanel>
 
-                    <!-- DataGrid com scroll horizontal e vertical -->
+                    <!-- DataGrid -->
                     <DataGrid x:Name="DgVeiculos"
                               Grid.Row="4"
                               Style="{StaticResource CleanDataGrid}"
@@ -202,53 +190,51 @@
 
                             <DataGridTextColumn Header="Código"
                                                 Binding="{Binding Id}"
-                                                Width="70"
-                                                MinWidth="70"/>
+                                                Width="70" MinWidth="70"/>
 
                             <DataGridTextColumn Header="Fabricante"
                                                 Binding="{Binding Fabricante}"
-                                                Width="140"
-                                                MinWidth="120"/>
+                                                Width="140" MinWidth="120"/>
 
                             <DataGridTextColumn Header="Modelo"
                                                 Binding="{Binding Modelo}"
-                                                Width="160"
-                                                MinWidth="130"/>
+                                                Width="160" MinWidth="130"/>
 
                             <DataGridTextColumn Header="Placa"
                                                 Binding="{Binding Placa}"
-                                                Width="100"
-                                                MinWidth="90"/>
+                                                Width="100" MinWidth="90"/>
+
+                            <DataGridTextColumn Header="Tipo"
+                                                Binding="{Binding Tipo}"
+                                                Width="170" MinWidth="150"/>
+
+                            <DataGridTextColumn Header="KM / Horímetro"
+                                                Binding="{Binding KmAtual, StringFormat={}{0:N0}}"
+                                                Width="120" MinWidth="110"/>
 
                             <DataGridTextColumn Header="Ano Modelo"
                                                 Binding="{Binding AnoModelo}"
-                                                Width="100"
-                                                MinWidth="90"/>
+                                                Width="100" MinWidth="90"/>
 
                             <DataGridTextColumn Header="Ano Fabricação"
                                                 Binding="{Binding AnoFabricacao}"
-                                                Width="120"
-                                                MinWidth="110"/>
+                                                Width="120" MinWidth="110"/>
 
                             <DataGridTextColumn Header="Mês Emplacamento"
                                                 Binding="{Binding MesEmplacamento}"
-                                                Width="140"
-                                                MinWidth="130"/>
+                                                Width="140" MinWidth="130"/>
 
                             <DataGridTextColumn Header="Renavam"
                                                 Binding="{Binding Renavam}"
-                                                Width="130"
-                                                MinWidth="120"/>
+                                                Width="130" MinWidth="120"/>
 
                             <DataGridTextColumn Header="Cor"
                                                 Binding="{Binding Cor}"
-                                                Width="100"
-                                                MinWidth="80"/>
+                                                Width="100" MinWidth="80"/>
 
                             <DataGridTextColumn Header="Venc. Tacógrafo"
                                                 Binding="{Binding DataTacografo, StringFormat=dd/MM/yyyy}"
-                                                Width="130"
-                                                MinWidth="120"/>
+                                                Width="130" MinWidth="120"/>
 
                             <DataGridTemplateColumn Header="Ativo" Width="70" MinWidth="70">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -260,11 +246,6 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-
-                            <DataGridTextColumn Header="Observações"
-                                                Binding="{Binding Observacoes}"
-                                                Width="200"
-                                                MinWidth="150"/>
 
                         </DataGrid.Columns>
                     </DataGrid>

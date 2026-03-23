@@ -14,7 +14,6 @@ namespace GerenciamentoDeFrota.Data.Models
 
     /// <summary>
     /// DTO de exibição de um agendamento dentro de um slot da timeline.
-    /// Evita expor a entidade do banco direto na View.
     /// </summary>
     public class AgendamentoManutencaoDisplay
     {
@@ -23,8 +22,12 @@ namespace GerenciamentoDeFrota.Data.Models
         public string TipoServico { get; set; } = string.Empty;
         public string Fornecedor { get; set; } = string.Empty;
         public string Responsavel { get; set; } = string.Empty;
-
-        // Cor do card na timeline — hex baseado no tipo de serviço
         public string Cor { get; set; } = "#2563EB";
+
+        /// <summary>KM agendado formatado — ex: "125.000 km". Vazio se não informado.</summary>
+        public string KmFormatado { get; set; } = string.Empty;
+
+        /// <summary>Controla Visibility do badge de KM no XAML.</summary>
+        public bool TemKm => !string.IsNullOrWhiteSpace(KmFormatado);
     }
 }

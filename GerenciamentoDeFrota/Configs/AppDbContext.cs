@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using GerenciamentoDeFrota.Data.Models;
 using Microsoft.Extensions.Configuration;
+using System;
 
 namespace GerenciamentoDeFrota.Configs
 {
@@ -9,6 +10,10 @@ namespace GerenciamentoDeFrota.Configs
         public DbSet<CentrosCusto> CentrosCusto { get; set; }
         public DbSet<Veiculos> Veiculos { get; set; }
         public DbSet<AgendamentoManutencao> AgendamentosManutencao { get; set; }
+
+        public AppDbContext() { }
+
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -22,14 +27,6 @@ namespace GerenciamentoDeFrota.Configs
                 optionsBuilder.UseSqlServer(config.GetConnectionString("Default"));
             }
         }
-
-        public AppDbContext()
-        {
-            
-        }
-
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -77,10 +74,14 @@ namespace GerenciamentoDeFrota.Configs
                 entity.Property(e => e.DataAgendamento).IsRequired();
                 entity.Property(e => e.HorarioAgendamento).IsRequired();
                 entity.Property(e => e.Servico).IsRequired().HasMaxLength(1000);
+                entity.Property(e => e.KmAtualAgendamento).IsRequired(false); // nullable — opcional
                 entity.Property(e => e.Observacoes).HasMaxLength(1000).IsRequired(false);
                 entity.Property(e => e.DataCriacao).IsRequired();
+
+                // Computed — não persistidos
                 entity.Ignore(e => e.VeiculoDescricao);
                 entity.Ignore(e => e.HoraFormatada);
+                entity.Ignore(e => e.KmFormatado);
             });
         }
     }

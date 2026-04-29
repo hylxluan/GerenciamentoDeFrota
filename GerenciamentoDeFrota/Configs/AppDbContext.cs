@@ -24,7 +24,7 @@ namespace GerenciamentoDeFrota.Configs
                     .AddJsonFile("appsettings.json", optional: false)
                     .Build();
 
-                optionsBuilder.UseSqlServer(config.GetConnectionString("Default"));
+                optionsBuilder.UseMySQL(config.GetConnectionString("Default"));
             }
         }
 

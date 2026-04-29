@@ -16,7 +16,7 @@ namespace GerenciamentoDeFrota.ViewModels
         private readonly IServiceAgendamento _serviceAgendamento;
         private readonly IServiceVeiculos _serviceVeiculos;
 
-        // Lista completa para filtrar localmente
+
         private List<Veiculos> _todosVeiculos = new();
 
         #region Commands

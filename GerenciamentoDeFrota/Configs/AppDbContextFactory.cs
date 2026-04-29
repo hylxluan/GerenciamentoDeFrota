@@ -21,7 +21,7 @@ namespace GerenciamentoDeFrota.Configs
                 .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseSqlServer(config.GetConnectionString("Default"));
+            optionsBuilder.UseMySQL(config.GetConnectionString("Default"));
 
             return new AppDbContext(optionsBuilder.Options);
         }

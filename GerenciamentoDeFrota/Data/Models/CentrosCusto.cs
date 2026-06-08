@@ -12,5 +12,6 @@ namespace GerenciamentoDeFrota.Data.Models
         public string? Observacoes { get; set; } = string.Empty;
         public bool? Ativo { get; set; } = true;
         public DateTime? DataCriacao { get; set; } = DateTime.UtcNow.Date;
+        public ICollection<Veiculos>? Veiculos { get; set; } = [];
     }
 }

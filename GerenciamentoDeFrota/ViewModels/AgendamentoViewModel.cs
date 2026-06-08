@@ -20,6 +20,8 @@ namespace GerenciamentoDeFrota.ViewModels
         public ICommand ProximoMesCommand { get; set; }
         public ICommand SelecionarDiaCommand { get; set; }
         public ICommand NovoAgendamentoCommand { get; set; }
+
+
         #endregion
 
         #region Calendário

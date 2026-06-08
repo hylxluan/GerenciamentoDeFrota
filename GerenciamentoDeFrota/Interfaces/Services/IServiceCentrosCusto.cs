@@ -8,9 +8,9 @@ namespace GerenciamentoDeFrota.Interfaces.Services
 {
     public interface IServiceCentrosCusto
     {
-        void SalvarCentroCusto(CentrosCusto centroCusto);
-        List<CentrosCusto> ListarCentrosCustos();
-        CentrosCusto? RecuperarCentrosCustoById(long id);
-        void DeletarCentroCusto(long id);
+        Task SalvarCentroCustoAsync(CentrosCusto centroCusto);
+        Task<List<CentrosCusto>> ListarCentrosCustosAsync();
+        Task<CentrosCusto?> RecuperarCentrosCustoByIdAsync(long id);
+        Task DeletarCentroCustoAsync(long id);
     }
 }

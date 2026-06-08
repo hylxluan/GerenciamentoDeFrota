@@ -15,5 +15,10 @@ namespace GerenciamentoDeFrota.Data.Models
         public DateTime DataUpload { get; set; } = DateTime.UtcNow;
 
         public Veiculos? Veiculo { get; set; }
+
+        // campo computado
+        public string TamanhoFormatado => TamanhoBytes.HasValue
+            ? $"{TamanhoBytes.Value / 1024.0:N0} KB"
+            : "-";
     }
 }

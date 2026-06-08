@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Cadastro de Veículo"
-        Width="720" SizeToContent="Height"
+        Width="820" Height="820"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -11,52 +11,73 @@
         ResizeMode="NoResize">
 
     <Window.Resources>
-        <SolidColorBrush x:Key="CardBrush"  Color="#FFFFFF"/>
-        <SolidColorBrush x:Key="TextStrong" Color="#1F2A37"/>
-        <SolidColorBrush x:Key="TextSoft"   Color="#6B7280"/>
-        <SolidColorBrush x:Key="LineBrush"  Color="#E5E7EB"/>
+        <SolidColorBrush x:Key="CardBrush"   Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="TextStrong"  Color="#1F2A37"/>
+        <SolidColorBrush x:Key="TextSoft"    Color="#6B7280"/>
+        <SolidColorBrush x:Key="LineBrush"   Color="#E5E7EB"/>
+        <SolidColorBrush x:Key="SectionLine" Color="#F3F4F6"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
         <Style x:Key="ModernTextBox" TargetType="TextBox">
-            <Setter Property="Height" Value="32"/>
-            <Setter Property="Padding" Value="6,4"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="{StaticResource TextStrong}"/>
-            <Setter Property="Background" Value="#FFFFFF"/>
-            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height"                   Value="32"/>
+            <Setter Property="Padding"                  Value="6,4"/>
+            <Setter Property="FontSize"                 Value="13"/>
+            <Setter Property="Foreground"               Value="{StaticResource TextStrong}"/>
+            <Setter Property="Background"               Value="#FFFFFF"/>
+            <Setter Property="BorderBrush"              Value="{StaticResource LineBrush}"/>
+            <Setter Property="BorderThickness"          Value="1"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
 
         <Style x:Key="ModernTextBoxMultiline" TargetType="TextBox">
-            <Setter Property="Padding" Value="6,4"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="{StaticResource TextStrong}"/>
-            <Setter Property="Background" Value="#FFFFFF"/>
-            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="AcceptsReturn" Value="True"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Padding"                    Value="6,4"/>
+            <Setter Property="FontSize"                   Value="13"/>
+            <Setter Property="Foreground"                 Value="{StaticResource TextStrong}"/>
+            <Setter Property="Background"                 Value="#FFFFFF"/>
+            <Setter Property="BorderBrush"                Value="{StaticResource LineBrush}"/>
+            <Setter Property="BorderThickness"            Value="1"/>
+            <Setter Property="AcceptsReturn"              Value="True"/>
+            <Setter Property="TextWrapping"               Value="Wrap"/>
             <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="Height" Value="80"/>
+            <Setter Property="Height"                     Value="70"/>
         </Style>
 
         <Style x:Key="ModernComboBox" TargetType="ComboBox">
-            <Setter Property="Height" Value="32"/>
-            <Setter Property="Padding" Value="6,4"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="{StaticResource TextStrong}"/>
-            <Setter Property="Background" Value="#FFFFFF"/>
-            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height"                   Value="32"/>
+            <Setter Property="Padding"                  Value="6,4"/>
+            <Setter Property="FontSize"                 Value="13"/>
+            <Setter Property="Foreground"               Value="{StaticResource TextStrong}"/>
+            <Setter Property="Background"               Value="#FFFFFF"/>
+            <Setter Property="BorderBrush"              Value="{StaticResource LineBrush}"/>
+            <Setter Property="BorderThickness"          Value="1"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="IsEditable" Value="False"/>
+        </Style>
+
+        <Style x:Key="ModernDatePicker" TargetType="DatePicker">
+            <Setter Property="Height"         Value="32"/>
+            <Setter Property="FontSize"       Value="13"/>
+            <Setter Property="BorderBrush"    Value="{StaticResource LineBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="SelectedDateFormat" Value="Short"/>
         </Style>
 
         <Style x:Key="FieldLabel" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontSize"   Value="12"/>
             <Setter Property="Foreground" Value="{StaticResource TextSoft}"/>
-            <Setter Property="Margin" Value="0,0,0,4"/>
+            <Setter Property="Margin"     Value="0,0,0,4"/>
+        </Style>
+
+        <Style x:Key="SectionHeader" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource TextStrong}"/>
+            <Setter Property="Margin"     Value="0,16,0,10"/>
+        </Style>
+
+        <Style x:Key="SectionDivider" TargetType="Border">
+            <Setter Property="Height"     Value="1"/>
+            <Setter Property="Background" Value="{StaticResource SectionLine}"/>
+            <Setter Property="Margin"     Value="0,0,0,0"/>
         </Style>
     </Window.Resources>
 
@@ -68,20 +89,22 @@
         <Grid Margin="24">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="16"/>
+                <!-- Header -->
+                <RowDefinition Height="12"/>
+                <RowDefinition Height="*"/>
+                <!-- Scroll -->
+                <RowDefinition Height="8"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="14"/>
+                <!-- Erro -->
+                <RowDefinition Height="12"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="14"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="16"/>
-                <RowDefinition Height="Auto"/>
+                <!-- Botões -->
             </Grid.RowDefinitions>
 
-            <!-- Header -->
+            <!-- ── Header ─────────────────────────────────────────────────── -->
             <Grid Grid.Row="0">
                 <StackPanel>
-                    <TextBlock Text="Novo Veículo"
+                    <TextBlock Text="{Binding Titulo}"
                                FontSize="18" FontWeight="Bold"
                                Foreground="{StaticResource TextStrong}"/>
                     <TextBlock Text="Preencha os dados do veículo abaixo."
@@ -110,161 +133,572 @@
                 </Button>
             </Grid>
 
-            <Border Grid.Row="1" Height="1" Background="{StaticResource LineBrush}" Margin="0,8,0,0"/>
+            <Border Grid.Row="1" Style="{StaticResource SectionDivider}" VerticalAlignment="Bottom"/>
 
-            <!-- Identificação -->
-            <StackPanel Grid.Row="2">
-                <TextBlock Text="Identificação"
-                           FontSize="13" FontWeight="SemiBold"
-                           Foreground="{StaticResource TextStrong}"
-                           Margin="0,0,0,12"/>
+            <!-- ── Conteúdo com scroll ────────────────────────────────────── -->
+            <ScrollViewer Grid.Row="2"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          Padding="0,0,6,0">
+                <StackPanel>
 
-                <!-- Linha 1: Fabricante | Modelo | Placa | Renavam -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="1.2*"/>
-                        <ColumnDefinition Width="1.4*"/>
-                    </Grid.ColumnDefinitions>
+                    <!-- ════ IDENTIFICAÇÃO ════ -->
+                    <TextBlock Text="Identificação" Style="{StaticResource SectionHeader}"/>
 
-                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                        <TextBlock Text="Fabricante *" Style="{StaticResource FieldLabel}"/>
-                        <TextBox Text="{Binding Fabricante, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}"/>
-                    </StackPanel>
+                    <!-- Fabricante | Modelo | Placa | Renavam -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.4*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Text="Fabricante *" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Fabricante, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                            <TextBlock Text="Modelo *" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Modelo, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                            <TextBlock Text="Placa *" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Placa, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     TextChanged="TxtPlaca_TextChanged"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3">
+                            <TextBlock Text="Renavam" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Renavam, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtRenavam_PreviewTextInput"/>
+                        </StackPanel>
+                    </Grid>
 
-                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
-                        <TextBlock Text="Modelo *" Style="{StaticResource FieldLabel}"/>
-                        <TextBox Text="{Binding Modelo, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}"/>
-                    </StackPanel>
+                    <!-- Tipo | KM | Cor | Nº Frota | UF -->
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="0.6*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Text="Tipo de Veículo *" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox ItemsSource="{Binding TiposVeiculo}"
+                                      SelectedItem="{Binding Tipo}"
+                                      Style="{StaticResource ModernComboBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                            <TextBlock Text="KM / Horímetro *" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding KmAtual, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtKmAtual_PreviewTextInput"
+                                     TextChanged="TxtKmAtual_TextChanged"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                            <TextBlock Text="Cor" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Cor, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                            <TextBlock Text="Nº Frota" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding NumeroFrota, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="UF" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding UF, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     MaxLength="2"/>
+                        </StackPanel>
+                    </Grid>
 
-                    <StackPanel Grid.Column="2" Margin="0,0,10,0">
-                        <TextBlock Text="Placa *" Style="{StaticResource FieldLabel}"/>
-                        <TextBox Text="{Binding Placa, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}"
-                                 TextChanged="TxtPlaca_TextChanged"/>
-                    </StackPanel>
+                    <!-- ════ INFORMAÇÕES COMPLEMENTARES ════ -->
+                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
+                    <TextBlock Text="Informações Complementares" Style="{StaticResource SectionHeader}"/>
 
-                    <StackPanel Grid.Column="3">
-                        <TextBlock Text="Renavam" Style="{StaticResource FieldLabel}"/>
-                        <TextBox Text="{Binding Renavam, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}"
-                                 PreviewTextInput="TxtRenavam_PreviewTextInput"/>
-                    </StackPanel>
-                </Grid>
+                    <!-- Ano Modelo | Ano Fab | Mês Empl | Ano Empl | Venc. Tacógrafo -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Text="Ano Modelo" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding AnoModelo, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtAno_PreviewTextInput" MaxLength="4"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                            <TextBlock Text="Ano Fabricação" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding AnoFabricacao, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtAno_PreviewTextInput" MaxLength="4"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                            <TextBlock Text="Mês Emplacamento" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding MesEmplacamento, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtMes_PreviewTextInput" MaxLength="2"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                            <TextBlock Text="Ano Emplacamento" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding AnoEmplacamento, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtAno_PreviewTextInput" MaxLength="4"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Venc. Tacógrafo" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker SelectedDate="{Binding DataTacografo}"
+                                        Style="{StaticResource ModernDatePicker}"/>
+                        </StackPanel>
+                    </Grid>
 
-                <!-- Linha 2: Tipo de Veículo | KM Atual -->
-                <Grid Margin="0,10,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="1.5*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                    <!-- KmHora | VeiculoTracao | Terceirizado | Ativo | Centro de Custo -->
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.6*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Text="Equipamento Utiliza" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox ItemsSource="{Binding TiposKmHora}"
+                                      SelectedItem="{Binding KmHoraSelecionado}"
+                                      Style="{StaticResource ModernComboBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0" VerticalAlignment="Bottom">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                <CheckBox Content="Veículo Tração"
+                                          IsChecked="{Binding VeiculoTracao}"
+                                          Foreground="{StaticResource TextStrong}"
+                                          Margin="0,0,16,0"/>
+                                <CheckBox Content="Terceirizado"
+                                          IsChecked="{Binding Terceirizado}"
+                                          Foreground="{StaticResource TextStrong}"
+                                          Margin="0,0,16,0"/>
+                                <CheckBox Content="Ativo"
+                                          IsChecked="{Binding Ativo}"
+                                          Foreground="{StaticResource TextStrong}"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Centro de Custo" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox ItemsSource="{Binding CentrosCusto}"
+                                      SelectedItem="{Binding CentrosCustoSelecionado}"
+                                      DisplayMemberPath="Nome"
+                                      Style="{StaticResource ModernComboBox}"/>
+                        </StackPanel>
+                    </Grid>
 
-                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                        <TextBlock Text="Tipo de Veículo" Style="{StaticResource FieldLabel}"/>
-                        <ComboBox ItemsSource="{Binding TiposVeiculo}"
-                                  SelectedItem="{Binding Tipo, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource ModernComboBox}"/>
-                    </StackPanel>
+                    <!-- ════ PROPRIETÁRIO ════ -->
+                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
+                    <TextBlock Text="Proprietário" Style="{StaticResource SectionHeader}"/>
 
-                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
-                        <TextBlock Text="KM/Horímetro Atual" Style="{StaticResource FieldLabel}"/>
-                        <TextBox Text="{Binding KmAtual, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}"
-                                 PreviewTextInput="TxtKmAtual_PreviewTextInput"
-                                 TextChanged="TxtKmAtual_TextChanged"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Text="Proprietário" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Proprietario, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                            <TextBlock Text="CPF" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding CPF, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     TextChanged="TxtCPF_TextChanged" MaxLength="14"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="CNPJ" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding CNPJ, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     TextChanged="TxtCNPJ_TextChanged" MaxLength="18"/>
+                        </StackPanel>
+                    </Grid>
 
-                    <!-- Coluna vazia para equilíbrio visual -->
-                    <Grid Grid.Column="2"/>
-                </Grid>
-            </StackPanel>
+                    <!-- ════ DADOS TÉCNICOS ════ -->
+                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
+                    <TextBlock Text="Dados Técnicos" Style="{StaticResource SectionHeader}"/>
 
-            <!-- Informações Complementares -->
-            <StackPanel Grid.Row="4">
-                <TextBlock Text="Informações Complementares"
-                           FontSize="13" FontWeight="SemiBold"
-                           Foreground="{StaticResource TextStrong}"
-                           Margin="0,0,0,12"/>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                    <!-- Valor FIPE | Cap. Tanque | Padronização | Carroceria -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Text="Vr. Bem (FIPE)" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding ValorFipe, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtDecimal_PreviewTextInput"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                            <TextBlock Text="Capacidade Tanque" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding CapacidadeTanque, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtDecimal_PreviewTextInput"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                            <TextBlock Text="Padronização" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Padronizacao, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3">
+                            <TextBlock Text="Carroceria" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Carroceria, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                    </Grid>
 
-                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                        <TextBlock Text="Ano Modelo" Style="{StaticResource FieldLabel}"/>
-                        <TextBox Text="{Binding AnoModelo, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}"
-                                 PreviewTextInput="TxtAnoModelo_PreviewTextInput"/>
-                    </StackPanel>
+                    <!-- Cap. Paletes | Cap. Caixa | Tara Kg | Lotação Kg -->
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Text="Cap. Paletes / M³ / L / Kg" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding CapacidadePaletes, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtDecimal_PreviewTextInput"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                            <TextBlock Text="Capacidade Caixa" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding CapacidadeCaixa, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtDecimal_PreviewTextInput"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                            <TextBlock Text="Tara (Kg)" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding TaraKg, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtDecimal_PreviewTextInput"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3">
+                            <TextBlock Text="Lotação (Kg)" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding LotacaoKg, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtDecimal_PreviewTextInput"/>
+                        </StackPanel>
+                    </Grid>
 
-                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
-                        <TextBlock Text="Ano Fabricação" Style="{StaticResource FieldLabel}"/>
-                        <TextBox Text="{Binding AnoFabricacao, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}"
-                                 PreviewTextInput="TxtAnoFabricacao_PreviewTextInput"/>
-                    </StackPanel>
+                    <!-- ════ DOCUMENTOS E VENCIMENTOS ════ -->
+                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
+                    <TextBlock Text="Documentos e Vencimentos" Style="{StaticResource SectionHeader}"/>
 
-                    <StackPanel Grid.Column="2" Margin="0,0,10,0">
-                        <TextBlock Text="Mês Emplacamento" Style="{StaticResource FieldLabel}"/>
-                        <TextBox Text="{Binding MesEmplacamento, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}"
-                                 PreviewTextInput="TxtMesEmplacamento_PreviewTextInput"/>
-                    </StackPanel>
+                    <!-- Licenciamento | IPVA | ANTT -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="3" Margin="0,0,10,0">
-                        <TextBlock Text="Cor" Style="{StaticResource FieldLabel}"/>
-                        <TextBox Text="{Binding Cor, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}"/>
-                    </StackPanel>
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Text="Licenciamento (ano)" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Licenciamento, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtAno_PreviewTextInput" MaxLength="4"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                            <TextBlock Text="Dt. Venc. Licenciamento" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker SelectedDate="{Binding LicenciamentoDtVencimento}"
+                                        Style="{StaticResource ModernDatePicker}"/>
+                        </StackPanel>
 
-                    <StackPanel Grid.Column="4">
-                        <TextBlock Text="Venc. Tacógrafo" Style="{StaticResource FieldLabel}"/>
-                        <DatePicker SelectedDate="{Binding DataTacografo}"
-                                    Height="32" FontSize="13"
-                                    BorderBrush="{StaticResource LineBrush}"
-                                    BorderThickness="1"
-                                    SelectedDateFormat="Short"/>
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                            <TextBlock Text="IPVA (ano)" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Ipva, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     PreviewTextInput="TxtAno_PreviewTextInput" MaxLength="4"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                            <TextBlock Text="Dt. Venc. IPVA" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker SelectedDate="{Binding IpvaDtVencimento}"
+                                        Style="{StaticResource ModernDatePicker}"/>
+                        </StackPanel>
 
-            <!-- Observações + Ativo -->
-            <StackPanel Grid.Row="6">
-                <TextBlock Text="Observações" Style="{StaticResource FieldLabel}"/>
-                <TextBox Text="{Binding Observacoes, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource ModernTextBoxMultiline}"/>
-                <CheckBox Content="Ativo?"
-                          IsChecked="{Binding Ativo}"
-                          Foreground="{StaticResource TextStrong}"
-                          Margin="0,12,0,0"/>
-            </StackPanel>
+                        <StackPanel Grid.Column="4" Margin="0,0,8,0">
+                            <TextBlock Text="ANTT" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Antt, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}" MaxLength="30"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="5">
+                            <TextBlock Text="Dt. Venc. ANTT" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker SelectedDate="{Binding AnttDtVencimento}"
+                                        Style="{StaticResource ModernDatePicker}"/>
+                        </StackPanel>
+                    </Grid>
 
-            <!-- Mensagem de erro -->
-            <TextBlock Grid.Row="7"
+                    <!-- Cronoacógrafo | Extintor -->
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Text="Dt. Venc. Cronoacógrafo" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker SelectedDate="{Binding CronoacografoDtVencimento}"
+                                        Style="{StaticResource ModernDatePicker}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                            <TextBlock Text="Dt. Venc. Extintor" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker SelectedDate="{Binding ExtintorDtVencimento}"
+                                        Style="{StaticResource ModernDatePicker}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Cód. Extintor" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding ExtintorCodigo, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}" MaxLength="50"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- ════ SEGURO DO VEÍCULO ════ -->
+                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
+                    <TextBlock Text="Seguro do Veículo" Style="{StaticResource SectionHeader}"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Text="Seguradora" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding SeguroSeguradora, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}" MaxLength="200"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                            <TextBlock Text="Nr. Apólice" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding SeguroNrApolice, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}" MaxLength="50"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                            <TextBlock Text="Dt. Início Vigência" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker SelectedDate="{Binding SeguroDtInicioVigencia}"
+                                        Style="{StaticResource ModernDatePicker}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                            <TextBlock Text="Dt. Término Vigência" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker SelectedDate="{Binding SeguroDtTerminoVigencia}"
+                                        Style="{StaticResource ModernDatePicker}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Tipo" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding SeguroTipo, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}" MaxLength="100"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- ════ OUTROS DOCUMENTOS ════ -->
+                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
+                    <Grid Margin="0,16,0,10">
+                        <TextBlock Text="Outros Documentos" Style="{StaticResource SectionHeader}"
+                                   Margin="0,0,0,0" VerticalAlignment="Center"/>
+                        <Button HorizontalAlignment="Right"
+                                Command="{Binding AdicionarDocumentoCommand}"
+                                Height="30" Cursor="Hand" Background="#16A34A"
+                                BorderThickness="0">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border CornerRadius="8" Background="{TemplateBinding Background}">
+                                        <StackPanel Orientation="Horizontal" Margin="12,0">
+                                            <materialDesign:PackIcon Kind="Plus" Width="14" Height="14"
+                                                                     Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                            <TextBlock Text="Adicionar" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#15803D"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+
+                    <DataGrid ItemsSource="{Binding Documentos}"
+                              SelectedItem="{Binding DocumentoSelecionado}"
+                              AutoGenerateColumns="False"
+                              HeadersVisibility="Column"
+                              RowHeight="36" ColumnHeaderHeight="36"
+                              GridLinesVisibility="None"
+                              RowBackground="#FFFFFF"
+                              AlternatingRowBackground="#FBFBFD"
+                              BorderBrush="{StaticResource LineBrush}"
+                              BorderThickness="1"
+                              CanUserAddRows="False"
+                              CanUserResizeRows="False"
+                              SelectionMode="Single"
+                              SelectionUnit="FullRow"
+                              IsReadOnly="True"
+                              MaxHeight="160">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Documento"
+                                               Binding="{Binding Documento}"
+                                               Width="*"/>
+                            <DataGridTextColumn Header="Dt. Vencimento"
+                                               Binding="{Binding DtVencimento, StringFormat=dd/MM/yyyy}"
+                                               Width="140"/>
+                            <DataGridTemplateColumn Width="60">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.RemoverDocumentoCommand,
+                                                    RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Width="26" Height="26" Cursor="Hand"
+                                                Background="#FFEBEB" BorderThickness="0">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border CornerRadius="6" Background="{TemplateBinding Background}">
+                                                        <materialDesign:PackIcon Kind="TrashCanOutline"
+                                                                                 Width="13" Height="13"
+                                                                                 Foreground="#DC2626"
+                                                                                 HorizontalAlignment="Center"
+                                                                                 VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- ════ ANEXOS ════ -->
+                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
+                    <Grid Margin="0,16,0,10">
+                        <TextBlock Text="Anexos" Style="{StaticResource SectionHeader}"
+                                   Margin="0" VerticalAlignment="Center"/>
+                        <Button HorizontalAlignment="Right"
+                                Command="{Binding AdicionarAnexoCommand}"
+                                Height="30" Cursor="Hand" Background="#2563EB"
+                                BorderThickness="0">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border CornerRadius="8" Background="{TemplateBinding Background}">
+                                        <StackPanel Orientation="Horizontal" Margin="12,0">
+                                            <materialDesign:PackIcon Kind="PaperclipPlus" Width="14" Height="14"
+                                                                     Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                            <TextBlock Text="Anexar arquivo" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#1D4ED8"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+
+                    <DataGrid ItemsSource="{Binding Anexos}"
+                              AutoGenerateColumns="False"
+                              HeadersVisibility="Column"
+                              RowHeight="36" ColumnHeaderHeight="36"
+                              GridLinesVisibility="None"
+                              RowBackground="#FFFFFF"
+                              AlternatingRowBackground="#FBFBFD"
+                              BorderBrush="{StaticResource LineBrush}"
+                              BorderThickness="1"
+                              CanUserAddRows="False"
+                              CanUserResizeRows="False"
+                              SelectionMode="Single"
+                              SelectionUnit="FullRow"
+                              IsReadOnly="True"
+                              MaxHeight="160">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Arquivo"
+                                               Binding="{Binding NomeArquivo}"
+                                               Width="*"/>
+                            <DataGridTextColumn Header="Tipo"
+                                               Binding="{Binding TipoArquivo}"
+                                               Width="120"/>
+                            <DataGridTextColumn Header="Tamanho"
+                                               Binding="{Binding TamanhoFormatado}"
+                                               Width="90"/>
+                            <DataGridTextColumn Header="Data Upload"
+                                               Binding="{Binding DataUpload, StringFormat=dd/MM/yyyy}"
+                                               Width="110"/>
+                            <DataGridTemplateColumn Width="60">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.RemoverAnexoCommand,
+                                                    RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Width="26" Height="26" Cursor="Hand"
+                                                Background="#FFEBEB" BorderThickness="0">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border CornerRadius="6" Background="{TemplateBinding Background}">
+                                                        <materialDesign:PackIcon Kind="TrashCanOutline"
+                                                                                 Width="13" Height="13"
+                                                                                 Foreground="#DC2626"
+                                                                                 HorizontalAlignment="Center"
+                                                                                 VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- ════ OBSERVAÇÕES ════ -->
+                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
+                    <TextBlock Text="Observações" Style="{StaticResource SectionHeader}"/>
+                    <TextBox Text="{Binding Observacoes, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource ModernTextBoxMultiline}"
+                             Margin="0,0,0,8"/>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- ── Mensagem de erro ────────────────────────────────────────── -->
+            <TextBlock Grid.Row="4"
                        Text="{Binding MensagemErro}"
-                       Foreground="#DC2626" FontSize="12"/>
+                       Foreground="#DC2626" FontSize="12"
+                       TextWrapping="Wrap"/>
 
-            <!-- Botões -->
-            <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Right">
+            <!-- ── Botões ──────────────────────────────────────────────────── -->
+            <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right">
+
                 <Button Command="{Binding DeletarCommand}"
-                        Height="40" Cursor="Hand"
-                        Background="#DC2626" BorderThickness="0"
-                        Margin="0,0,8,0"
+                        Height="40" Cursor="Hand" Background="#DC2626"
+                        BorderThickness="0" Margin="0,0,8,0"
                         Visibility="{Binding EmModoEdicao, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border CornerRadius="10" Background="{TemplateBinding Background}">
                                 <StackPanel Orientation="Horizontal" Margin="16,0">
                                     <materialDesign:PackIcon Kind="TrashCanOutline" Width="16" Height="16"
-                                             Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                             Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                     <TextBlock Text="Deletar" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
@@ -277,12 +711,9 @@
                     </Button.Template>
                 </Button>
 
-
-
                 <Button Command="{Binding CancelarCommand}"
-                        Height="40" Cursor="Hand"
-                        Background="#F3F4F6" BorderThickness="0"
-                        Margin="0,0,8,0">
+                        Height="40" Cursor="Hand" Background="#F3F4F6"
+                        BorderThickness="0" Margin="0,0,8,0">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border CornerRadius="10" Background="{TemplateBinding Background}">
@@ -304,9 +735,8 @@
                 </Button>
 
                 <Button Command="{Binding LimparCommand}"
-                        Height="40" Cursor="Hand"
-                        Background="#F59E0B" BorderThickness="0"
-                        Margin="0,0,8,0">
+                        Height="40" Cursor="Hand" Background="#F59E0B"
+                        BorderThickness="0" Margin="0,0,8,0">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border CornerRadius="10" Background="{TemplateBinding Background}">
@@ -326,8 +756,8 @@
                 </Button>
 
                 <Button Command="{Binding SalvarCommand}"
-                        Height="40" Cursor="Hand"
-                        Background="#16A34A" BorderThickness="0">
+                        Height="40" Cursor="Hand" Background="#16A34A"
+                        BorderThickness="0">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border CornerRadius="10" Background="{TemplateBinding Background}">

@@ -4,10 +4,10 @@ namespace GerenciamentoDeFrota.Interfaces.Repositories
 {
     public interface ICentrosCustoRepository
     {
-        List<CentrosCusto> GetCentrosCustos();
-        CentrosCusto? GetCentroCustoById(long id);
-        void AddCentroCusto(CentrosCusto centroCusto);
-        void UpdateCentroCusto(CentrosCusto centroCusto);
-        void DeleteCentroCusto(long id);
+        Task<List<CentrosCusto>> GetCentrosCustosAsync();
+        Task<CentrosCusto?> GetCentroCustoByIdAsync(long id);
+        Task AddCentroCustoAsync(CentrosCusto centroCusto);
+        Task UpdateCentroCustoAsync(CentrosCusto centroCusto);
+        Task DeleteCentroCustoAsync(long id);
     }
 }

@@ -5,52 +5,49 @@ using GerenciamentoDeFrota.Interfaces.Repositories;
 using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Configs;
 using GerenciamentoDeFrota.Exceptions.CustomExceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace GerenciamentoDeFrota.Data.Repositories
 {
     public class CentrosCustoRepository : ICentrosCustoRepository
     {
-
         private readonly AppDbContext _context;
 
-        public CentrosCustoRepository(AppDbContext dbContext)
+        public CentrosCustoRepository(AppDbContext context)
         {
-            this._context = dbContext;
+            _context = context;
         }
 
-        public void AddCentroCusto(CentrosCusto centroCusto)
+        public async Task AddCentroCustoAsync(CentrosCusto centroCusto)
         {
-            this._context.CentrosCusto.Add(centroCusto);
-            this._context.SaveChanges();
+            await _context.CentrosCusto.AddAsync(centroCusto);
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteCentroCusto(long id)
+        public async Task UpdateCentroCustoAsync(CentrosCusto centroCusto)
         {
-            var entity = GetCentroCustoById(id);
-            if (entity != null) 
-            {
-                this._context.CentrosCusto.Remove(entity);
-                this._context.SaveChanges();
-            }
-            else
-            {
+            _context.CentrosCusto.Update(centroCusto);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteCentroCustoAsync(long id)
+        {
+            var entity = await GetCentroCustoByIdAsync(id);
+
+            if (entity is null)
                 throw new RegisterNotFoundException("Centro de custo não encontrado para exclusão!");
-            }
 
+            _context.CentrosCusto.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public CentrosCusto? GetCentroCustoById(long id) => 
-            this._context.CentrosCusto.FirstOrDefault(c => c.Id == id);
+        public async Task<CentrosCusto?> GetCentroCustoByIdAsync(long id) =>
+            await _context.CentrosCusto.FirstOrDefaultAsync(c => c.Id == id);
 
-        public List<CentrosCusto> GetCentrosCustos() =>
-            this._context.CentrosCusto.OrderBy(c => c.Nome).ThenByDescending(c => c.DataCriacao).ToList();
-
-        public void UpdateCentroCusto(CentrosCusto centroCusto)
-        {
-            this._context.CentrosCusto.Update(centroCusto);
-            this._context.SaveChanges();
-        }
-
-        
+        public async Task<List<CentrosCusto>> GetCentrosCustosAsync() =>
+            await _context.CentrosCusto
+                .OrderBy(c => c.Nome)
+                .ThenByDescending(c => c.DataCriacao)
+                .ToListAsync();
     }
 }

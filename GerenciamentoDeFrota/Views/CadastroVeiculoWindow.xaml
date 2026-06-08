@@ -565,11 +565,41 @@
                         </Button>
                     </Grid>
 
+                    <!-- Campos para novo documento -->
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="180"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Nome do Documento"
+               Style="{StaticResource FieldLabel}" Margin="0,0,8,0"
+               VerticalAlignment="Bottom"/>
+                        <TextBlock Grid.Column="1" Text="Dt. Vencimento"
+               Style="{StaticResource FieldLabel}"
+               VerticalAlignment="Bottom"/>
+                    </Grid>
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="180"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Margin="0,0,8,0"
+             Text="{Binding NovoDocumentoNome, UpdateSourceTrigger=PropertyChanged}"
+             Style="{StaticResource ModernTextBox}"
+             materialDesign:HintAssist.Hint="Nome do documento"/>
+                        <DatePicker Grid.Column="1"
+                SelectedDate="{Binding NovoDocumentoDtVencimento}"
+                Height="32" FontSize="13" Language="pt-BR"
+                BorderBrush="{StaticResource LineBrush}"
+                BorderThickness="1" SelectedDateFormat="Short"
+                PreviewTextInput="DatePicker_PreviewTextInput"/>
+                    </Grid>
+
                     <DataGrid ItemsSource="{Binding Documentos}"
                               SelectedItem="{Binding DocumentoSelecionado}"
                               AutoGenerateColumns="False"
                               HeadersVisibility="Column"
-                              RowHeight="36" ColumnHeaderHeight="36"
+                              RowHeight="48" ColumnHeaderHeight="36"
                               GridLinesVisibility="None"
                               RowBackground="#FFFFFF"
                               AlternatingRowBackground="#FBFBFD"
@@ -645,7 +675,7 @@
                     <DataGrid ItemsSource="{Binding Anexos}"
                               AutoGenerateColumns="False"
                               HeadersVisibility="Column"
-                              RowHeight="36" ColumnHeaderHeight="36"
+                              RowHeight="48" ColumnHeaderHeight="36"
                               GridLinesVisibility="None"
                               RowBackground="#FFFFFF"
                               AlternatingRowBackground="#FBFBFD"
@@ -663,7 +693,7 @@
                                                Width="*"/>
                             <DataGridTextColumn Header="Tipo"
                                                Binding="{Binding TipoArquivo}"
-                                               Width="120"/>
+                                               Width="160"/>
                             <DataGridTextColumn Header="Tamanho"
                                                Binding="{Binding TamanhoFormatado}"
                                                Width="90"/>

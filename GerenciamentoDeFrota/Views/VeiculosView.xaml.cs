@@ -28,26 +28,29 @@ namespace GerenciamentoDeFrota.Views
 
         private async void AbrirCadastroVeiculo()
         {
-            var service = CriarService();
-            var window = new CadastroVeiculoWindow(service);
+            var (service, serviceCentrosCusto) = CriarServices();
+            var window = new CadastroVeiculoWindow(service, serviceCentrosCusto);
             window.ShowDialog();
             await _viewModel.CarregarListaAsync();
         }
 
         private async void AbrirEdicaoVeiculo(Veiculos veiculo)
         {
-            var service = CriarService();
-            var window = new CadastroVeiculoWindow(service, veiculo);
+            var (service, serviceCentrosCusto) = CriarServices();
+            var window = new CadastroVeiculoWindow(service, serviceCentrosCusto, veiculo);
             window.ShowDialog();
             await _viewModel.CarregarListaAsync();
         }
 
-
-        private static ServiceVeiculos CriarService()
+        private static (ServiceVeiculos, ServiceCentrosCusto) CriarServices()
         {
             var context = new AppDbContext();
-            var repository = new VeiculosRepository(context);
-            return new ServiceVeiculos(repository);
+
+            var veiculosRepo = new VeiculosRepository(context);
+            var centrosRepo = new CentrosCustoRepository(context);
+
+            return (new ServiceVeiculos(veiculosRepo),
+                    new ServiceCentrosCusto(centrosRepo));
         }
     }
 }

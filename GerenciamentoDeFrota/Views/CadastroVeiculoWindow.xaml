@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Cadastro de Veículo"
-        Width="820" Height="820"
+        Width="1250" Height="820"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -54,11 +54,11 @@
         </Style>
 
         <Style x:Key="ModernDatePicker" TargetType="DatePicker">
-            <Setter Property="Height"         Value="32"/>
-            <Setter Property="FontSize"       Value="13"/>
-            <Setter Property="BorderBrush"    Value="{StaticResource LineBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height"             Value="32"/>
+            <Setter Property="FontSize"           Value="13"/>
+            <Setter Property="Language"           Value="pt-BR"/>
             <Setter Property="SelectedDateFormat" Value="Short"/>
+            <EventSetter Event="PreviewTextInput" Handler="DatePicker_PreviewTextInput"/>
         </Style>
 
         <Style x:Key="FieldLabel" TargetType="TextBlock">
@@ -85,6 +85,7 @@
             Background="{StaticResource CardBrush}"
             BorderBrush="{StaticResource LineBrush}"
             BorderThickness="1"
+            ClipToBounds="True"
             MouseDown="Border_MouseDown">
         <Grid Margin="24">
             <Grid.RowDefinitions>
@@ -139,8 +140,8 @@
             <ScrollViewer Grid.Row="2"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled"
-                          Padding="0,0,6,0">
-                <StackPanel>
+                          Padding="0">
+                <StackPanel Margin="0,0,8,0">
 
                     <!-- ════ IDENTIFICAÇÃO ════ -->
                     <TextBlock Text="Identificação" Style="{StaticResource SectionHeader}"/>
@@ -257,7 +258,11 @@
                         <StackPanel Grid.Column="4">
                             <TextBlock Text="Venc. Tacógrafo" Style="{StaticResource FieldLabel}"/>
                             <DatePicker SelectedDate="{Binding DataTacografo}"
-                                        Style="{StaticResource ModernDatePicker}"/>
+                                        Height="32" FontSize="13" Language="pt-BR"
+                                        BorderBrush="{StaticResource LineBrush}"
+                                        BorderThickness="1" SelectedDateFormat="Short"
+                                        PreviewTextInput="DatePicker_PreviewTextInput"
+                            />
                         </StackPanel>
                     </Grid>
 
@@ -421,7 +426,10 @@
                         <StackPanel Grid.Column="1" Margin="0,0,8,0">
                             <TextBlock Text="Dt. Venc. Licenciamento" Style="{StaticResource FieldLabel}"/>
                             <DatePicker SelectedDate="{Binding LicenciamentoDtVencimento}"
-                                        Style="{StaticResource ModernDatePicker}"/>
+                                        Height="32" FontSize="13" Language="pt-BR"
+                                        BorderBrush="{StaticResource LineBrush}"
+                                        BorderThickness="1" SelectedDateFormat="Short"
+                                        PreviewTextInput="DatePicker_PreviewTextInput"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Margin="0,0,8,0">
@@ -433,7 +441,10 @@
                         <StackPanel Grid.Column="3" Margin="0,0,8,0">
                             <TextBlock Text="Dt. Venc. IPVA" Style="{StaticResource FieldLabel}"/>
                             <DatePicker SelectedDate="{Binding IpvaDtVencimento}"
-                                        Style="{StaticResource ModernDatePicker}"/>
+                                        Height="32" FontSize="13" Language="pt-BR"
+                                        BorderBrush="{StaticResource LineBrush}"
+                                        BorderThickness="1" SelectedDateFormat="Short"
+                                        PreviewTextInput="DatePicker_PreviewTextInput"  />
                         </StackPanel>
 
                         <StackPanel Grid.Column="4" Margin="0,0,8,0">
@@ -444,7 +455,10 @@
                         <StackPanel Grid.Column="5">
                             <TextBlock Text="Dt. Venc. ANTT" Style="{StaticResource FieldLabel}"/>
                             <DatePicker SelectedDate="{Binding AnttDtVencimento}"
-                                        Style="{StaticResource ModernDatePicker}"/>
+                                        Height="32" FontSize="13" Language="pt-BR"
+                                        BorderBrush="{StaticResource LineBrush}"
+                                        BorderThickness="1" SelectedDateFormat="Short"
+                                        PreviewTextInput="DatePicker_PreviewTextInput"  />
                         </StackPanel>
                     </Grid>
 
@@ -458,12 +472,18 @@
                         <StackPanel Grid.Column="0" Margin="0,0,8,0">
                             <TextBlock Text="Dt. Venc. Cronoacógrafo" Style="{StaticResource FieldLabel}"/>
                             <DatePicker SelectedDate="{Binding CronoacografoDtVencimento}"
-                                        Style="{StaticResource ModernDatePicker}"/>
+                                        Height="32" FontSize="13" Language="pt-BR"
+                                        BorderBrush="{StaticResource LineBrush}"
+                                        BorderThickness="1" SelectedDateFormat="Short"
+                                        PreviewTextInput="DatePicker_PreviewTextInput"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Margin="0,0,8,0">
                             <TextBlock Text="Dt. Venc. Extintor" Style="{StaticResource FieldLabel}"/>
                             <DatePicker SelectedDate="{Binding ExtintorDtVencimento}"
-                                        Style="{StaticResource ModernDatePicker}"/>
+                                        Height="32" FontSize="13" Language="pt-BR"
+                                        BorderBrush="{StaticResource LineBrush}"
+                                        BorderThickness="1" SelectedDateFormat="Short"
+                                        PreviewTextInput="DatePicker_PreviewTextInput"  />
                         </StackPanel>
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="Cód. Extintor" Style="{StaticResource FieldLabel}"/>
@@ -497,12 +517,18 @@
                         <StackPanel Grid.Column="2" Margin="0,0,8,0">
                             <TextBlock Text="Dt. Início Vigência" Style="{StaticResource FieldLabel}"/>
                             <DatePicker SelectedDate="{Binding SeguroDtInicioVigencia}"
-                                        Style="{StaticResource ModernDatePicker}"/>
+                                        Height="32" FontSize="13" Language="pt-BR"
+                                        BorderBrush="{StaticResource LineBrush}"
+                                        BorderThickness="1" SelectedDateFormat="Short"
+                                        PreviewTextInput="DatePicker_PreviewTextInput"  />
                         </StackPanel>
                         <StackPanel Grid.Column="3" Margin="0,0,8,0">
                             <TextBlock Text="Dt. Término Vigência" Style="{StaticResource FieldLabel}"/>
                             <DatePicker SelectedDate="{Binding SeguroDtTerminoVigencia}"
-                                        Style="{StaticResource ModernDatePicker}"/>
+                                        Height="32" FontSize="13" Language="pt-BR"
+                                        BorderBrush="{StaticResource LineBrush}"
+                                        BorderThickness="1" SelectedDateFormat="Short"
+                                        PreviewTextInput="DatePicker_PreviewTextInput" />
                         </StackPanel>
                         <StackPanel Grid.Column="4">
                             <TextBlock Text="Tipo" Style="{StaticResource FieldLabel}"/>

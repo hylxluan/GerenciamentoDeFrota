@@ -38,7 +38,6 @@ namespace GerenciamentoDeFrota.Helpers
         public static void LimitarCaracteresNumericos_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             if (sender is not TextBox renavam) return;
-
             e.Handled = renavam.Text.Length >= 11 || !int.TryParse(e.Text, out _);
         }
 
@@ -150,6 +149,69 @@ namespace GerenciamentoDeFrota.Helpers
                 txt.Text = formatado;
                 txt.SelectionStart = formatado.Length;
             }
+        }
+
+        public static void LimitarDecimal_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (sender is not TextBox txt) return;
+
+            var c = e.Text[0];
+            bool ehDigito = char.IsDigit(c);
+            bool ehVirgula = c == ',' && !txt.Text.Contains(',');
+
+            e.Handled = !ehDigito && !ehVirgula;
+        }
+
+        // Máscara CPF: 000.000.000-00
+        public static void CPF_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is not TextBox txt) return;
+
+            string digits = new([.. txt.Text.Where(char.IsDigit).Take(11)]);
+
+            string mask = digits.Length switch
+            {
+                <= 3 => digits,
+                <= 6 => $"{digits[..3]}.{digits[3..]}",
+                <= 9 => $"{digits[..3]}.{digits[3..6]}.{digits[6..]}",
+                _ => $"{digits[..3]}.{digits[3..6]}.{digits[6..9]}-{digits[9..]}"
+            };
+
+            AtualizarTexto(txt, mask);
+        }
+
+        // Máscara CNPJ: 00.000.000/0000-00
+        public static void CNPJ_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is not TextBox txt) return;
+
+            string digits = new([.. txt.Text.Where(char.IsDigit).Take(14)]);
+
+            string mask = digits.Length switch
+            {
+                <= 2 => digits,
+                <= 5 => $"{digits[..2]}.{digits[2..]}",
+                <= 8 => $"{digits[..2]}.{digits[2..5]}.{digits[5..]}",
+                <= 12 => $"{digits[..2]}.{digits[2..5]}.{digits[5..8]}/{digits[8..]}",
+                _ => $"{digits[..2]}.{digits[2..5]}.{digits[5..8]}/{digits[8..12]}-{digits[12..]}"
+            };
+
+            AtualizarTexto(txt, mask);
+        }
+
+        private static void AtualizarTexto(TextBox txt, string valor)
+        {
+            if (txt.Text == valor) return;
+            int caret = txt.CaretIndex;
+            txt.Text = valor;
+            txt.CaretIndex = Math.Min(caret + 1, valor.Length);
+        }
+
+        
+        public static void Data_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            var c = e.Text[0];
+            e.Handled = !char.IsDigit(c) && c != '/';
         }
     }
 }

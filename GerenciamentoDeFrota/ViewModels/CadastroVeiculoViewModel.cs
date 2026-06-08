@@ -490,7 +490,7 @@ namespace GerenciamentoDeFrota.ViewModels
 
         private async Task CarregarCentrosCustoAsync()
         {
-            var lista = await _serviceCentrosCusto.ObterTodosAsync();
+            var lista = await _serviceCentrosCusto.ListarCentrosCustosAsync();
             CentrosCusto = new ObservableCollection<CentrosCusto>(lista);
 
             if (_veiculoEditando is not null)

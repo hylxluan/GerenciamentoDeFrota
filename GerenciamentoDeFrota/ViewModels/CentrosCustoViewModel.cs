@@ -2,16 +2,17 @@
 using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Exceptions.ExceptionBase;
 using GerenciamentoDeFrota.Interfaces.Services;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 
 namespace GerenciamentoDeFrota.ViewModels
 {
     public class CentrosCustoViewModel : BaseViewModel
     {
+        #region Service
+        private readonly IServiceCentrosCusto _service;
+        #endregion
+
         #region Commands
         public ICommand SalvarCommand { get; set; }
         public ICommand EditarCommand { get; set; }
@@ -72,27 +73,23 @@ namespace GerenciamentoDeFrota.ViewModels
         }
 
         public ObservableCollection<CentrosCusto> CentrosCusto { get; } = new();
-        private List<CentrosCusto> _todosCentrosCusto = new();
-        #endregion
-
-        #region Service
-        private readonly IServiceCentrosCusto _service;
+        private List<CentrosCusto> _todosCentrosCusto = [];
         #endregion
 
         public CentrosCustoViewModel(IServiceCentrosCusto service) : base()
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
 
-            SalvarCommand = new SimpleRelayCommand(Salvar);
+            SalvarCommand = new SimpleRelayCommand(async () => await SalvarAsync());
             EditarCommand = new SimpleRelayCommand(Editar);
             LimparCommand = new SimpleRelayCommand(Limpar);
-            DeletarCommand = new SimpleRelayCommand(Deletar);
+            DeletarCommand = new SimpleRelayCommand(async () => await DeletarAsync());
 
-            CarregarLista();
+            _ = CarregarListaAsync();
         }
 
         #region Transações DB
-        private void Salvar()
+        private async Task SalvarAsync()
         {
             try
             {
@@ -103,8 +100,8 @@ namespace GerenciamentoDeFrota.ViewModels
                 entity.Observacoes = Observacoes;
                 entity.Ativo = Ativo;
 
-                _service.SalvarCentroCusto(entity);
-                CarregarLista();
+                await _service.SalvarCentroCustoAsync(entity);
+                await CarregarListaAsync();
                 Limpar();
                 MensagemSucesso = "Centro de custo salvo com sucesso!";
             }
@@ -120,7 +117,7 @@ namespace GerenciamentoDeFrota.ViewModels
 
         private void Editar()
         {
-            if (Selecionado == null)
+            if (Selecionado is null)
             {
                 MensagemErro = "Selecione um registro para editar.";
                 return;
@@ -131,26 +128,25 @@ namespace GerenciamentoDeFrota.ViewModels
         private void Limpar()
         {
             Selecionado = null;
-            Nome = string.Empty;
-            Observacoes = string.Empty;
+            Nome = Observacoes = string.Empty;
             Ativo = true;
             LimparMensagens();
         }
 
-        private void Deletar()
+        private async Task DeletarAsync()
         {
             try
             {
                 LimparMensagens();
 
-                if (Selecionado == null)
+                if (Selecionado is null)
                 {
                     MensagemErro = "Selecione um registro para deletar.";
                     return;
                 }
 
-                _service.DeletarCentroCusto(Selecionado.Id);
-                CarregarLista();
+                await _service.DeletarCentroCustoAsync(Selecionado.Id);
+                await CarregarListaAsync();
                 Limpar();
                 MensagemSucesso = "Centro de custo removido com sucesso!";
             }
@@ -165,11 +161,10 @@ namespace GerenciamentoDeFrota.ViewModels
         }
         #endregion
 
-
-        #region Métodos auxiliares
-        private void CarregarLista()
+        #region Auxiliares
+        private async Task CarregarListaAsync()
         {
-            _todosCentrosCusto = _service.ListarCentrosCustos();
+            _todosCentrosCusto = await _service.ListarCentrosCustosAsync();
             AplicarFiltro();
         }
 
@@ -187,7 +182,7 @@ namespace GerenciamentoDeFrota.ViewModels
             var lista = string.IsNullOrWhiteSpace(FiltroNome)
                 ? _todosCentrosCusto
                 : _todosCentrosCusto
-                    .Where(c => c.Nome.Contains(FiltroNome, StringComparison.OrdinalIgnoreCase))
+                    .Where(c => c.Nome!.Contains(FiltroNome, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
             foreach (var item in lista)

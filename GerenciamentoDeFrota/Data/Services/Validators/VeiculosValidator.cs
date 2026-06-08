@@ -40,7 +40,7 @@ namespace GerenciamentoDeFrota.Data.Services.Validators
             RuleFor(x => x.AnoModelo)
                 .InclusiveBetween(1900, DateTime.Now.Year + 2)
                 .When(x => x.AnoModelo.HasValue)
-                .WithMessage("Ano modelo inválido.");
+                .WithMessage("Ano do modelo inválido.");
 
             RuleFor(x => x.AnoEmplacamento)
                 .InclusiveBetween(1900, DateTime.Now.Year)
@@ -66,7 +66,7 @@ namespace GerenciamentoDeFrota.Data.Services.Validators
             RuleFor(x => x.SeguroDtTerminoVigencia)
                 .GreaterThan(x => x.SeguroDtInicioVigencia)
                 .When(x => x.SeguroDtInicioVigencia.HasValue && x.SeguroDtTerminoVigencia.HasValue)
-                .WithMessage("Dt. Término do seguro deve ser posterior ao Dt. Início.");
+                .WithMessage("Dt. Término do seguro deve ser posterior à Dt. Início.");
 
             // ── Tamanhos opcionais ────────────────────────────────────────
             RuleFor(x => x.Renavam).MaximumLength(12).When(x => x.Renavam is not null);

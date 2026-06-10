@@ -1,6 +1,8 @@
 ﻿// ─── ServiceVeiculos.cs ──────────────────────────────────────────────────────
 using GerenciamentoDeFrota.Data.Models;
+using GerenciamentoDeFrota.Data.Services.Validators;
 using GerenciamentoDeFrota.Exceptions.CustomExceptions;
+using GerenciamentoDeFrota.Helpers;
 using GerenciamentoDeFrota.Interfaces.Repositories;
 using GerenciamentoDeFrota.Interfaces.Services;
 
@@ -9,6 +11,11 @@ namespace GerenciamentoDeFrota.Data.Services
     public class ServiceVeiculos : IServiceVeiculos
     {
         private readonly IVeiculosRepository _repository;
+
+        // Validators instanciados uma vez por service — são stateless
+        private static readonly VeiculosValidator _veiculoValidator = new();
+        private static readonly VeiculoDocumentoValidator _documentoValidator = new();
+        private static readonly VeiculoAnexoValidator _anexoValidator = new();
 
         public ServiceVeiculos(IVeiculosRepository repository)
         {
@@ -19,9 +26,6 @@ namespace GerenciamentoDeFrota.Data.Services
         public async Task<List<Veiculos>> ListarVeiculosAsync() =>
             await _repository.GetVeiculosAsync();
 
-        /// <summary>
-        /// Listagem com CentrosCusto incluído — usada pelo DataGrid de veículos.
-        /// </summary>
         public async Task<List<Veiculos>> ListarVeiculosComCentroAsync() =>
             await _repository.ListarComCentroAsync();
 
@@ -30,10 +34,6 @@ namespace GerenciamentoDeFrota.Data.Services
             await _repository.GetVeiculoByIdAsync(id)
             ?? throw new RegisterNotFoundException("Veículo não encontrado!");
 
-        /// <summary>
-        /// Retorna o veículo com CentrosCusto, Documentos e Anexos carregados.
-        /// Deve ser usado antes de abrir o modal de edição.
-        /// </summary>
         public async Task<Veiculos?> ObterVeiculoCompletoAsync(long id) =>
             await _repository.ObterCompletoAsync(id);
 
@@ -43,14 +43,16 @@ namespace GerenciamentoDeFrota.Data.Services
             if (veiculo is null)
                 throw new ArgumentNullException(nameof(veiculo));
 
-            if (string.IsNullOrWhiteSpace(veiculo.Placa))
-                throw new ErrorOnValidationException("A placa do veículo é obrigatória!");
+            // Valida o veículo — acumula todos os erros antes de lançar
+            ValidatorHelper.ValidarOuLancar(_veiculoValidator, veiculo);
 
-            if (string.IsNullOrWhiteSpace(veiculo.Fabricante))
-                throw new ErrorOnValidationException("O fabricante do veículo é obrigatório!");
+            // Valida cada documento avulso cadastrado
+            foreach (var doc in veiculo.Documentos ?? [])
+                ValidatorHelper.ValidarOuLancar(_documentoValidator, doc);
 
-            if (string.IsNullOrWhiteSpace(veiculo.Modelo))
-                throw new ErrorOnValidationException("O modelo do veículo é obrigatório!");
+            // Valida cada anexo adicionado
+            foreach (var anx in veiculo.Anexos ?? [])
+                ValidatorHelper.ValidarOuLancar(_anexoValidator, anx);
 
             if (veiculo.Id == 0)
                 await _repository.AddVeiculoAsync(veiculo);

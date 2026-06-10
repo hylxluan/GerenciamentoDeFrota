@@ -1,5 +1,4 @@
-﻿// ─── CadastroVeiculoViewModel.cs ─────────────────────────────────────────────
-using GerenciamentoDeFrota.Commands;
+﻿using GerenciamentoDeFrota.Commands;
 using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Enums;
 using GerenciamentoDeFrota.Exceptions.ExceptionBase;
@@ -47,6 +46,13 @@ namespace GerenciamentoDeFrota.ViewModels
         ];
 
         public List<string> TiposKmHora { get; } = ["Km", "Horímetro"];
+
+        public List<string> EstadosBrasil { get; } =
+        [
+            "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO",
+            "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR",
+            "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"
+        ];
         #endregion
 
         #region Título
@@ -180,8 +186,8 @@ namespace GerenciamentoDeFrota.ViewModels
             set { _numeroFrota = value; OnPropertyChanged(nameof(NumeroFrota)); }
         }
 
-        private string _uf = string.Empty;
-        public string UF
+        private string? _uf;
+        public string? UF
         {
             get => _uf;
             set { _uf = value; OnPropertyChanged(nameof(UF)); }
@@ -567,7 +573,7 @@ namespace GerenciamentoDeFrota.ViewModels
                 entity.Renavam = Renavam;
                 entity.Tipo = Tipo;
                 entity.NumeroFrota = NumeroFrota;
-                entity.UF = UF.ToUpper();
+                entity.UF = UF?.ToUpper();
                 entity.Cor = Cor;
 
                 var kmDigits = KmAtual.Replace(".", string.Empty);
@@ -645,7 +651,7 @@ namespace GerenciamentoDeFrota.ViewModels
             _veiculoEditando = null;
             EmModoEdicao = false;
 
-            Fabricante = Modelo = Placa = Renavam = Cor = NumeroFrota = UF =
+            Fabricante = Modelo = Placa = Renavam = Cor = NumeroFrota =
             KmAtual = AnoModelo = AnoFabricacao = MesEmplacamento = AnoEmplacamento =
             Proprietario = CPF = CNPJ =
             ValorFipe = CapacidadeTanque = Padronizacao = Carroceria =
@@ -660,6 +666,7 @@ namespace GerenciamentoDeFrota.ViewModels
             SeguroDtTerminoVigencia = NovoDocumentoDtVencimento = null;
 
             Tipo = null;
+            UF = null;
             KmHoraSelecionado = "Km";
             VeiculoTracao = true;
             Terceirizado = false;
@@ -685,7 +692,7 @@ namespace GerenciamentoDeFrota.ViewModels
             Renavam = v.Renavam ?? string.Empty;
             Tipo = v.Tipo;
             NumeroFrota = v.NumeroFrota ?? string.Empty;
-            UF = v.UF ?? string.Empty;
+            UF = v.UF;   // null → ComboBox sem seleção
             Cor = v.Cor ?? string.Empty;
 
             KmAtual = v.KmAtual.HasValue
@@ -706,14 +713,14 @@ namespace GerenciamentoDeFrota.ViewModels
             CPF = v.CPF ?? string.Empty;
             CNPJ = v.CNPJ ?? string.Empty;
 
-            ValorFipe = v.ValorFipe?.ToString("F2", ptBr) ?? string.Empty;
-            CapacidadeTanque = v.CapacidadeTanque?.ToString("F2", ptBr) ?? string.Empty;
+            ValorFipe = v.ValorFipe?.ToString("N2", ptBr) ?? string.Empty;
+            CapacidadeTanque = v.CapacidadeTanque?.ToString("N2", ptBr) ?? string.Empty;
             Padronizacao = v.Padronizacao ?? string.Empty;
             Carroceria = v.Carroceria ?? string.Empty;
-            CapacidadePaletes = v.CapacidadePaletes?.ToString("F2", ptBr) ?? string.Empty;
-            CapacidadeCaixa = v.CapacidadeCaixa?.ToString("F2", ptBr) ?? string.Empty;
-            TaraKg = v.TaraKg?.ToString("F2", ptBr) ?? string.Empty;
-            LotacaoKg = v.LotacaoKg?.ToString("F2", ptBr) ?? string.Empty;
+            CapacidadePaletes = v.CapacidadePaletes?.ToString("N2", ptBr) ?? string.Empty;
+            CapacidadeCaixa = v.CapacidadeCaixa?.ToString("N2", ptBr) ?? string.Empty;
+            TaraKg = v.TaraKg?.ToString("N2", ptBr) ?? string.Empty;
+            LotacaoKg = v.LotacaoKg?.ToString("N2", ptBr) ?? string.Empty;
 
             Licenciamento = v.Licenciamento?.ToString() ?? string.Empty;
             LicenciamentoDtVencimento = v.LicenciamentoDtVencimento;

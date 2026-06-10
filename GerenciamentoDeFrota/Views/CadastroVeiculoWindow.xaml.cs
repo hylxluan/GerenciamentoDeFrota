@@ -102,7 +102,7 @@ namespace GerenciamentoDeFrota.Views
         private void BtnFechar_Click(object sender, RoutedEventArgs e) =>
             WindowHandler.Fechar(this);
 
-        // ── Máscaras: existentes ─────────────────────────────────────────────
+        // ── Máscaras: identificação ──────────────────────────────────────────
         private void TxtPlaca_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) =>
             InputMasks.PlacaMascara_TextChanged(sender, e);
 
@@ -115,23 +115,33 @@ namespace GerenciamentoDeFrota.Views
         private void TxtKmAtual_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) =>
             InputMasks.KmAtual_TextChanged(sender, e);
 
-        // ── Máscaras: novas ──────────────────────────────────────────────────
+        // ── Máscaras: campos de data/ano/mês ─────────────────────────────────
         private void TxtAno_PreviewTextInput(object sender, TextCompositionEventArgs e) =>
             InputMasks.LimitarAno_PreviewTextInput(sender, e);
 
         private void TxtMes_PreviewTextInput(object sender, TextCompositionEventArgs e) =>
             InputMasks.LimitarMesEmplacamento_PreviewTextInput(sender, e);
 
-        private void TxtDecimal_PreviewTextInput(object sender, TextCompositionEventArgs e) =>
-            InputMasks.LimitarDecimal_PreviewTextInput(sender, e);
+        private void DatePicker_PreviewTextInput(object sender, TextCompositionEventArgs e) =>
+            InputMasks.Data_PreviewTextInput(sender, e);
 
+        // ── Máscaras: documento ───────────────────────────────────────────────
         private void TxtCPF_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) =>
             InputMasks.CPF_TextChanged(sender, e);
 
         private void TxtCNPJ_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) =>
             InputMasks.CNPJ_TextChanged(sender, e);
 
-        private void DatePicker_PreviewTextInput(object sender, TextCompositionEventArgs e) =>
-            InputMasks.Data_PreviewTextInput(sender, e);
+        // ── Máscaras: moeda ───────────────────────────────────────────────────
+        private void TxtMoeda_PreviewTextInput(object sender, TextCompositionEventArgs e) =>
+            InputMasks.LimitarMoeda_PreviewTextInput(sender, e);
+
+        // ValorFipe → dinheiro (exibe "R$")
+        private void TxtValorFipe_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) =>
+            InputMasks.Moeda_TextChanged(sender, e, exibirSimbolo: true);
+
+        // Demais campos numéricos (capacidades, tara, lotação) → sem "R$"
+        private void TxtMoeda_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) =>
+            InputMasks.Moeda_TextChanged(sender, e, exibirSimbolo: false);
     }
 }

@@ -19,5 +19,8 @@ namespace GerenciamentoDeFrota.Interfaces.Services
         /// em uma única transação.
         /// </summary>
         Task DeletarVeiculoComVinculosAsync(long id);
+        Task<List<Veiculos>> ListarVeiculosComCentroAsync();
+        Task<Veiculos?> ObterVeiculoCompletoAsync(long id);
+
     }
 }

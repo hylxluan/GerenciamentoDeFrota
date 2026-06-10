@@ -9,38 +9,11 @@ namespace GerenciamentoDeFrota.Helpers
 {
     public static class InputMasks
     {
-        public static void LimitarMesEmplacamento_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            if (sender is TextBox mesEmplacamento)
-            {
-                string newText = mesEmplacamento.Text + e.Text;
+        // ── Guards ───────────────────────────────────────────────────────────
+        private static bool _atualizandoMoeda = false;
+        private static bool _atualizandoKm = false;
 
-                if (int.TryParse(newText, out int mes))
-                {
-                    if (mes < 1 || mes > 12)
-                        goto bloquear;
-                }
-                else
-                {
-                    goto bloquear;
-                }
-            }
-            else
-            {
-                goto bloquear;
-            }
-
-            return;
-        bloquear:
-            e.Handled = true;
-        }
-
-        public static void LimitarCaracteresNumericos_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            if (sender is not TextBox renavam) return;
-            e.Handled = renavam.Text.Length >= 11 || !int.TryParse(e.Text, out _);
-        }
-
+        // ── Placa ────────────────────────────────────────────────────────────
         public static void PlacaMascara_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (sender is not TextBox placa) return;
@@ -48,7 +21,7 @@ namespace GerenciamentoDeFrota.Helpers
             int posicaoInicial = placa.SelectionStart;
 
             string placaFormatada = new string(placa.Text.ToUpper()
-                .Where(character => char.IsLetterOrDigit(character)).ToArray());
+                .Where(char.IsLetterOrDigit).ToArray());
 
             if (placaFormatada.Length > 7)
                 placaFormatada = placaFormatada[..7];
@@ -88,34 +61,14 @@ namespace GerenciamentoDeFrota.Helpers
             }
         }
 
-        public static void LimitarAno_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        // ── Renavam ──────────────────────────────────────────────────────────
+        public static void LimitarCaracteresNumericos_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            if (sender is TextBox txtAno)
-            {
-                if (!int.TryParse(e.Text, out _))
-                    goto bloquear;
-
-                if (txtAno.Text.Length >= 4)
-                    goto bloquear;
-
-                string newText = txtAno.Text + e.Text;
-                if (newText.Length == 4 && int.TryParse(newText, out int ano))
-                {
-                    int anoAtual = DateTime.Now.Year;
-                    int anoMinimo = anoAtual - 60;
-                    e.Handled = ano > anoAtual || ano < anoMinimo;
-                }
-            }
-            else
-            {
-                goto bloquear;
-            }
-
-            return;
-        bloquear:
-            e.Handled = true;
+            if (sender is not TextBox renavam) return;
+            e.Handled = renavam.Text.Length >= 11 || !int.TryParse(e.Text, out _);
         }
 
+        // ── KM Atual ─────────────────────────────────────────────────────────
         public static void LimitarCaracteresNumericos_KmAtual_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             if (sender is not TextBox txt) return;
@@ -124,45 +77,134 @@ namespace GerenciamentoDeFrota.Helpers
 
         public static void KmAtual_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (_atualizandoKm) return;
             if (sender is not TextBox txt) return;
 
-            string digits = new([.. txt.Text.Where(char.IsDigit)]);
-
-            if (digits.Length == 0)
+            _atualizandoKm = true;
+            try
             {
-                if (txt.Text != string.Empty)
+                string digits = new([.. txt.Text.Where(char.IsDigit)]);
+
+                if (digits.Length == 0)
                 {
                     txt.Text = string.Empty;
                     txt.SelectionStart = 0;
+                    return;
                 }
+
+                if (digits.Length > 7)
+                    digits = digits[..7];
+
+                long valor = long.Parse(digits);
+                string formatado = valor.ToString("N0", new CultureInfo("pt-BR"));
+
+                if (txt.Text != formatado)
+                {
+                    txt.Text = formatado;
+                    txt.SelectionStart = formatado.Length;
+                }
+            }
+            finally
+            {
+                _atualizandoKm = false;
+            }
+        }
+
+        // ── Ano (4 dígitos, dentro de [anoAtual-60 .. anoAtual]) ─────────────
+        public static void LimitarAno_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (sender is not TextBox txtAno)
+            {
+                e.Handled = true;
                 return;
             }
 
-            if (digits.Length > 7)
-                digits = digits[..7];
-
-            long valor = long.Parse(digits);
-            string formatado = valor.ToString("N0", new CultureInfo("pt-BR"));
-
-            if (txt.Text != formatado)
+            if (!int.TryParse(e.Text, out _) || txtAno.Text.Length >= 4)
             {
-                txt.Text = formatado;
-                txt.SelectionStart = formatado.Length;
+                e.Handled = true;
+                return;
+            }
+
+            string newText = txtAno.Text + e.Text;
+            if (newText.Length == 4 && int.TryParse(newText, out int ano))
+            {
+                int anoAtual = DateTime.Now.Year;
+                int anoMinimo = anoAtual - 60;
+                e.Handled = ano > anoAtual || ano < anoMinimo;
             }
         }
 
+        // ── Mês de emplacamento (01-12) ───────────────────────────────────────
+        public static void LimitarMesEmplacamento_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (sender is not TextBox txt)
+            {
+                e.Handled = true;
+                return;
+            }
+
+            string newText = txt.Text + e.Text;
+
+            if (!int.TryParse(newText, out int mes) || mes < 1 || mes > 12)
+                e.Handled = true;
+        }
+
+        // ── Decimal simples (legado — mantido para compatibilidade) ───────────
         public static void LimitarDecimal_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             if (sender is not TextBox txt) return;
-
             var c = e.Text[0];
-            bool ehDigito = char.IsDigit(c);
-            bool ehVirgula = c == ',' && !txt.Text.Contains(',');
-
-            e.Handled = !ehDigito && !ehVirgula;
+            e.Handled = !char.IsDigit(c) && !(c == ',' && !txt.Text.Contains(','));
         }
 
-        // Máscara CPF: 000.000.000-00
+        // ── Moeda pt-BR  (ex.: 1.234,56) ─────────────────────────────────────
+        /// <summary>
+        /// Permite apenas dígitos; a formatação fica por conta do TextChanged.
+        /// </summary>
+        public static void LimitarMoeda_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !e.Text.All(char.IsDigit);
+        }
+
+        /// <summary>
+        /// Formata como decimal pt-BR enquanto o usuário digita.
+        /// Os dois últimos dígitos digitados são tratados como centavos (estilo calculadora).
+        /// <param name="exibirSimbolo">true → "R$ 1.234,56" | false → "1.234,56"</param>
+        /// </summary>
+        public static void Moeda_TextChanged(object sender, TextChangedEventArgs e, bool exibirSimbolo = false)
+        {
+            if (_atualizandoMoeda) return;
+            if (sender is not TextBox tb) return;
+
+            _atualizandoMoeda = true;
+            try
+            {
+                string digits = new([.. tb.Text.Where(char.IsDigit)]);
+
+                if (digits.Length == 0)
+                {
+                    tb.Text = string.Empty;
+                    tb.CaretIndex = 0;
+                    return;
+                }
+
+                decimal valor = decimal.Parse(digits) / 100m;
+                string numero = valor.ToString("N2", new CultureInfo("pt-BR"));
+                string formatted = exibirSimbolo ? "R$ " + numero : numero;
+
+                if (tb.Text != formatted)
+                {
+                    tb.Text = formatted;
+                    tb.CaretIndex = formatted.Length;
+                }
+            }
+            finally
+            {
+                _atualizandoMoeda = false;
+            }
+        }
+
+        // ── CPF: 000.000.000-00 ───────────────────────────────────────────────
         public static void CPF_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (sender is not TextBox txt) return;
@@ -180,7 +222,7 @@ namespace GerenciamentoDeFrota.Helpers
             AtualizarTexto(txt, mask);
         }
 
-        // Máscara CNPJ: 00.000.000/0000-00
+        // ── CNPJ: 00.000.000/0000-00 ─────────────────────────────────────────
         public static void CNPJ_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (sender is not TextBox txt) return;
@@ -199,19 +241,20 @@ namespace GerenciamentoDeFrota.Helpers
             AtualizarTexto(txt, mask);
         }
 
+        // ── DatePicker ────────────────────────────────────────────────────────
+        public static void Data_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            var c = e.Text[0];
+            e.Handled = !char.IsDigit(c) && c != '/';
+        }
+
+        // ── Helpers privados ──────────────────────────────────────────────────
         private static void AtualizarTexto(TextBox txt, string valor)
         {
             if (txt.Text == valor) return;
             int caret = txt.CaretIndex;
             txt.Text = valor;
             txt.CaretIndex = Math.Min(caret + 1, valor.Length);
-        }
-
-        
-        public static void Data_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            var c = e.Text[0];
-            e.Handled = !char.IsDigit(c) && c != '/';
         }
     }
 }

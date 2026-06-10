@@ -1,4 +1,5 @@
-﻿using GerenciamentoDeFrota.Configs;
+﻿// ─── VeiculosRepository.cs ───────────────────────────────────────────────────
+using GerenciamentoDeFrota.Configs;
 using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Exceptions.CustomExceptions;
 using GerenciamentoDeFrota.Exceptions.ExceptionBase;
@@ -16,14 +17,37 @@ namespace GerenciamentoDeFrota.Data.Repositories
             _context = context;
         }
 
+        // ── Listagem ──────────────────────────────────────────────────────────
         public async Task<List<Veiculos>> GetVeiculosAsync() =>
             await _context.Veiculos
                           .OrderByDescending(v => v.DataCriacao)
                           .ToListAsync();
 
+        /// <summary>
+        /// Lista todos os veículos incluindo CentrosCusto para exibir o nome no DataGrid.
+        /// </summary>
+        public async Task<List<Veiculos>> ListarComCentroAsync() =>
+            await _context.Veiculos
+                          .Include(v => v.CentrosCusto)
+                          .OrderByDescending(v => v.DataCriacao)
+                          .ToListAsync();
+
+        // ── Busca por ID ──────────────────────────────────────────────────────
         public async Task<Veiculos?> GetVeiculoByIdAsync(long id) =>
             await _context.Veiculos.FirstOrDefaultAsync(e => e.Id == id);
 
+        /// <summary>
+        /// Retorna o veículo completo com CentrosCusto, Documentos e Anexos carregados.
+        /// Necessário para abrir o modal de edição com todos os dados populados.
+        /// </summary>
+        public async Task<Veiculos?> ObterCompletoAsync(long id) =>
+            await _context.Veiculos
+                          .Include(v => v.CentrosCusto)
+                          .Include(v => v.Documentos)
+                          .Include(v => v.Anexos)
+                          .FirstOrDefaultAsync(v => v.Id == id);
+
+        // ── Persistência ──────────────────────────────────────────────────────
         public async Task AddVeiculoAsync(Veiculos veiculo)
         {
             _context.Veiculos.Add(veiculo);
@@ -36,6 +60,7 @@ namespace GerenciamentoDeFrota.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
+        // ── Vínculos e exclusão ───────────────────────────────────────────────
         public async Task<int> ContarVinculosAsync(long veiculoId) =>
             await _context.AgendamentosManutencao
                           .CountAsync(a => a.VeiculoId == veiculoId);
@@ -58,14 +83,12 @@ namespace GerenciamentoDeFrota.Data.Repositories
 
             try
             {
-
                 var agendamentos = await _context.AgendamentosManutencao
                     .Where(a => a.VeiculoId == veiculoId)
                     .ToListAsync();
 
                 _context.AgendamentosManutencao.RemoveRange(agendamentos);
                 await _context.SaveChangesAsync();
-
 
                 _context.Veiculos.Remove(entity);
                 await _context.SaveChangesAsync();

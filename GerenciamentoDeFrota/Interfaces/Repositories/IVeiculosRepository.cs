@@ -15,5 +15,7 @@ namespace GerenciamentoDeFrota.Interfaces.Repositories
 
         /// <summary>Deleta agendamentos vinculados e depois o veículo, tudo numa transação.</summary>
         Task DeletarComVinculosAsync(long veiculoId);
+        Task<List<Veiculos>> ListarComCentroAsync();
+        Task<Veiculos?> ObterCompletoAsync(long id);
     }
 }

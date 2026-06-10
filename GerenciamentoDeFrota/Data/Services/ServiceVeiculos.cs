@@ -1,4 +1,5 @@
-﻿using GerenciamentoDeFrota.Data.Models;
+﻿// ─── ServiceVeiculos.cs ──────────────────────────────────────────────────────
+using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Exceptions.CustomExceptions;
 using GerenciamentoDeFrota.Interfaces.Repositories;
 using GerenciamentoDeFrota.Interfaces.Services;
@@ -14,13 +15,29 @@ namespace GerenciamentoDeFrota.Data.Services
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
+        // ── Listagem ──────────────────────────────────────────────────────────
         public async Task<List<Veiculos>> ListarVeiculosAsync() =>
             await _repository.GetVeiculosAsync();
 
+        /// <summary>
+        /// Listagem com CentrosCusto incluído — usada pelo DataGrid de veículos.
+        /// </summary>
+        public async Task<List<Veiculos>> ListarVeiculosComCentroAsync() =>
+            await _repository.ListarComCentroAsync();
+
+        // ── Busca ─────────────────────────────────────────────────────────────
         public async Task<Veiculos?> RecuperarVeiculoByIdAsync(long id) =>
             await _repository.GetVeiculoByIdAsync(id)
             ?? throw new RegisterNotFoundException("Veículo não encontrado!");
 
+        /// <summary>
+        /// Retorna o veículo com CentrosCusto, Documentos e Anexos carregados.
+        /// Deve ser usado antes de abrir o modal de edição.
+        /// </summary>
+        public async Task<Veiculos?> ObterVeiculoCompletoAsync(long id) =>
+            await _repository.ObterCompletoAsync(id);
+
+        // ── Persistência ──────────────────────────────────────────────────────
         public async Task SalvarVeiculoAsync(Veiculos veiculo)
         {
             if (veiculo is null)
@@ -41,9 +58,9 @@ namespace GerenciamentoDeFrota.Data.Services
                 await _repository.UpdateVeiculoAsync(veiculo);
         }
 
+        // ── Exclusão ──────────────────────────────────────────────────────────
         public async Task DeletarVeiculoAsync(long id)
         {
-
             var totalVinculos = await _repository.ContarVinculosAsync(id);
 
             if (totalVinculos > 0)

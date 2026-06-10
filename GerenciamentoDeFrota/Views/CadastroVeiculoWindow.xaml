@@ -210,12 +210,15 @@
                             <TextBox Text="{Binding NumeroFrota, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
+
+                        <!-- ▼ UF agora é ComboBox com os 27 estados ▼ -->
                         <StackPanel Grid.Column="4">
                             <TextBlock Text="UF" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding UF, UpdateSourceTrigger=PropertyChanged}"
-                                     Style="{StaticResource ModernTextBox}"
-                                     MaxLength="2"/>
+                            <ComboBox ItemsSource="{Binding EstadosBrasil}"
+                                      SelectedItem="{Binding UF}"
+                                      Style="{StaticResource ModernComboBox}"/>
                         </StackPanel>
+
                     </Grid>
 
                     <!-- ════ INFORMAÇÕES COMPLEMENTARES ════ -->
@@ -348,13 +351,15 @@
                             <TextBlock Text="Vr. Bem (FIPE)" Style="{StaticResource FieldLabel}"/>
                             <TextBox Text="{Binding ValorFipe, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
-                                     PreviewTextInput="TxtDecimal_PreviewTextInput"/>
+                                     PreviewTextInput="TxtMoeda_PreviewTextInput"
+                                     TextChanged="TxtValorFipe_TextChanged"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                            <TextBlock Text="Capacidade Tanque" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Text="Capacidade Tanque (L)" Style="{StaticResource FieldLabel}"/>
                             <TextBox Text="{Binding CapacidadeTanque, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
-                                     PreviewTextInput="TxtDecimal_PreviewTextInput"/>
+                                     PreviewTextInput="TxtMoeda_PreviewTextInput"
+                                     TextChanged="TxtMoeda_TextChanged"/>
                         </StackPanel>
                         <StackPanel Grid.Column="2" Margin="0,0,8,0">
                             <TextBlock Text="Padronização" Style="{StaticResource FieldLabel}"/>
@@ -380,25 +385,29 @@
                             <TextBlock Text="Cap. Paletes / M³ / L / Kg" Style="{StaticResource FieldLabel}"/>
                             <TextBox Text="{Binding CapacidadePaletes, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
-                                     PreviewTextInput="TxtDecimal_PreviewTextInput"/>
+                                     PreviewTextInput="TxtMoeda_PreviewTextInput"
+                                     TextChanged="TxtMoeda_TextChanged"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Margin="0,0,8,0">
                             <TextBlock Text="Capacidade Caixa" Style="{StaticResource FieldLabel}"/>
                             <TextBox Text="{Binding CapacidadeCaixa, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
-                                     PreviewTextInput="TxtDecimal_PreviewTextInput"/>
+                                     PreviewTextInput="TxtMoeda_PreviewTextInput"
+                                     TextChanged="TxtMoeda_TextChanged"/>
                         </StackPanel>
                         <StackPanel Grid.Column="2" Margin="0,0,8,0">
                             <TextBlock Text="Tara (Kg)" Style="{StaticResource FieldLabel}"/>
                             <TextBox Text="{Binding TaraKg, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
-                                     PreviewTextInput="TxtDecimal_PreviewTextInput"/>
+                                     PreviewTextInput="TxtMoeda_PreviewTextInput"
+                                     TextChanged="TxtMoeda_TextChanged"/>
                         </StackPanel>
                         <StackPanel Grid.Column="3">
                             <TextBlock Text="Lotação (Kg)" Style="{StaticResource FieldLabel}"/>
                             <TextBox Text="{Binding LotacaoKg, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
-                                     PreviewTextInput="TxtDecimal_PreviewTextInput"/>
+                                     PreviewTextInput="TxtMoeda_PreviewTextInput"
+                                     TextChanged="TxtMoeda_TextChanged"/>
                         </StackPanel>
                     </Grid>
 

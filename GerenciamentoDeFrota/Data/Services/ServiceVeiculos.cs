@@ -1,5 +1,4 @@
-﻿// ─── ServiceVeiculos.cs ──────────────────────────────────────────────────────
-using GerenciamentoDeFrota.Data.Models;
+﻿using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Data.Services.Validators;
 using GerenciamentoDeFrota.Exceptions.CustomExceptions;
 using GerenciamentoDeFrota.Helpers;

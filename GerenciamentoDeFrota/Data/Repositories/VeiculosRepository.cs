@@ -1,5 +1,4 @@
-﻿// ─── VeiculosRepository.cs ───────────────────────────────────────────────────
-using GerenciamentoDeFrota.Configs;
+﻿using GerenciamentoDeFrota.Configs;
 using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Exceptions.CustomExceptions;
 using GerenciamentoDeFrota.Exceptions.ExceptionBase;

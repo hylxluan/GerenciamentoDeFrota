@@ -1,6 +1,7 @@
-﻿// ─── ServiceCentrosCusto.cs ──────────────────────────────────────────────────
-using GerenciamentoDeFrota.Data.Models;
+﻿using GerenciamentoDeFrota.Data.Models;
+using GerenciamentoDeFrota.Data.Services.Validators;
 using GerenciamentoDeFrota.Exceptions.CustomExceptions;
+using GerenciamentoDeFrota.Helpers;
 using GerenciamentoDeFrota.Interfaces.Repositories;
 using GerenciamentoDeFrota.Interfaces.Services;
 
@@ -9,6 +10,8 @@ namespace GerenciamentoDeFrota.Data.Services
     public class ServiceCentrosCusto : IServiceCentrosCusto
     {
         private readonly ICentrosCustoRepository _repository;
+
+        private static readonly CentrosCustoValidator _validator = new();
 
         #region Construtor
         public ServiceCentrosCusto(ICentrosCustoRepository repository)
@@ -32,8 +35,7 @@ namespace GerenciamentoDeFrota.Data.Services
             if (centroCusto is null)
                 throw new ArgumentNullException(nameof(centroCusto), "O centro de custo não pode ser nulo!");
 
-            if (string.IsNullOrWhiteSpace(centroCusto.Nome))
-                throw new ErrorOnValidationException("O nome do centro de custo é obrigatório!");
+            ValidatorHelper.ValidarOuLancar(_validator, centroCusto);
 
             if (centroCusto.Id == 0)
                 await _repository.AddCentroCustoAsync(centroCusto);

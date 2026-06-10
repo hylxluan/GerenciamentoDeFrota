@@ -6,6 +6,7 @@ using GerenciamentoDeFrota.Interfaces.Services;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows.Input;
+using System.IO;
 
 namespace GerenciamentoDeFrota.ViewModels
 {
@@ -25,6 +26,7 @@ namespace GerenciamentoDeFrota.ViewModels
         public ICommand RemoverDocumentoCommand { get; set; }
         public ICommand AdicionarAnexoCommand { get; set; }
         public ICommand RemoverAnexoCommand { get; set; }
+        public ICommand AbrirAnexoCommand { get; set; }
         #endregion
 
         #region Listas estáticas
@@ -487,6 +489,15 @@ namespace GerenciamentoDeFrota.ViewModels
             AdicionarAnexoCommand = new SimpleRelayCommand(() => AdicionarAnexoSolicitado?.Invoke());
             RemoverAnexoCommand = new RelayCommands<VeiculoAnexo>(
                 anx => { if (anx is not null) Anexos.Remove(anx); });
+            AbrirAnexoCommand = new RelayCommands<VeiculoAnexo>(anx =>
+            {
+                if (anx is null || !System.IO.File.Exists(anx.CaminhoArquivo)) return;
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = anx.CaminhoArquivo,
+                    UseShellExecute = true   // abre com o app padrão do SO
+                });
+            });
 
             _ = CarregarCentrosCustoAsync();
 
@@ -713,14 +724,14 @@ namespace GerenciamentoDeFrota.ViewModels
             CPF = v.CPF ?? string.Empty;
             CNPJ = v.CNPJ ?? string.Empty;
 
-            ValorFipe = v.ValorFipe?.ToString("N2", ptBr) ?? string.Empty;
-            CapacidadeTanque = v.CapacidadeTanque?.ToString("N2", ptBr) ?? string.Empty;
+            ValorFipe = v.ValorFipe?.ToString("F2", ptBr) ?? string.Empty;
+            CapacidadeTanque = v.CapacidadeTanque?.ToString("F2", ptBr) ?? string.Empty;
             Padronizacao = v.Padronizacao ?? string.Empty;
             Carroceria = v.Carroceria ?? string.Empty;
-            CapacidadePaletes = v.CapacidadePaletes?.ToString("N2", ptBr) ?? string.Empty;
-            CapacidadeCaixa = v.CapacidadeCaixa?.ToString("N2", ptBr) ?? string.Empty;
-            TaraKg = v.TaraKg?.ToString("N2", ptBr) ?? string.Empty;
-            LotacaoKg = v.LotacaoKg?.ToString("N2", ptBr) ?? string.Empty;
+            CapacidadePaletes = v.CapacidadePaletes?.ToString("F2", ptBr) ?? string.Empty;
+            CapacidadeCaixa = v.CapacidadeCaixa?.ToString("F2", ptBr) ?? string.Empty;
+            TaraKg = v.TaraKg?.ToString("F2", ptBr) ?? string.Empty;
+            LotacaoKg = v.LotacaoKg?.ToString("F2", ptBr) ?? string.Empty;
 
             Licenciamento = v.Licenciamento?.ToString() ?? string.Empty;
             LicenciamentoDtVencimento = v.LicenciamentoDtVencimento;
@@ -741,7 +752,9 @@ namespace GerenciamentoDeFrota.ViewModels
             Observacoes = v.Observacoes ?? string.Empty;
 
             Documentos = new ObservableCollection<VeiculoDocumento>(v.Documentos ?? []);
-            Anexos = new ObservableCollection<VeiculoAnexo>(v.Anexos ?? []);
+            // Exibe apenas anexos cujo arquivo ainda existe no disco
+            Anexos = new ObservableCollection<VeiculoAnexo>(
+                (v.Anexos ?? []).Where(a => File.Exists(a.CaminhoArquivo)));
         }
     }
 }

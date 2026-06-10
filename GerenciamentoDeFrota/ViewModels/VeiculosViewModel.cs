@@ -1,4 +1,5 @@
-﻿using GerenciamentoDeFrota.Commands;
+﻿// ─── VeiculosViewModel.cs ────────────────────────────────────────────────────
+using GerenciamentoDeFrota.Commands;
 using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Exceptions.CustomExceptions;
 using GerenciamentoDeFrota.Exceptions.ExceptionBase;
@@ -19,6 +20,10 @@ namespace GerenciamentoDeFrota.ViewModels
         public ICommand NovoVeiculoCommand { get; set; }
         public ICommand EditarCommand { get; set; }
         public ICommand DeletarCommand { get; set; }
+
+        // ── Comandos de linha (recebem o item diretamente do DataGrid) ────────
+        public ICommand EditarItemCommand { get; set; }
+        public ICommand DeletarItemCommand { get; set; }
         #endregion
 
         #region Listagem e Seleção
@@ -34,14 +39,14 @@ namespace GerenciamentoDeFrota.ViewModels
         #endregion
 
         #region Filtro
-        private string _filtroPlaca = string.Empty;
-        public string FiltroPlaca
+        private string _filtro = string.Empty;
+        public string Filtro
         {
-            get => _filtroPlaca;
+            get => _filtro;
             set
             {
-                _filtroPlaca = value;
-                OnPropertyChanged(nameof(FiltroPlaca));
+                _filtro = value;
+                OnPropertyChanged(nameof(Filtro));
                 AplicarFiltro();
             }
         }
@@ -76,6 +81,22 @@ namespace GerenciamentoDeFrota.ViewModels
             EditarCommand = new SimpleRelayCommand(Editar);
             DeletarCommand = new SimpleRelayCommand(async () => await DeletarAsync());
 
+            // Comandos de linha — recebem o Veiculos como parâmetro
+            EditarItemCommand = new RelayCommands<Veiculos>(v =>
+            {
+                if (v is null) return;
+                Selecionado = v;
+                LimparMensagens();
+                EditarRequested?.Invoke(v);
+            });
+
+            DeletarItemCommand = new RelayCommands<Veiculos>(async v =>
+            {
+                if (v is null) return;
+                Selecionado = v;
+                await DeletarAsync();
+            });
+
             _ = CarregarListaAsync();
         }
 
@@ -105,7 +126,6 @@ namespace GerenciamentoDeFrota.ViewModels
                     return;
                 }
 
-                // 1ª confirmação
                 var confirmar = MessageBox.Show(
                     $"Tem certeza que deseja excluir o veículo \"{Selecionado.Modelo} — {Selecionado.Placa}\"?\nEssa ação não pode ser desfeita.",
                     "Confirmar Exclusão",
@@ -115,14 +135,12 @@ namespace GerenciamentoDeFrota.ViewModels
                 if (confirmar is not MessageBoxResult.Yes) return;
 
                 await _service.DeletarVeiculoAsync(Selecionado.Id);
-
                 await CarregarListaAsync();
                 Selecionado = null;
                 MensagemSucesso = "Veículo removido com sucesso!";
             }
             catch (VeiculoPossuiVinculosException ex)
             {
-                // 2ª confirmação — tem vínculos, pergunta se quer tudo
                 var confirmarCascata = MessageBox.Show(
                     $"{ex.Message}\n\nDeseja excluir o veículo junto com todos os registros vinculados?\n\nEssa ação é irreversível.",
                     "Veículo com vínculos",
@@ -157,7 +175,8 @@ namespace GerenciamentoDeFrota.ViewModels
         #region Métodos auxiliares
         public async Task CarregarListaAsync()
         {
-            _todosVeiculos = await _service.ListarVeiculosAsync();
+            // Usa o método que inclui CentrosCusto para exibir o nome no grid
+            _todosVeiculos = await _service.ListarVeiculosComCentroAsync();
             AplicarFiltro();
         }
 
@@ -165,12 +184,14 @@ namespace GerenciamentoDeFrota.ViewModels
         {
             Veiculos.Clear();
 
-            var lista = string.IsNullOrWhiteSpace(FiltroPlaca)
+            var lista = string.IsNullOrWhiteSpace(Filtro)
                 ? _todosVeiculos
-                : _todosVeiculos
-                    .Where(v => v.Placa is not null &&
-                                v.Placa.Contains(FiltroPlaca, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+                : _todosVeiculos.Where(v =>
+                      (v.Placa?.Contains(Filtro, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                      (v.Modelo?.Contains(Filtro, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                      (v.Fabricante?.Contains(Filtro, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                      (v.NumeroFrota?.Contains(Filtro, StringComparison.OrdinalIgnoreCase) ?? false))
+                  .ToList();
 
             foreach (var item in lista)
                 Veiculos.Add(item);

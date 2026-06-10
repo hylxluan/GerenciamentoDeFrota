@@ -1,5 +1,4 @@
-﻿// ─── VeiculosView.xaml.cs ────────────────────────────────────────────────────
-using GerenciamentoDeFrota.Configs;
+﻿using GerenciamentoDeFrota.Configs;
 using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Data.Repositories;
 using GerenciamentoDeFrota.Data.Services;
@@ -41,7 +40,7 @@ namespace GerenciamentoDeFrota.Views
 
             // ── Carrega o veículo completo (com Documentos, Anexos e CentrosCusto) ──
             // O objeto que vem do DataGrid não tem as navegações populadas
-            var veiculoCompleto = await service.RecuperarVeiculoByIdAsync(veiculo.Id);
+            var veiculoCompleto = await service.ObterVeiculoCompletoAsync(veiculo.Id);
 
             if (veiculoCompleto is null)
             {

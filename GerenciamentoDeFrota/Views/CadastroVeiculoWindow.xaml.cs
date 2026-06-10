@@ -1,11 +1,11 @@
-﻿// ─── CadastroVeiculoWindow.xaml.cs ───────────────────────────────────────────
-using GerenciamentoDeFrota.Data.Models;
+﻿using GerenciamentoDeFrota.Data.Models;
 using GerenciamentoDeFrota.Exceptions.CustomExceptions;
 using GerenciamentoDeFrota.Helpers;
 using GerenciamentoDeFrota.Interfaces.Services;
 using GerenciamentoDeFrota.ViewModels;
 using Microsoft.Win32;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace GerenciamentoDeFrota.Views
@@ -124,6 +124,49 @@ namespace GerenciamentoDeFrota.Views
 
         private void DatePicker_PreviewTextInput(object sender, TextCompositionEventArgs e) =>
             InputMasks.Data_PreviewTextInput(sender, e);
+
+        // ── Máscara de data: anexada em runtime a cada DatePickerTextBox ────────
+        private void Window_Loaded(object sender, RoutedEventArgs e) =>
+            AnexarMascaraDataEmTodosDatePickers();
+
+        /// <summary>
+        /// Percorre a árvore visual e anexa o TextChanged de máscara
+        /// diretamente no PART_TextBox interno de cada DatePicker.
+        /// Chamado no Loaded da janela — nesse ponto o template já foi aplicado.
+        /// </summary>
+        private void AnexarMascaraDataEmTodosDatePickers()
+        {
+            foreach (var dp in EncontrarFilhos<DatePicker>(this))
+            {
+                if (dp.Template.FindName("PART_TextBox", dp) is
+                    System.Windows.Controls.Primitives.DatePickerTextBox tb)
+                {
+                    // Remove antes para evitar duplicata caso Loaded dispare mais de uma vez
+                    tb.TextChanged -= DatePickerTextBox_TextChanged;
+                    tb.TextChanged += DatePickerTextBox_TextChanged;
+                }
+            }
+        }
+
+        private void DatePickerTextBox_TextChanged(object sender,
+            System.Windows.Controls.TextChangedEventArgs e) =>
+            InputMasks.DataMascara_TextChanged(sender, e);
+
+        /// <summary>
+        /// Retorna todos os descendentes do tipo T na árvore visual.
+        /// </summary>
+        private static IEnumerable<T> EncontrarFilhos<T>(
+            System.Windows.DependencyObject parent) where T : System.Windows.DependencyObject
+        {
+            int count = System.Windows.Media.VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < count; i++)
+            {
+                var child = System.Windows.Media.VisualTreeHelper.GetChild(parent, i);
+                if (child is T t) yield return t;
+                foreach (var descendant in EncontrarFilhos<T>(child))
+                    yield return descendant;
+            }
+        }
 
         // ── Máscaras: documento ───────────────────────────────────────────────
         private void TxtCPF_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) =>

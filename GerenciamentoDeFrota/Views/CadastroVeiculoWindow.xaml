@@ -1,4 +1,5 @@
 ﻿<Window x:Class="GerenciamentoDeFrota.Views.CadastroVeiculoWindow"
+        Loaded="Window_Loaded"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -79,6 +80,7 @@
             <Setter Property="Background" Value="{StaticResource SectionLine}"/>
             <Setter Property="Margin"     Value="0,0,0,0"/>
         </Style>
+
     </Window.Resources>
 
     <Border CornerRadius="20"
@@ -355,7 +357,7 @@
                                      TextChanged="TxtValorFipe_TextChanged"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                            <TextBlock Text="Capacidade Tanque (L)" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Text="Capacidade Tanque" Style="{StaticResource FieldLabel}"/>
                             <TextBox Text="{Binding CapacidadeTanque, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtMoeda_PreviewTextInput"
@@ -697,9 +699,30 @@
                               IsReadOnly="True"
                               MaxHeight="160">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Arquivo"
-                                               Binding="{Binding NomeArquivo}"
-                                               Width="*"/>
+                            <DataGridTemplateColumn Header="Arquivo" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.AbrirAnexoCommand,
+                                                    RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Cursor="Hand"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <TextBlock Text="{Binding NomeArquivo}"
+                                                               Foreground="#2563EB"
+                                                               FontSize="12"
+                                                               TextDecorations="Underline"
+                                                               VerticalAlignment="Center"/>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Tipo"
                                                Binding="{Binding TipoArquivo}"
                                                Width="160"/>

@@ -242,10 +242,52 @@ namespace GerenciamentoDeFrota.Helpers
         }
 
         // ── DatePicker ────────────────────────────────────────────────────────
+
+        private static bool _atualizandoData = false;
+
+        /// <summary>
+        /// Bloqueia tudo que não seja dígito ou barra — usado no PreviewTextInput do DatePicker.
+        /// </summary>
         public static void Data_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             var c = e.Text[0];
             e.Handled = !char.IsDigit(c) && c != '/';
+        }
+
+        /// <summary>
+        /// Formata a digitação como dd/MM/yyyy em tempo real, inserindo as barras automaticamente.
+        /// Aplicado via Style global para DatePickerTextBox na janela — cobre todos os DatePickers.
+        /// </summary>
+        public static void DataMascara_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_atualizandoData) return;
+            if (sender is not TextBox tb) return;
+
+            _atualizandoData = true;
+            try
+            {
+                string digits = new([.. tb.Text.Where(char.IsDigit)]);
+
+                if (digits.Length > 8) digits = digits[..8];
+
+                string mask = digits.Length switch
+                {
+                    0 => string.Empty,
+                    <= 2 => digits,
+                    <= 4 => $"{digits[..2]}/{digits[2..]}",
+                    _ => $"{digits[..2]}/{digits[2..4]}/{digits[4..]}"
+                };
+
+                if (tb.Text != mask)
+                {
+                    tb.Text = mask;
+                    tb.CaretIndex = mask.Length;
+                }
+            }
+            finally
+            {
+                _atualizandoData = false;
+            }
         }
 
         // ── Helpers privados ──────────────────────────────────────────────────

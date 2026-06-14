@@ -70,15 +70,25 @@
 
         <Style x:Key="SectionHeader" TargetType="TextBlock">
             <Setter Property="FontSize"   Value="13"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="{StaticResource TextStrong}"/>
-            <Setter Property="Margin"     Value="0,16,0,10"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#15803D"/>
+            <Setter Property="Margin"     Value="0,0,0,12"/>
         </Style>
 
         <Style x:Key="SectionDivider" TargetType="Border">
             <Setter Property="Height"     Value="1"/>
             <Setter Property="Background" Value="{StaticResource SectionLine}"/>
             <Setter Property="Margin"     Value="0,0,0,0"/>
+        </Style>
+
+        <!-- Card de seção esverdeado -->
+        <Style x:Key="SectionCard" TargetType="Border">
+            <Setter Property="Background"      Value="#F0FDF4"/>
+            <Setter Property="BorderBrush"     Value="#BBF7D0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius"    Value="12"/>
+            <Setter Property="Padding"         Value="16,12,16,16"/>
+            <Setter Property="Margin"          Value="0,0,0,10"/>
         </Style>
 
     </Window.Resources>
@@ -118,9 +128,46 @@
                         Click="BtnFechar_Click"
                         Width="28" Height="28"
                         Background="#FFEBEB" BorderThickness="0" Cursor="Hand">
+                    <Button.RenderTransform>
+                        <ScaleTransform/>
+                    </Button.RenderTransform>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Button.Triggers>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border CornerRadius="8" Background="{TemplateBinding Background}">
+                            <Border x:Name="Bd" CornerRadius="8" Background="{TemplateBinding Background}">
                                 <materialDesign:PackIcon Kind="Close" Width="14" Height="14"
                                                          Foreground="#DC2626"
                                                          HorizontalAlignment="Center"
@@ -129,6 +176,8 @@
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="#FCA5A5"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -146,467 +195,532 @@
                 <StackPanel Margin="0,0,8,0">
 
                     <!-- ════ IDENTIFICAÇÃO ════ -->
-                    <TextBlock Text="Identificação" Style="{StaticResource SectionHeader}"/>
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <TextBlock Text="Identificação" Style="{StaticResource SectionHeader}"/>
 
-                    <!-- Fabricante | Modelo | Placa | Renavam -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="1.2*"/>
-                            <ColumnDefinition Width="1.4*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                            <TextBlock Text="Fabricante *" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding Fabricante, UpdateSourceTrigger=PropertyChanged}"
+                            <!-- Fabricante | Modelo | Placa | Renavam -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1.2*"/>
+                                    <ColumnDefinition Width="1.4*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Text="Fabricante *" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding Fabricante, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                            <TextBlock Text="Modelo *" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding Modelo, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                                    <TextBlock Text="Modelo *" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding Modelo, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
-                            <TextBlock Text="Placa *" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding Placa, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                                    <TextBlock Text="Placa *" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding Placa, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      TextChanged="TxtPlaca_TextChanged"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="3">
-                            <TextBlock Text="Renavam" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding Renavam, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="3">
+                                    <TextBlock Text="Renavam" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding Renavam, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtRenavam_PreviewTextInput"/>
-                        </StackPanel>
-                    </Grid>
+                                </StackPanel>
+                            </Grid>
 
-                    <!-- Tipo | KM | Cor | Nº Frota | UF -->
-                    <Grid Margin="0,8,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2.5*"/>
-                            <ColumnDefinition Width="1.5*"/>
-                            <ColumnDefinition Width="1.2*"/>
-                            <ColumnDefinition Width="1.2*"/>
-                            <ColumnDefinition Width="0.6*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                            <TextBlock Text="Tipo de Veículo *" Style="{StaticResource FieldLabel}"/>
-                            <ComboBox ItemsSource="{Binding TiposVeiculo}"
+                            <!-- Tipo | KM | Cor | Nº Frota | UF -->
+                            <Grid Margin="0,8,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1.2*"/>
+                                    <ColumnDefinition Width="1.2*"/>
+                                    <ColumnDefinition Width="0.6*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Text="Tipo de Veículo *" Style="{StaticResource FieldLabel}"/>
+                                    <ComboBox ItemsSource="{Binding TiposVeiculo}"
                                       SelectedItem="{Binding Tipo}"
                                       Style="{StaticResource ModernComboBox}"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                            <TextBlock Text="KM / Horímetro *" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding KmAtual, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                                    <TextBlock Text="KM / Horímetro *" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding KmAtual, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtKmAtual_PreviewTextInput"
                                      TextChanged="TxtKmAtual_TextChanged"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
-                            <TextBlock Text="Cor" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding Cor, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                                    <TextBlock Text="Cor" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding Cor, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="3" Margin="0,0,8,0">
-                            <TextBlock Text="Nº Frota" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding NumeroFrota, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                                    <TextBlock Text="Nº Frota" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding NumeroFrota, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
-                        </StackPanel>
+                                </StackPanel>
 
-                        <!-- ▼ UF agora é ComboBox com os 27 estados ▼ -->
-                        <StackPanel Grid.Column="4">
-                            <TextBlock Text="UF" Style="{StaticResource FieldLabel}"/>
-                            <ComboBox ItemsSource="{Binding EstadosBrasil}"
+                                <!-- ▼ UF agora é ComboBox com os 27 estados ▼ -->
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="UF" Style="{StaticResource FieldLabel}"/>
+                                    <ComboBox ItemsSource="{Binding EstadosBrasil}"
                                       SelectedItem="{Binding UF}"
                                       Style="{StaticResource ModernComboBox}"/>
-                        </StackPanel>
+                                </StackPanel>
 
-                    </Grid>
+                            </Grid>
+
+                        </StackPanel>
+                    </Border>
 
                     <!-- ════ INFORMAÇÕES COMPLEMENTARES ════ -->
-                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
-                    <TextBlock Text="Informações Complementares" Style="{StaticResource SectionHeader}"/>
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <TextBlock Text="Informações Complementares" Style="{StaticResource SectionHeader}"/>
 
-                    <!-- Ano Modelo | Ano Fab | Mês Empl | Ano Empl | Venc. Tacógrafo -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                            <TextBlock Text="Ano Modelo" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding AnoModelo, UpdateSourceTrigger=PropertyChanged}"
+                            <!-- Ano Modelo | Ano Fab | Mês Empl | Ano Empl | Venc. Tacógrafo -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Text="Ano Modelo" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding AnoModelo, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtAno_PreviewTextInput" MaxLength="4"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                            <TextBlock Text="Ano Fabricação" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding AnoFabricacao, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                                    <TextBlock Text="Ano Fabricação" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding AnoFabricacao, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtAno_PreviewTextInput" MaxLength="4"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
-                            <TextBlock Text="Mês Emplacamento" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding MesEmplacamento, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                                    <TextBlock Text="Mês Emplacamento" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding MesEmplacamento, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtMes_PreviewTextInput" MaxLength="2"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="3" Margin="0,0,8,0">
-                            <TextBlock Text="Ano Emplacamento" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding AnoEmplacamento, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                                    <TextBlock Text="Ano Emplacamento" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding AnoEmplacamento, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtAno_PreviewTextInput" MaxLength="4"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="4">
-                            <TextBlock Text="Venc. Tacógrafo" Style="{StaticResource FieldLabel}"/>
-                            <DatePicker SelectedDate="{Binding DataTacografo}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="Venc. Tacógrafo" Style="{StaticResource FieldLabel}"/>
+                                    <DatePicker SelectedDate="{Binding DataTacografo}"
                                         Height="32" FontSize="13" Language="pt-BR"
                                         BorderBrush="{StaticResource LineBrush}"
                                         BorderThickness="1" SelectedDateFormat="Short"
                                         PreviewTextInput="DatePicker_PreviewTextInput"
                             />
-                        </StackPanel>
-                    </Grid>
+                                </StackPanel>
+                            </Grid>
 
-                    <!-- KmHora | VeiculoTracao | Terceirizado | Ativo | Centro de Custo -->
-                    <Grid Margin="0,8,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1.6*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="3*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                            <TextBlock Text="Equipamento Utiliza" Style="{StaticResource FieldLabel}"/>
-                            <ComboBox ItemsSource="{Binding TiposKmHora}"
+                            <!-- KmHora | VeiculoTracao | Terceirizado | Ativo | Centro de Custo -->
+                            <Grid Margin="0,8,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.6*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Text="Equipamento Utiliza" Style="{StaticResource FieldLabel}"/>
+                                    <ComboBox ItemsSource="{Binding TiposKmHora}"
                                       SelectedItem="{Binding KmHoraSelecionado}"
                                       Style="{StaticResource ModernComboBox}"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="0,0,8,0" VerticalAlignment="Bottom">
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                                <CheckBox Content="Veículo Tração"
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,8,0" VerticalAlignment="Bottom">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                        <CheckBox Content="Veículo Tração"
                                           IsChecked="{Binding VeiculoTracao}"
                                           Foreground="{StaticResource TextStrong}"
                                           Margin="0,0,16,0"/>
-                                <CheckBox Content="Terceirizado"
+                                        <CheckBox Content="Terceirizado"
                                           IsChecked="{Binding Terceirizado}"
                                           Foreground="{StaticResource TextStrong}"
                                           Margin="0,0,16,0"/>
-                                <CheckBox Content="Ativo"
+                                        <CheckBox Content="Ativo"
                                           IsChecked="{Binding Ativo}"
                                           Foreground="{StaticResource TextStrong}"/>
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2">
-                            <TextBlock Text="Centro de Custo" Style="{StaticResource FieldLabel}"/>
-                            <ComboBox ItemsSource="{Binding CentrosCusto}"
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Centro de Custo" Style="{StaticResource FieldLabel}"/>
+                                    <ComboBox ItemsSource="{Binding CentrosCusto}"
                                       SelectedItem="{Binding CentrosCustoSelecionado}"
                                       DisplayMemberPath="Nome"
                                       Style="{StaticResource ModernComboBox}"/>
+                                </StackPanel>
+                            </Grid>
+
                         </StackPanel>
-                    </Grid>
+                    </Border>
 
                     <!-- ════ PROPRIETÁRIO ════ -->
-                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
-                    <TextBlock Text="Proprietário" Style="{StaticResource SectionHeader}"/>
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <TextBlock Text="Proprietário" Style="{StaticResource SectionHeader}"/>
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                            <TextBlock Text="Proprietário" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding Proprietario, UpdateSourceTrigger=PropertyChanged}"
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Text="Proprietário" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding Proprietario, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                            <TextBlock Text="CPF" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding CPF, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                                    <TextBlock Text="CPF" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding CPF, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      TextChanged="TxtCPF_TextChanged" MaxLength="14"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2">
-                            <TextBlock Text="CNPJ" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding CNPJ, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="CNPJ" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding CNPJ, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      TextChanged="TxtCNPJ_TextChanged" MaxLength="18"/>
+                                </StackPanel>
+                            </Grid>
+
                         </StackPanel>
-                    </Grid>
+                    </Border>
 
                     <!-- ════ DADOS TÉCNICOS ════ -->
-                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
-                    <TextBlock Text="Dados Técnicos" Style="{StaticResource SectionHeader}"/>
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <TextBlock Text="Dados Técnicos" Style="{StaticResource SectionHeader}"/>
 
-                    <!-- Valor FIPE | Cap. Tanque | Padronização | Carroceria -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                            <TextBlock Text="Vr. Bem (FIPE)" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding ValorFipe, UpdateSourceTrigger=PropertyChanged}"
+                            <!-- Valor FIPE | Cap. Tanque | Padronização | Carroceria -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Text="Vr. Bem (FIPE)" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding ValorFipe, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtMoeda_PreviewTextInput"
                                      TextChanged="TxtValorFipe_TextChanged"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                            <TextBlock Text="Capacidade Tanque" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding CapacidadeTanque, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                                    <TextBlock Text="Capacidade Tanque" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding CapacidadeTanque, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtMoeda_PreviewTextInput"
                                      TextChanged="TxtMoeda_TextChanged"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
-                            <TextBlock Text="Padronização" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding Padronizacao, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                                    <TextBlock Text="Padronização" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding Padronizacao, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="3">
-                            <TextBlock Text="Carroceria" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding Carroceria, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="3">
+                                    <TextBlock Text="Carroceria" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding Carroceria, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"/>
-                        </StackPanel>
-                    </Grid>
+                                </StackPanel>
+                            </Grid>
 
-                    <!-- Cap. Paletes | Cap. Caixa | Tara Kg | Lotação Kg -->
-                    <Grid Margin="0,8,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                            <TextBlock Text="Cap. Paletes / M³ / L / Kg" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding CapacidadePaletes, UpdateSourceTrigger=PropertyChanged}"
+                            <!-- Cap. Paletes | Cap. Caixa | Tara Kg | Lotação Kg -->
+                            <Grid Margin="0,8,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Text="Cap. Paletes / M³ / L / Kg" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding CapacidadePaletes, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtMoeda_PreviewTextInput"
                                      TextChanged="TxtMoeda_TextChanged"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                            <TextBlock Text="Capacidade Caixa" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding CapacidadeCaixa, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                                    <TextBlock Text="Capacidade Caixa" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding CapacidadeCaixa, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtMoeda_PreviewTextInput"
                                      TextChanged="TxtMoeda_TextChanged"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
-                            <TextBlock Text="Tara (Kg)" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding TaraKg, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                                    <TextBlock Text="Tara (Kg)" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding TaraKg, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtMoeda_PreviewTextInput"
                                      TextChanged="TxtMoeda_TextChanged"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="3">
-                            <TextBlock Text="Lotação (Kg)" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding LotacaoKg, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="3">
+                                    <TextBlock Text="Lotação (Kg)" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding LotacaoKg, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtMoeda_PreviewTextInput"
                                      TextChanged="TxtMoeda_TextChanged"/>
+                                </StackPanel>
+                            </Grid>
+
                         </StackPanel>
-                    </Grid>
+                    </Border>
 
                     <!-- ════ DOCUMENTOS E VENCIMENTOS ════ -->
-                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
-                    <TextBlock Text="Documentos e Vencimentos" Style="{StaticResource SectionHeader}"/>
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <TextBlock Text="Documentos e Vencimentos" Style="{StaticResource SectionHeader}"/>
 
-                    <!-- Licenciamento | IPVA | ANTT -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                            <!-- Licenciamento | IPVA | ANTT -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                            <TextBlock Text="Licenciamento (ano)" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding Licenciamento, UpdateSourceTrigger=PropertyChanged}"
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Text="Licenciamento (ano)" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding Licenciamento, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtAno_PreviewTextInput" MaxLength="4"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                            <TextBlock Text="Dt. Venc. Licenciamento" Style="{StaticResource FieldLabel}"/>
-                            <DatePicker SelectedDate="{Binding LicenciamentoDtVencimento}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                                    <TextBlock Text="Dt. Venc. Licenciamento" Style="{StaticResource FieldLabel}"/>
+                                    <DatePicker SelectedDate="{Binding LicenciamentoDtVencimento}"
                                         Height="32" FontSize="13" Language="pt-BR"
                                         BorderBrush="{StaticResource LineBrush}"
                                         BorderThickness="1" SelectedDateFormat="Short"
                                         PreviewTextInput="DatePicker_PreviewTextInput"/>
-                        </StackPanel>
+                                </StackPanel>
 
-                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
-                            <TextBlock Text="IPVA (ano)" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding Ipva, UpdateSourceTrigger=PropertyChanged}"
+                                <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                                    <TextBlock Text="IPVA (ano)" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding Ipva, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}"
                                      PreviewTextInput="TxtAno_PreviewTextInput" MaxLength="4"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="3" Margin="0,0,8,0">
-                            <TextBlock Text="Dt. Venc. IPVA" Style="{StaticResource FieldLabel}"/>
-                            <DatePicker SelectedDate="{Binding IpvaDtVencimento}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                                    <TextBlock Text="Dt. Venc. IPVA" Style="{StaticResource FieldLabel}"/>
+                                    <DatePicker SelectedDate="{Binding IpvaDtVencimento}"
                                         Height="32" FontSize="13" Language="pt-BR"
                                         BorderBrush="{StaticResource LineBrush}"
                                         BorderThickness="1" SelectedDateFormat="Short"
                                         PreviewTextInput="DatePicker_PreviewTextInput"  />
-                        </StackPanel>
+                                </StackPanel>
 
-                        <StackPanel Grid.Column="4" Margin="0,0,8,0">
-                            <TextBlock Text="ANTT" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding Antt, UpdateSourceTrigger=PropertyChanged}"
+                                <StackPanel Grid.Column="4" Margin="0,0,8,0">
+                                    <TextBlock Text="ANTT" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding Antt, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}" MaxLength="30"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="5">
-                            <TextBlock Text="Dt. Venc. ANTT" Style="{StaticResource FieldLabel}"/>
-                            <DatePicker SelectedDate="{Binding AnttDtVencimento}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="5">
+                                    <TextBlock Text="Dt. Venc. ANTT" Style="{StaticResource FieldLabel}"/>
+                                    <DatePicker SelectedDate="{Binding AnttDtVencimento}"
                                         Height="32" FontSize="13" Language="pt-BR"
                                         BorderBrush="{StaticResource LineBrush}"
                                         BorderThickness="1" SelectedDateFormat="Short"
                                         PreviewTextInput="DatePicker_PreviewTextInput"  />
-                        </StackPanel>
-                    </Grid>
+                                </StackPanel>
+                            </Grid>
 
-                    <!-- Cronoacógrafo | Extintor -->
-                    <Grid Margin="0,8,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                            <TextBlock Text="Dt. Venc. Cronoacógrafo" Style="{StaticResource FieldLabel}"/>
-                            <DatePicker SelectedDate="{Binding CronoacografoDtVencimento}"
+                            <!-- Cronoacógrafo | Extintor -->
+                            <Grid Margin="0,8,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Text="Dt. Venc. Cronoacógrafo" Style="{StaticResource FieldLabel}"/>
+                                    <DatePicker SelectedDate="{Binding CronoacografoDtVencimento}"
                                         Height="32" FontSize="13" Language="pt-BR"
                                         BorderBrush="{StaticResource LineBrush}"
                                         BorderThickness="1" SelectedDateFormat="Short"
                                         PreviewTextInput="DatePicker_PreviewTextInput"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                            <TextBlock Text="Dt. Venc. Extintor" Style="{StaticResource FieldLabel}"/>
-                            <DatePicker SelectedDate="{Binding ExtintorDtVencimento}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                                    <TextBlock Text="Dt. Venc. Extintor" Style="{StaticResource FieldLabel}"/>
+                                    <DatePicker SelectedDate="{Binding ExtintorDtVencimento}"
                                         Height="32" FontSize="13" Language="pt-BR"
                                         BorderBrush="{StaticResource LineBrush}"
                                         BorderThickness="1" SelectedDateFormat="Short"
                                         PreviewTextInput="DatePicker_PreviewTextInput"  />
-                        </StackPanel>
-                        <StackPanel Grid.Column="2">
-                            <TextBlock Text="Cód. Extintor" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding ExtintorCodigo, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Cód. Extintor" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding ExtintorCodigo, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}" MaxLength="50"/>
+                                </StackPanel>
+                            </Grid>
+
                         </StackPanel>
-                    </Grid>
+                    </Border>
 
                     <!-- ════ SEGURO DO VEÍCULO ════ -->
-                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
-                    <TextBlock Text="Seguro do Veículo" Style="{StaticResource SectionHeader}"/>
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <TextBlock Text="Seguro do Veículo" Style="{StaticResource SectionHeader}"/>
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="1.5*"/>
-                            <ColumnDefinition Width="1.5*"/>
-                            <ColumnDefinition Width="1.5*"/>
-                            <ColumnDefinition Width="1.5*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                            <TextBlock Text="Seguradora" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding SeguroSeguradora, UpdateSourceTrigger=PropertyChanged}"
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Text="Seguradora" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding SeguroSeguradora, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}" MaxLength="200"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                            <TextBlock Text="Nr. Apólice" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding SeguroNrApolice, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                                    <TextBlock Text="Nr. Apólice" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding SeguroNrApolice, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}" MaxLength="50"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
-                            <TextBlock Text="Dt. Início Vigência" Style="{StaticResource FieldLabel}"/>
-                            <DatePicker SelectedDate="{Binding SeguroDtInicioVigencia}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                                    <TextBlock Text="Dt. Início Vigência" Style="{StaticResource FieldLabel}"/>
+                                    <DatePicker SelectedDate="{Binding SeguroDtInicioVigencia}"
                                         Height="32" FontSize="13" Language="pt-BR"
                                         BorderBrush="{StaticResource LineBrush}"
                                         BorderThickness="1" SelectedDateFormat="Short"
                                         PreviewTextInput="DatePicker_PreviewTextInput"  />
-                        </StackPanel>
-                        <StackPanel Grid.Column="3" Margin="0,0,8,0">
-                            <TextBlock Text="Dt. Término Vigência" Style="{StaticResource FieldLabel}"/>
-                            <DatePicker SelectedDate="{Binding SeguroDtTerminoVigencia}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                                    <TextBlock Text="Dt. Término Vigência" Style="{StaticResource FieldLabel}"/>
+                                    <DatePicker SelectedDate="{Binding SeguroDtTerminoVigencia}"
                                         Height="32" FontSize="13" Language="pt-BR"
                                         BorderBrush="{StaticResource LineBrush}"
                                         BorderThickness="1" SelectedDateFormat="Short"
                                         PreviewTextInput="DatePicker_PreviewTextInput" />
-                        </StackPanel>
-                        <StackPanel Grid.Column="4">
-                            <TextBlock Text="Tipo" Style="{StaticResource FieldLabel}"/>
-                            <TextBox Text="{Binding SeguroTipo, UpdateSourceTrigger=PropertyChanged}"
+                                </StackPanel>
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="Tipo" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding SeguroTipo, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBox}" MaxLength="100"/>
+                                </StackPanel>
+                            </Grid>
+
                         </StackPanel>
-                    </Grid>
+                    </Border>
 
                     <!-- ════ OUTROS DOCUMENTOS ════ -->
-                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
-                    <Grid Margin="0,16,0,10">
-                        <TextBlock Text="Outros Documentos" Style="{StaticResource SectionHeader}"
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,10">
+                                <TextBlock Text="Outros Documentos" Style="{StaticResource SectionHeader}"
                                    Margin="0,0,0,0" VerticalAlignment="Center"/>
-                        <Button HorizontalAlignment="Right"
+                                <Button HorizontalAlignment="Right"
                                 Command="{Binding AdicionarDocumentoCommand}"
                                 Height="30" Cursor="Hand" Background="#16A34A"
                                 BorderThickness="0">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border CornerRadius="8" Background="{TemplateBinding Background}">
-                                        <StackPanel Orientation="Horizontal" Margin="12,0">
-                                            <materialDesign:PackIcon Kind="Plus" Width="14" Height="14"
+                                    <Button.RenderTransform>
+                                        <ScaleTransform/>
+                                    </Button.RenderTransform>
+                                    <Button.Triggers>
+                                        <EventTrigger RoutedEvent="MouseEnter">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="MouseLeave">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Button.Triggers>
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="Bd" CornerRadius="8" Background="{TemplateBinding Background}">
+                                                <StackPanel Orientation="Horizontal" Margin="12,0">
+                                                    <materialDesign:PackIcon Kind="Plus" Width="14" Height="14"
                                                                      Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0"/>
-                                            <TextBlock Text="Adicionar" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#15803D"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                    </Grid>
+                                                    <TextBlock Text="Adicionar" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#15803D"/>
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="True">
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </Grid>
 
-                    <!-- Campos para novo documento -->
-                    <Grid Margin="0,0,0,8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="180"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Nome do Documento"
+                            <!-- Campos para novo documento -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="180"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Nome do Documento"
                Style="{StaticResource FieldLabel}" Margin="0,0,8,0"
                VerticalAlignment="Bottom"/>
-                        <TextBlock Grid.Column="1" Text="Dt. Vencimento"
+                                <TextBlock Grid.Column="1" Text="Dt. Vencimento"
                Style="{StaticResource FieldLabel}"
                VerticalAlignment="Bottom"/>
-                    </Grid>
-                    <Grid Margin="0,0,0,8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="180"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" Margin="0,0,8,0"
+                            </Grid>
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="180"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" Margin="0,0,8,0"
              Text="{Binding NovoDocumentoNome, UpdateSourceTrigger=PropertyChanged}"
              Style="{StaticResource ModernTextBox}"
              materialDesign:HintAssist.Hint="Nome do documento"/>
-                        <DatePicker Grid.Column="1"
+                                <DatePicker Grid.Column="1"
                 SelectedDate="{Binding NovoDocumentoDtVencimento}"
                 Height="32" FontSize="13" Language="pt-BR"
                 BorderBrush="{StaticResource LineBrush}"
                 BorderThickness="1" SelectedDateFormat="Short"
                 PreviewTextInput="DatePicker_PreviewTextInput"/>
-                    </Grid>
+                            </Grid>
 
-                    <DataGrid ItemsSource="{Binding Documentos}"
+                            <DataGrid ItemsSource="{Binding Documentos}"
                               SelectedItem="{Binding DocumentoSelecionado}"
                               AutoGenerateColumns="False"
                               HeadersVisibility="Column"
@@ -622,68 +736,155 @@
                               SelectionUnit="FullRow"
                               IsReadOnly="True"
                               MaxHeight="160">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Documento"
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Documento"
                                                Binding="{Binding Documento}"
                                                Width="*"/>
-                            <DataGridTextColumn Header="Dt. Vencimento"
+                                    <DataGridTextColumn Header="Dt. Vencimento"
                                                Binding="{Binding DtVencimento, StringFormat=dd/MM/yyyy}"
                                                Width="140"/>
-                            <DataGridTemplateColumn Width="60">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding DataContext.RemoverDocumentoCommand,
+                                    <DataGridTemplateColumn Width="60">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Command="{Binding DataContext.RemoverDocumentoCommand,
                                                     RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                 CommandParameter="{Binding}"
                                                 Width="26" Height="26" Cursor="Hand"
                                                 Background="#FFEBEB" BorderThickness="0">
-                                            <Button.Template>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Border CornerRadius="6" Background="{TemplateBinding Background}">
-                                                        <materialDesign:PackIcon Kind="TrashCanOutline"
+                                                    <Button.RenderTransform>
+                                                        <ScaleTransform/>
+                                                    </Button.RenderTransform>
+                                                    <Button.Triggers>
+                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </Button.Triggers>
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border x:Name="Bd" CornerRadius="6" Background="{TemplateBinding Background}">
+                                                                <materialDesign:PackIcon Kind="TrashCanOutline"
                                                                                  Width="13" Height="13"
                                                                                  Foreground="#DC2626"
                                                                                  HorizontalAlignment="Center"
                                                                                  VerticalAlignment="Center"/>
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Button.Template>
-                                        </Button>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="Bd" Property="Background" Value="#FCA5A5"/>
+                                                                </Trigger>
+                                                                <Trigger Property="IsPressed" Value="True">
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                        </StackPanel>
+                    </Border>
 
                     <!-- ════ ANEXOS ════ -->
-                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
-                    <Grid Margin="0,16,0,10">
-                        <TextBlock Text="Anexos" Style="{StaticResource SectionHeader}"
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,10">
+                                <TextBlock Text="Anexos" Style="{StaticResource SectionHeader}"
                                    Margin="0" VerticalAlignment="Center"/>
-                        <Button HorizontalAlignment="Right"
+                                <Button HorizontalAlignment="Right"
                                 Command="{Binding AdicionarAnexoCommand}"
                                 Height="30" Cursor="Hand" Background="#2563EB"
                                 BorderThickness="0">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border CornerRadius="8" Background="{TemplateBinding Background}">
-                                        <StackPanel Orientation="Horizontal" Margin="12,0">
-                                            <materialDesign:PackIcon Kind="PaperclipPlus" Width="14" Height="14"
+                                    <Button.RenderTransform>
+                                        <ScaleTransform/>
+                                    </Button.RenderTransform>
+                                    <Button.Triggers>
+                                        <EventTrigger RoutedEvent="MouseEnter">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="MouseLeave">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Button.Triggers>
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="Bd" CornerRadius="8" Background="{TemplateBinding Background}">
+                                                <StackPanel Orientation="Horizontal" Margin="12,0">
+                                                    <materialDesign:PackIcon Kind="PaperclipPlus" Width="14" Height="14"
                                                                      Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0"/>
-                                            <TextBlock Text="Anexar arquivo" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#1D4ED8"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                    </Grid>
+                                                    <TextBlock Text="Anexar arquivo" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#1D4ED8"/>
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="True">
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </Grid>
 
-                    <DataGrid ItemsSource="{Binding Anexos}"
+                            <DataGrid ItemsSource="{Binding Anexos}"
                               AutoGenerateColumns="False"
                               HeadersVisibility="Column"
                               RowHeight="48" ColumnHeaderHeight="36"
@@ -698,11 +899,11 @@
                               SelectionUnit="FullRow"
                               IsReadOnly="True"
                               MaxHeight="160">
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Arquivo" Width="*">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding DataContext.AbrirAnexoCommand,
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Arquivo" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Command="{Binding DataContext.AbrirAnexoCommand,
                                                     RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                 CommandParameter="{Binding}"
                                                 Background="Transparent"
@@ -710,60 +911,147 @@
                                                 Cursor="Hand"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Center">
-                                            <Button.Template>
-                                                <ControlTemplate TargetType="Button">
-                                                    <TextBlock Text="{Binding NomeArquivo}"
+                                                    <Button.RenderTransform>
+                                                        <ScaleTransform/>
+                                                    </Button.RenderTransform>
+                                                    <Button.Triggers>
+                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </Button.Triggers>
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <TextBlock Text="{Binding NomeArquivo}"
                                                                Foreground="#2563EB"
                                                                FontSize="12"
                                                                TextDecorations="Underline"
                                                                VerticalAlignment="Center"/>
-                                                </ControlTemplate>
-                                            </Button.Template>
-                                        </Button>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="Tipo"
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Tipo"
                                                Binding="{Binding TipoArquivo}"
                                                Width="160"/>
-                            <DataGridTextColumn Header="Tamanho"
+                                    <DataGridTextColumn Header="Tamanho"
                                                Binding="{Binding TamanhoFormatado}"
                                                Width="90"/>
-                            <DataGridTextColumn Header="Data Upload"
+                                    <DataGridTextColumn Header="Data Upload"
                                                Binding="{Binding DataUpload, StringFormat=dd/MM/yyyy}"
                                                Width="110"/>
-                            <DataGridTemplateColumn Width="60">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding DataContext.RemoverAnexoCommand,
+                                    <DataGridTemplateColumn Width="60">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Command="{Binding DataContext.RemoverAnexoCommand,
                                                     RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                 CommandParameter="{Binding}"
                                                 Width="26" Height="26" Cursor="Hand"
                                                 Background="#FFEBEB" BorderThickness="0">
-                                            <Button.Template>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Border CornerRadius="6" Background="{TemplateBinding Background}">
-                                                        <materialDesign:PackIcon Kind="TrashCanOutline"
+                                                    <Button.RenderTransform>
+                                                        <ScaleTransform/>
+                                                    </Button.RenderTransform>
+                                                    <Button.Triggers>
+                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </Button.Triggers>
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border x:Name="Bd" CornerRadius="6" Background="{TemplateBinding Background}">
+                                                                <materialDesign:PackIcon Kind="TrashCanOutline"
                                                                                  Width="13" Height="13"
                                                                                  Foreground="#DC2626"
                                                                                  HorizontalAlignment="Center"
                                                                                  VerticalAlignment="Center"/>
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Button.Template>
-                                        </Button>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="Bd" Property="Background" Value="#FCA5A5"/>
+                                                                </Trigger>
+                                                                <Trigger Property="IsPressed" Value="True">
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                        </StackPanel>
+                    </Border>
 
                     <!-- ════ OBSERVAÇÕES ════ -->
-                    <Border Style="{StaticResource SectionDivider}" Margin="0,16,0,0"/>
-                    <TextBlock Text="Observações" Style="{StaticResource SectionHeader}"/>
-                    <TextBox Text="{Binding Observacoes, UpdateSourceTrigger=PropertyChanged}"
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <TextBlock Text="Observações" Style="{StaticResource SectionHeader}"/>
+                            <TextBox Text="{Binding Observacoes, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource ModernTextBoxMultiline}"
                              Margin="0,0,0,8"/>
+                        </StackPanel>
+                    </Border>
 
                 </StackPanel>
             </ScrollViewer>
@@ -781,9 +1069,46 @@
                         Height="40" Cursor="Hand" Background="#DC2626"
                         BorderThickness="0" Margin="0,0,8,0"
                         Visibility="{Binding EmModoEdicao, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Button.RenderTransform>
+                        <ScaleTransform/>
+                    </Button.RenderTransform>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Button.Triggers>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                            <Border x:Name="Bd" CornerRadius="10" Background="{TemplateBinding Background}">
                                 <StackPanel Orientation="Horizontal" Margin="16,0">
                                     <materialDesign:PackIcon Kind="TrashCanOutline" Width="16" Height="16"
                                                              Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
@@ -794,6 +1119,8 @@
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="#B91C1C"/>
                                 </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Button.Template>
@@ -802,9 +1129,46 @@
                 <Button Command="{Binding CancelarCommand}"
                         Height="40" Cursor="Hand" Background="#F3F4F6"
                         BorderThickness="0" Margin="0,0,8,0">
+                    <Button.RenderTransform>
+                        <ScaleTransform/>
+                    </Button.RenderTransform>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Button.Triggers>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                            <Border x:Name="Bd" CornerRadius="10" Background="{TemplateBinding Background}">
                                 <StackPanel Orientation="Horizontal" Margin="16,0">
                                     <materialDesign:PackIcon Kind="Close" Width="16" Height="16"
                                                              Foreground="{StaticResource TextStrong}"
@@ -817,6 +1181,8 @@
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="#E5E7EB"/>
                                 </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Button.Template>
@@ -825,9 +1191,46 @@
                 <Button Command="{Binding LimparCommand}"
                         Height="40" Cursor="Hand" Background="#F59E0B"
                         BorderThickness="0" Margin="0,0,8,0">
+                    <Button.RenderTransform>
+                        <ScaleTransform/>
+                    </Button.RenderTransform>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Button.Triggers>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                            <Border x:Name="Bd" CornerRadius="10" Background="{TemplateBinding Background}">
                                 <StackPanel Orientation="Horizontal" Margin="16,0">
                                     <materialDesign:PackIcon Kind="Broom" Width="16" Height="16"
                                                              Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
@@ -838,6 +1241,8 @@
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="#D97706"/>
                                 </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Button.Template>
@@ -846,9 +1251,46 @@
                 <Button Command="{Binding SalvarCommand}"
                         Height="40" Cursor="Hand" Background="#16A34A"
                         BorderThickness="0">
+                    <Button.RenderTransform>
+                        <ScaleTransform/>
+                    </Button.RenderTransform>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Button.Triggers>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                            <Border x:Name="Bd" CornerRadius="10" Background="{TemplateBinding Background}">
                                 <StackPanel Orientation="Horizontal" Margin="16,0">
                                     <materialDesign:PackIcon Kind="ContentSaveOutline" Width="16" Height="16"
                                                              Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
@@ -858,6 +1300,8 @@
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="#15803D"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>

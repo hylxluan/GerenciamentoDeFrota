@@ -10,14 +10,13 @@
         Background="Transparent">
 
     <Window.Resources>
-
         <SolidColorBrush x:Key="AppSurfaceBrush"        Color="#F5F7FB"/>
         <SolidColorBrush x:Key="PanelBrush"             Color="#FFFFFF"/>
         <SolidColorBrush x:Key="LogoHolderBrush"        Color="#30FFFFFF"/>
         <SolidColorBrush x:Key="SidebarTitleBrush"      Color="#0F3D2E"/>
         <SolidColorBrush x:Key="SidebarSubTitleBrush"   Color="#2E6B57"/>
-        <SolidColorBrush x:Key="NavHoverBrush"          Color="#22FFFFFF"/>
-        <SolidColorBrush x:Key="NavPressedBrush"        Color="#33FFFFFF"/>
+        <SolidColorBrush x:Key="NavHoverBrush"          Color="#22006400"/>
+        <SolidColorBrush x:Key="NavPressedBrush"        Color="#3A006400"/>
         <SolidColorBrush x:Key="NavSelectedBrush"       Color="#300F3D2E"/>
         <SolidColorBrush x:Key="NavSelectedBorderBrush" Color="#450F3D2E"/>
 
@@ -26,12 +25,13 @@
             <GradientStop Color="#8CE7B7" Offset="1"/>
         </LinearGradientBrush>
 
+        <!-- ── Nav item principal ────────────────────────────────────────── -->
         <Style x:Key="NavItemStyle" TargetType="RadioButton">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="MinHeight" Value="48"/>
+            <Setter Property="Background"       Value="Transparent"/>
+            <Setter Property="BorderBrush"      Value="Transparent"/>
+            <Setter Property="BorderThickness"  Value="1"/>
+            <Setter Property="Cursor"           Value="Hand"/>
+            <Setter Property="MinHeight"        Value="48"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
@@ -39,16 +39,24 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}">
-                            <Grid Margin="12,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="36"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ContentPresenter Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" VerticalAlignment="Center"
-                                           FontSize="13" FontWeight="SemiBold"
-                                           Foreground="{StaticResource SidebarTitleBrush}"
-                                           Text="{TemplateBinding Tag}"/>
+                            <Grid>
+                                <!-- Indicador lateral verde (visível apenas quando selecionado) -->
+                                <Border x:Name="SelectedBar"
+                                        Width="4" HorizontalAlignment="Left"
+                                        CornerRadius="2" Background="#15803D"
+                                        Margin="4,10,0,10" Opacity="0"/>
+
+                                <Grid Margin="12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="36"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" VerticalAlignment="Center"
+                                               FontSize="13" FontWeight="SemiBold"
+                                               Foreground="{StaticResource SidebarTitleBrush}"
+                                               Text="{TemplateBinding Tag}"/>
+                                </Grid>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -59,8 +67,9 @@
                                 <Setter TargetName="Root" Property="Background" Value="{StaticResource NavPressedBrush}"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="{StaticResource NavSelectedBrush}"/>
-                                <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource NavSelectedBorderBrush}"/>
+                                <Setter TargetName="Root" Property="Background"   Value="{StaticResource NavSelectedBrush}"/>
+                                <Setter TargetName="Root" Property="BorderBrush"  Value="{StaticResource NavSelectedBorderBrush}"/>
+                                <Setter TargetName="SelectedBar" Property="Opacity" Value="1"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -68,13 +77,14 @@
             </Setter>
         </Style>
 
+        <!-- ── Sub-nav item ──────────────────────────────────────────────── -->
         <Style x:Key="SubNavItemStyle" TargetType="RadioButton">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="MinHeight" Value="40"/>
-            <Setter Property="Margin" Value="0,0,0,2"/>
+            <Setter Property="Background"       Value="Transparent"/>
+            <Setter Property="BorderBrush"      Value="Transparent"/>
+            <Setter Property="BorderThickness"  Value="1"/>
+            <Setter Property="Cursor"           Value="Hand"/>
+            <Setter Property="MinHeight"        Value="40"/>
+            <Setter Property="Margin"           Value="0,0,0,2"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
@@ -82,16 +92,22 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}">
-                            <Grid Margin="10,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="26"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ContentPresenter Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" VerticalAlignment="Center"
-                                           FontSize="12" FontWeight="Medium"
-                                           Foreground="{StaticResource SidebarTitleBrush}"
-                                           Text="{TemplateBinding Tag}"/>
+                            <Grid>
+                                <Border x:Name="SelectedBar"
+                                        Width="3" HorizontalAlignment="Left"
+                                        CornerRadius="2" Background="#16A34A"
+                                        Margin="3,8,0,8" Opacity="0"/>
+                                <Grid Margin="10,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" VerticalAlignment="Center"
+                                               FontSize="12" FontWeight="Medium"
+                                               Foreground="{StaticResource SidebarTitleBrush}"
+                                               Text="{TemplateBinding Tag}"/>
+                                </Grid>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -102,8 +118,9 @@
                                 <Setter TargetName="Root" Property="Background" Value="{StaticResource NavPressedBrush}"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="{StaticResource NavSelectedBrush}"/>
-                                <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource NavSelectedBorderBrush}"/>
+                                <Setter TargetName="Root"        Property="Background"  Value="{StaticResource NavSelectedBrush}"/>
+                                <Setter TargetName="Root"        Property="BorderBrush" Value="{StaticResource NavSelectedBorderBrush}"/>
+                                <Setter TargetName="SelectedBar" Property="Opacity"     Value="1"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -111,12 +128,13 @@
             </Setter>
         </Style>
 
+        <!-- ── Toggle grupo ──────────────────────────────────────────────── -->
         <Style x:Key="GroupToggleStyle" TargetType="ToggleButton">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="MinHeight" Value="48"/>
+            <Setter Property="Background"       Value="Transparent"/>
+            <Setter Property="BorderBrush"      Value="Transparent"/>
+            <Setter Property="BorderThickness"  Value="1"/>
+            <Setter Property="Cursor"           Value="Hand"/>
+            <Setter Property="MinHeight"        Value="48"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
@@ -130,17 +148,14 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="22"/>
                                 </Grid.ColumnDefinitions>
-
                                 <materialDesign:PackIcon Grid.Column="0"
                                     Kind="FolderMultipleOutline" Width="22" Height="22"
                                     VerticalAlignment="Center" HorizontalAlignment="Center"
                                     Foreground="{StaticResource SidebarTitleBrush}"/>
-
                                 <TextBlock Grid.Column="1" VerticalAlignment="Center"
                                            FontSize="13" FontWeight="SemiBold"
                                            Foreground="{StaticResource SidebarTitleBrush}"
                                            Text="Cadastros Gerais"/>
-
                                 <materialDesign:PackIcon x:Name="Arrow"
                                     Grid.Column="2" Kind="ChevronDown"
                                     Width="16" Height="16" VerticalAlignment="Center"
@@ -159,7 +174,7 @@
                                 <Setter TargetName="Root" Property="Background" Value="{StaticResource NavPressedBrush}"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="{StaticResource NavSelectedBrush}"/>
+                                <Setter TargetName="Root" Property="Background"  Value="{StaticResource NavSelectedBrush}"/>
                                 <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource NavSelectedBorderBrush}"/>
                                 <Trigger.EnterActions>
                                     <BeginStoryboard>
@@ -186,48 +201,78 @@
             </Setter>
         </Style>
 
-        <!-- ===== ESTILOS DOS BOTÕES DE CONTROLE DA JANELA ===== -->
-
         <Style x:Key="WinCtrlBtnStyle" TargetType="Button">
-            <Setter Property="Width" Value="32"/>
-            <Setter Property="Height" Value="32"/>
+            <Setter Property="Width"           Value="32"/>
+            <Setter Property="Height"          Value="32"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Cursor"          Value="Hand"/>
         </Style>
-
     </Window.Resources>
 
     <Border CornerRadius="25"
             Background="{StaticResource AppSurfaceBrush}"
+            ClipToBounds="True"
             MouseDown="Border_MouseDown"
             MouseLeftButtonDown="Border_MouseLeftButtonDown">
         <Grid>
 
-            <!-- ===== BOTÕES DE CONTROLE DA JANELA (Minimizar / Maximizar / Fechar) ===== -->
-            <StackPanel HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Orientation="Horizontal"
-                        Margin="0,12,12,0"
-                        Panel.ZIndex="99">
+            <!-- ── Botões de controle da janela ──────────────────────────── -->
+            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top"
+                        Orientation="Horizontal" Margin="0,12,12,0" Panel.ZIndex="99">
 
                 <!-- Minimizar -->
-                <Button x:Name="BtnMinimizar"
-                        Click="BtnMinimizar_Click"
+                <Button x:Name="BtnMinimizar" Click="BtnMinimizar_Click"
                         Style="{StaticResource WinCtrlBtnStyle}"
-                        Background="#F3F4F6"
-                        Margin="0,0,6,0">
+                        Background="#F3F4F6" Margin="0,0,6,0">
+                    <Button.RenderTransform>
+                        <ScaleTransform/>
+                    </Button.RenderTransform>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Button.Triggers>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border CornerRadius="10" Background="{TemplateBinding Background}">
-                                <materialDesign:PackIcon Kind="WindowMinimize"
-                                                         Width="16" Height="16"
+                            <Border x:Name="Bd" CornerRadius="10" Background="{TemplateBinding Background}">
+                                <materialDesign:PackIcon Kind="WindowMinimize" Width="16" Height="16"
                                                          Foreground="#374151"
-                                                         HorizontalAlignment="Center"
-                                                         VerticalAlignment="Center"/>
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#E5E7EB"/>
+                                    <Setter TargetName="Bd" Property="Background" Value="#E5E7EB"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -235,24 +280,58 @@
                 </Button>
 
                 <!-- Maximizar / Restaurar -->
-                <Button x:Name="BtnMaximizar"
-                        Click="BtnMaximizar_Click"
+                <Button x:Name="BtnMaximizar" Click="BtnMaximizar_Click"
                         Style="{StaticResource WinCtrlBtnStyle}"
-                        Background="#EFF6FF"
-                        Margin="0,0,6,0">
+                        Background="#EFF6FF" Margin="0,0,6,0">
+                    <Button.RenderTransform>
+                        <ScaleTransform/>
+                    </Button.RenderTransform>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Button.Triggers>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border CornerRadius="10" Background="{TemplateBinding Background}">
-                                <materialDesign:PackIcon x:Name="IcoMax"
-                                                         Kind="WindowMaximize"
-                                                         Width="16" Height="16"
-                                                         Foreground="#2563EB"
-                                                         HorizontalAlignment="Center"
-                                                         VerticalAlignment="Center"/>
+                            <Border x:Name="Bd" CornerRadius="10" Background="{TemplateBinding Background}">
+                                <materialDesign:PackIcon x:Name="IcoMax" Kind="WindowMaximize"
+                                                         Width="16" Height="16" Foreground="#2563EB"
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#DBEAFE"/>
+                                    <Setter TargetName="Bd" Property="Background" Value="#DBEAFE"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -260,53 +339,90 @@
                 </Button>
 
                 <!-- Fechar -->
-                <Button x:Name="BtnFechar"
-                        Click="BtnFechar_Click"
+                <Button x:Name="BtnFechar" Click="BtnFechar_Click"
                         Style="{StaticResource WinCtrlBtnStyle}"
                         Background="#FFEBEB">
+                    <Button.RenderTransform>
+                        <ScaleTransform/>
+                    </Button.RenderTransform>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Button.Triggers>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border CornerRadius="10" Background="{TemplateBinding Background}">
-                                <materialDesign:PackIcon Kind="Close"
-                                                         Width="16" Height="16"
-                                                         Foreground="#DC2626"
-                                                         HorizontalAlignment="Center"
-                                                         VerticalAlignment="Center"/>
+                            <Border x:Name="Bd" CornerRadius="10" Background="{TemplateBinding Background}">
+                                <materialDesign:PackIcon Kind="Close" Width="16" Height="16" Foreground="#DC2626"
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#FCA5A5"/>
+                                    <Setter TargetName="Bd" Property="Background" Value="#FCA5A5"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-
             </StackPanel>
 
-            <!-- Layout principal -->
+            <!-- ── Layout principal ───────────────────────────────────────── -->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="260"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- SIDEBAR -->
+                <!-- ── SIDEBAR ───────────────────────────────────────────── -->
                 <Border Grid.Column="0"
                         Background="{StaticResource SidebarBrush}"
                         CornerRadius="25,0,0,25">
-
                     <Grid Margin="18">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
+                            <!-- Logo -->
                             <RowDefinition Height="18"/>
                             <RowDefinition Height="Auto"/>
+                            <!-- Divisor -->
                             <RowDefinition Height="12"/>
                             <RowDefinition Height="*"/>
+                            <!-- Menu -->
                             <RowDefinition Height="Auto"/>
+                            <!-- Rodapé -->
                         </Grid.RowDefinitions>
 
-                        <!-- LOGO + NOME -->
+                        <!-- Logo + nome -->
                         <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top">
                             <Border Width="66" Height="66" CornerRadius="33"
                                     Background="{StaticResource LogoHolderBrush}">
@@ -329,10 +445,9 @@
 
                         <Border Grid.Row="2" Height="1" Background="#22FFFFFF"/>
 
-                        <!-- MENU -->
+                        <!-- Menu -->
                         <StackPanel Grid.Row="4" x:Name="MenuContainer" Margin="0,18,0,0">
 
-                            <!-- Dashboard -->
                             <RadioButton x:Name="RbDashboard"
                                          GroupName="Nav"
                                          Style="{StaticResource NavItemStyle}"
@@ -344,12 +459,10 @@
                                                          Foreground="{StaticResource SidebarTitleBrush}"/>
                             </RadioButton>
 
-                            <!-- Grupo Cadastros Gerais -->
                             <ToggleButton x:Name="TglCadastros"
                                           Style="{StaticResource GroupToggleStyle}"
                                           Margin="0,0,0,2"/>
 
-                            <!-- Sub-itens -->
                             <StackPanel Margin="16,0,0,6">
                                 <StackPanel.Style>
                                     <Style TargetType="StackPanel">
@@ -384,61 +497,47 @@
                                         <ColumnDefinition Width="2"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-
                                     <Border Grid.Column="0" Background="#44FFFFFF" CornerRadius="1" Margin="8,4,0,4"/>
-
                                     <StackPanel Grid.Column="1" Margin="6,0,0,0">
 
-                                        <RadioButton x:Name="RbVeiculos"
-                                                     GroupName="Nav"
+                                        <RadioButton x:Name="RbVeiculos" GroupName="Nav"
                                                      Style="{StaticResource SubNavItemStyle}"
-                                                     Tag="Veículos"
-                                                     Checked="RbVeiculos_Checked">
+                                                     Tag="Veículos" Checked="RbVeiculos_Checked">
                                             <materialDesign:PackIcon Kind="CarOutline" Width="16" Height="16"
                                                                      Foreground="{StaticResource SidebarTitleBrush}"/>
                                         </RadioButton>
 
-                                        <RadioButton x:Name="RbCondutores"
-                                                     GroupName="Nav"
+                                        <RadioButton x:Name="RbCondutores" GroupName="Nav"
                                                      Style="{StaticResource SubNavItemStyle}"
-                                                     Tag="Condutores"
-                                                     Checked="RbCondutores_Checked">
+                                                     Tag="Condutores" Checked="RbCondutores_Checked">
                                             <materialDesign:PackIcon Kind="AccountTieOutline" Width="16" Height="16"
                                                                      Foreground="{StaticResource SidebarTitleBrush}"/>
                                         </RadioButton>
 
-                                        <RadioButton x:Name="RbCentrosCusto"
-                                                     GroupName="Nav"
+                                        <RadioButton x:Name="RbCentrosCusto" GroupName="Nav"
                                                      Style="{StaticResource SubNavItemStyle}"
-                                                     Tag="Centros de Custo"
-                                                     Checked="RbCentrosCusto_Checked">
+                                                     Tag="Centros de Custo" Checked="RbCentrosCusto_Checked">
                                             <materialDesign:PackIcon Kind="CurrencyUsd" Width="16" Height="16"
                                                                      Foreground="{StaticResource SidebarTitleBrush}"/>
                                         </RadioButton>
 
-                                        <RadioButton x:Name="RbFornecedores"
-                                                     GroupName="Nav"
+                                        <RadioButton x:Name="RbFornecedores" GroupName="Nav"
                                                      Style="{StaticResource SubNavItemStyle}"
-                                                     Tag="Fornecedores"
-                                                     Checked="RbFornecedores_Checked">
+                                                     Tag="Fornecedores" Checked="RbFornecedores_Checked">
                                             <materialDesign:PackIcon Kind="TruckOutline" Width="16" Height="16"
                                                                      Foreground="{StaticResource SidebarTitleBrush}"/>
                                         </RadioButton>
 
-                                        <RadioButton x:Name="RbCombustivel"
-                                                     GroupName="Nav"
+                                        <RadioButton x:Name="RbCombustivel" GroupName="Nav"
                                                      Style="{StaticResource SubNavItemStyle}"
-                                                     Tag="Combustíveis"
-                                                     Checked="RbCombustivel_Checked">
+                                                     Tag="Combustíveis" Checked="RbCombustivel_Checked">
                                             <materialDesign:PackIcon Kind="GasStation" Width="16" Height="16"
                                                                      Foreground="{StaticResource SidebarTitleBrush}"/>
                                         </RadioButton>
 
-                                        <RadioButton x:Name="RbVeiculoCombustivel"
-                                                     GroupName="Nav"
+                                        <RadioButton x:Name="RbVeiculoCombustivel" GroupName="Nav"
                                                      Style="{StaticResource SubNavItemStyle}"
-                                                     Tag="Veículo/Combustível"
-                                                     Checked="RbVeiculoCombustivel_Checked">
+                                                     Tag="Veículo/Combustível" Checked="RbVeiculoCombustivel_Checked">
                                             <materialDesign:PackIcon Kind="CarCog" Width="16" Height="16"
                                                                      Foreground="{StaticResource SidebarTitleBrush}"/>
                                         </RadioButton>
@@ -447,12 +546,9 @@
                                 </Grid>
                             </StackPanel>
 
-                            <!-- Agendamento -->
-                            <RadioButton x:Name="RbAgendamento"
-                                         GroupName="Nav"
+                            <RadioButton x:Name="RbAgendamento" GroupName="Nav"
                                          Style="{StaticResource NavItemStyle}"
-                                         Tag="Agendamento"
-                                         Checked="RbAgendamento_Checked"
+                                         Tag="Agendamento" Checked="RbAgendamento_Checked"
                                          Margin="0,6,0,0">
                                 <materialDesign:PackIcon Kind="CalendarClock" Width="22" Height="22"
                                                          Foreground="{StaticResource SidebarTitleBrush}"/>
@@ -460,26 +556,133 @@
 
                         </StackPanel>
 
-                        <StackPanel Grid.Row="5" x:Name="SidebarFooter"/>
+                        <!-- ── Rodapé da sidebar ─────────────────────────── -->
+                        <Border Grid.Row="5" BorderBrush="#22FFFFFF" BorderThickness="0,1,0,0" Padding="0,12,0,0">
+                            <Grid>
+                                <StackPanel>
+                                    <TextBlock Text="EcoFrota"
+                                               Foreground="{StaticResource SidebarTitleBrush}"
+                                               FontSize="11" FontWeight="Bold"/>
+                                    <TextBlock Text="v1.0.0 — Gerenciamento de Frota"
+                                               Foreground="{StaticResource SidebarSubTitleBrush}"
+                                               FontSize="10"/>
+                                </StackPanel>
+                                <!-- Botão de configurações (placeholder para futura expansão) -->
+                                <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                                        Width="32" Height="32" Background="#22FFFFFF"
+                                        BorderThickness="0" Cursor="Hand"
+                                        ToolTip="Configurações">
+                                    <Button.RenderTransform>
+                                        <ScaleTransform/>
+                                    </Button.RenderTransform>
+                                    <Button.Triggers>
+                                        <EventTrigger RoutedEvent="MouseEnter">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="MouseLeave">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Button.Triggers>
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="Bd" CornerRadius="8" Background="{TemplateBinding Background}">
+                                                <materialDesign:PackIcon Kind="CogOutline" Width="16" Height="16"
+                                                                         Foreground="{StaticResource SidebarTitleBrush}"
+                                                                         HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF"/>
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="True">
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </Grid>
+                        </Border>
+
                     </Grid>
                 </Border>
 
-                <!-- ÁREA PRINCIPAL (DIREITA) -->
+                <!-- ── ÁREA PRINCIPAL ────────────────────────────────────── -->
                 <Border Grid.Column="1"
                         Background="{StaticResource AppSurfaceBrush}"
                         CornerRadius="0,25,25,0"
                         Padding="22">
-                    <Border Background="{StaticResource PanelBrush}"
-                            CornerRadius="18" Padding="18">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                      HorizontalScrollBarVisibility="Disabled">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <!-- Breadcrumb / título da página -->
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="*"/>
+                            <!-- Conteúdo -->
+                        </Grid.RowDefinitions>
+
+                        <!-- Breadcrumb / título da página -->
+                        <Border Grid.Row="0"
+                                Background="{StaticResource PanelBrush}"
+                                CornerRadius="12"
+                                Padding="16,10">
+                            <Grid>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <materialDesign:PackIcon x:Name="IcoPage"
+                                                             Kind="ViewDashboard"
+                                                             Width="18" Height="18"
+                                                             Foreground="#15803D"
+                                                             VerticalAlignment="Center"
+                                                             Margin="0,0,8,0"/>
+                                    <TextBlock x:Name="TxtPageTitle"
+                                               Text="Dashboard"
+                                               FontSize="15" FontWeight="Bold"
+                                               Foreground="#1F2A37"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <!-- Data atual — atualizar via code-behind: TxtDate.Text = DateTime.Now.ToString("dd/MM/yyyy", ptBR) -->
+                                <TextBlock x:Name="TxtDate"
+                                           HorizontalAlignment="Right" VerticalAlignment="Center"
+                                           FontSize="12" Foreground="#6B7280"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Conteúdo da página — sem ScrollViewer (cada view gerencia o próprio) -->
+                        <Border Grid.Row="2"
+                                Background="{StaticResource PanelBrush}"
+                                CornerRadius="18">
                             <ContentControl x:Name="MainContentHost"
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Stretch"
                                             HorizontalContentAlignment="Stretch"
                                             VerticalContentAlignment="Stretch"/>
-                        </ScrollViewer>
-                    </Border>
+                        </Border>
+                    </Grid>
                 </Border>
 
             </Grid>

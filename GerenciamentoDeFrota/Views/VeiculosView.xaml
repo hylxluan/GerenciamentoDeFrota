@@ -16,26 +16,27 @@
 
         <!-- Cabeçalho do DataGrid -->
         <Style TargetType="DataGridColumnHeader">
-            <Setter Property="Background"   Value="#F3F4F6"/>
-            <Setter Property="Foreground"   Value="{StaticResource TextSoft}"/>
-            <Setter Property="FontSize"     Value="11"/>
-            <Setter Property="FontWeight"   Value="SemiBold"/>
-            <Setter Property="Padding"      Value="8,0"/>
-            <Setter Property="BorderBrush"  Value="{StaticResource LineBrush}"/>
-            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+            <Setter Property="Background"      Value="#15803D"/>
+            <Setter Property="Foreground"      Value="#ECFDF5"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="FontWeight"      Value="Bold"/>
+            <Setter Property="Padding"         Value="10,0"/>
+            <Setter Property="BorderBrush"     Value="#166534"/>
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+            <Setter Property="Height"          Value="42"/>
         </Style>
 
         <!-- Célula do DataGrid -->
         <Style TargetType="DataGridCell">
-            <Setter Property="Padding"       Value="8,0"/>
-            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding"                  Value="10,0"/>
+            <Setter Property="BorderThickness"          Value="0"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="FontSize"      Value="12"/>
-            <Setter Property="Foreground"    Value="{StaticResource TextStrong}"/>
+            <Setter Property="FontSize"                 Value="14"/>
+            <Setter Property="Foreground"               Value="{StaticResource TextStrong}"/>
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="#EFF6FF"/>
-                    <Setter Property="Foreground" Value="{StaticResource TextStrong}"/>
+                    <Setter Property="Background" Value="#DCFCE7"/>
+                    <Setter Property="Foreground" Value="#14532D"/>
                     <Setter Property="BorderBrush" Value="Transparent"/>
                 </Trigger>
             </Style.Triggers>
@@ -43,10 +44,10 @@
 
         <!-- Linha do DataGrid -->
         <Style TargetType="DataGridRow">
-            <Setter Property="Height" Value="44"/>
+            <Setter Property="Height" Value="52"/>
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="#EFF6FF"/>
+                    <Setter Property="Background" Value="#DCFCE7"/>
                 </Trigger>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#F0FDF4"/>
@@ -154,9 +155,51 @@
                         Command="{Binding NovoVeiculoCommand}"
                         Height="36" Cursor="Hand" Background="#16A34A"
                         BorderThickness="0">
+                    <Button.RenderTransform>
+                        <ScaleTransform/>
+                    </Button.RenderTransform>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Button.Triggers>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border CornerRadius="8" Background="{TemplateBinding Background}">
+                            <Border x:Name="BtnBorder"
+                                    CornerRadius="8"
+                                    Background="{TemplateBinding Background}">
+                                <Border.RenderTransform>
+                                    <ScaleTransform x:Name="BorderScale" ScaleX="1" ScaleY="1"/>
+                                </Border.RenderTransform>
                                 <StackPanel Orientation="Horizontal" Margin="14,0">
                                     <materialDesign:PackIcon Kind="Plus" Width="16" Height="16"
                                                              Foreground="White" VerticalAlignment="Center"
@@ -167,8 +210,13 @@
                                 </StackPanel>
                             </Border>
                             <ControlTemplate.Triggers>
+                                <!-- Hover: cresce levemente + cor mais escura -->
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#15803D"/>
+                                    <Setter TargetName="BtnBorder" Property="Background" Value="#15803D"/>
+                                </Trigger>
+                                <!-- Pressionado: encolhe + cor mais escura -->
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="BtnBorder" Property="Background" Value="#166534"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -183,11 +231,11 @@
                   SelectedItem="{Binding Selecionado}"
                   AutoGenerateColumns="False"
                   HeadersVisibility="Column"
-                  ColumnHeaderHeight="36"
+                  ColumnHeaderHeight="40"
                   GridLinesVisibility="Horizontal"
-                  HorizontalGridLinesBrush="{StaticResource LineBrush}"
+                  HorizontalGridLinesBrush="#F3F4F6"
                   RowBackground="#FFFFFF"
-                  AlternatingRowBackground="#FAFAFA"
+                  AlternatingRowBackground="#F9FBF9"
                   BorderThickness="0"
                   CanUserAddRows="False"
                   CanUserResizeRows="False"
@@ -204,7 +252,7 @@
             <DataGrid.Columns>
 
                 <!-- ── Ações ─────────────────────────────────────────────── -->
-                <DataGridTemplateColumn Header="" Width="76" CanUserSort="False">
+                <DataGridTemplateColumn Header="" Width="84" CanUserSort="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal"
@@ -214,12 +262,49 @@
                                 <Button Command="{Binding DataContext.EditarItemCommand,
                                                   RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                         CommandParameter="{Binding}"
-                                        Width="28" Height="28" Cursor="Hand"
+                                        Width="32" Height="32" Cursor="Hand"
                                         Background="#EFF6FF" BorderThickness="0"
                                         Margin="0,0,4,0" ToolTip="Editar">
+                                    <Button.RenderTransform>
+                                        <ScaleTransform/>
+                                    </Button.RenderTransform>
+                                    <Button.Triggers>
+                                        <EventTrigger RoutedEvent="MouseEnter">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="MouseLeave">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Button.Triggers>
                                     <Button.Template>
                                         <ControlTemplate TargetType="Button">
-                                            <Border CornerRadius="6" Background="{TemplateBinding Background}">
+                                            <Border x:Name="Bd" CornerRadius="6" Background="{TemplateBinding Background}">
                                                 <materialDesign:PackIcon Kind="PencilOutline"
                                                                          Width="13" Height="13"
                                                                          Foreground="#2563EB"
@@ -230,6 +315,8 @@
                                                 <Trigger Property="IsMouseOver" Value="True">
                                                     <Setter Property="Background" Value="#DBEAFE"/>
                                                 </Trigger>
+                                                <Trigger Property="IsPressed" Value="True">
+                                                </Trigger>
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
                                     </Button.Template>
@@ -238,12 +325,49 @@
                                 <Button Command="{Binding DataContext.DeletarItemCommand,
                                                   RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                         CommandParameter="{Binding}"
-                                        Width="28" Height="28" Cursor="Hand"
+                                        Width="32" Height="32" Cursor="Hand"
                                         Background="#FFEBEB" BorderThickness="0"
                                         ToolTip="Excluir">
+                                    <Button.RenderTransform>
+                                        <ScaleTransform/>
+                                    </Button.RenderTransform>
+                                    <Button.Triggers>
+                                        <EventTrigger RoutedEvent="MouseEnter">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="MouseLeave">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.96" Duration="0:0:0.08"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.96" Duration="0:0:0.08"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonUp">
+                                            <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Button.Triggers>
                                     <Button.Template>
                                         <ControlTemplate TargetType="Button">
-                                            <Border CornerRadius="6" Background="{TemplateBinding Background}">
+                                            <Border x:Name="Bd" CornerRadius="6" Background="{TemplateBinding Background}">
                                                 <materialDesign:PackIcon Kind="TrashCanOutline"
                                                                          Width="13" Height="13"
                                                                          Foreground="#DC2626"
@@ -253,6 +377,8 @@
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
                                                     <Setter Property="Background" Value="#FCA5A5"/>
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="True">
                                                 </Trigger>
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
@@ -266,116 +392,120 @@
                 <!-- ── Identificação ─────────────────────────────────────── -->
                 <DataGridTextColumn Header="Cód."
                                     Binding="{Binding Id, StringFormat={}{0:D6}}"
-                                    Width="68" CanUserSort="True"/>
+                                    Width="80" CanUserSort="True"/>
 
                 <DataGridTextColumn Header="Nr. Frota"
                                     Binding="{Binding NumeroFrota}"
-                                    Width="80"/>
+                                    Width="110"/>
 
                 <DataGridTextColumn Header="Placa"
                                     Binding="{Binding Placa}"
-                                    Width="90"/>
+                                    Width="110"/>
 
                 <DataGridTextColumn Header="Renavam"
                                     Binding="{Binding Renavam}"
-                                    Width="110"/>
+                                    Width="140"/>
 
                 <DataGridTextColumn Header="Fabricante"
                                     Binding="{Binding Fabricante}"
-                                    Width="160"/>
+                                    Width="190"/>
 
                 <DataGridTextColumn Header="Modelo"
                                     Binding="{Binding Modelo}"
-                                    Width="180"/>
+                                    Width="200"/>
 
                 <DataGridTextColumn Header="Tipo de Veículo"
                                     Binding="{Binding Tipo}"
-                                    Width="220"/>
+                                    Width="260"/>
 
                 <DataGridTextColumn Header="Cor"
                                     Binding="{Binding Cor}"
-                                    Width="80"/>
+                                    Width="110"/>
 
                 <DataGridTextColumn Header="UF"
                                     Binding="{Binding UF}"
-                                    Width="50"/>
+                                    Width="60"/>
 
                 <DataGridTextColumn Header="Ano Fab."
                                     Binding="{Binding AnoFabricacao}"
-                                    Width="80"/>
+                                    Width="100"/>
 
                 <DataGridTextColumn Header="Ano Mod."
                                     Binding="{Binding AnoModelo}"
-                                    Width="80"/>
+                                    Width="100"/>
 
                 <DataGridTextColumn Header="KM / Horímetro"
                                     Binding="{Binding KmAtual, StringFormat={}{0:N0}}"
-                                    Width="110"/>
+                                    Width="140"/>
 
                 <!-- ── Proprietário ──────────────────────────────────────── -->
                 <DataGridTextColumn Header="Proprietário"
                                     Binding="{Binding Proprietario}"
-                                    Width="200"/>
+                                    Width="220"/>
+
+                <DataGridTextColumn Header="CPF"
+                                    Binding="{Binding CPF}"
+                                    Width="150"/>
 
                 <DataGridTextColumn Header="CNPJ"
                                     Binding="{Binding CNPJ}"
-                                    Width="160"/>
+                                    Width="180"/>
 
                 <!-- ── Dados Técnicos ────────────────────────────────────── -->
                 <DataGridTextColumn Header="Tara (Kg)"
                                     Binding="{Binding TaraKg, StringFormat={}{0:N2}}"
-                                    Width="90"/>
+                                    Width="120"/>
 
                 <DataGridTextColumn Header="Lotação (Kg)"
                                     Binding="{Binding LotacaoKg, StringFormat={}{0:N2}}"
-                                    Width="100"/>
+                                    Width="130"/>
 
                 <!-- ── Documentos e Vencimentos ──────────────────────────── -->
                 <DataGridTextColumn Header="Licenciamento"
                                     Binding="{Binding Licenciamento}"
-                                    Width="105"/>
+                                    Width="130"/>
 
                 <DataGridTextColumn Header="Dt. Venc. Lic."
                                     Binding="{Binding LicenciamentoDtVencimento, StringFormat=dd/MM/yyyy}"
-                                    Width="110"/>
+                                    Width="130"/>
 
                 <DataGridTextColumn Header="IPVA"
                                     Binding="{Binding Ipva}"
-                                    Width="60"/>
+                                    Width="80"/>
 
                 <DataGridTextColumn Header="Dt. Venc. IPVA"
                                     Binding="{Binding IpvaDtVencimento, StringFormat=dd/MM/yyyy}"
-                                    Width="110"/>
+                                    Width="130"/>
 
                 <DataGridTextColumn Header="ANTT"
                                     Binding="{Binding Antt}"
-                                    Width="120"/>
+                                    Width="150"/>
 
                 <DataGridTextColumn Header="Dt. Venc. ANTT"
                                     Binding="{Binding AnttDtVencimento, StringFormat=dd/MM/yyyy}"
-                                    Width="110"/>
+                                    Width="130"/>
 
                 <DataGridTextColumn Header="Dt. Venc. Tacógrafo"
                                     Binding="{Binding DataTacografo, StringFormat=dd/MM/yyyy}"
-                                    Width="130"/>
+                                    Width="155"/>
 
                 <DataGridTextColumn Header="Dt. Venc. Cronoacógrafo"
                                     Binding="{Binding CronoacografoDtVencimento, StringFormat=dd/MM/yyyy}"
-                                    Width="160"/>
+                                    Width="180"/>
 
                 <DataGridTextColumn Header="Dt. Venc. Extintor"
                                     Binding="{Binding ExtintorDtVencimento, StringFormat=dd/MM/yyyy}"
-                                    Width="120"/>
+                                    Width="145"/>
 
                 <!-- ── Centro de Custo ───────────────────────────────────── -->
                 <DataGridTextColumn Header="Centro de Custo"
                                     Binding="{Binding CentrosCusto.Nome}"
-                                    Width="230"/>
+                                    Width="260"/>
 
                 <!-- ── Status ────────────────────────────────────────────── -->
                 <DataGridTextColumn Header="Ativo"
                                     Binding="{Binding Ativo, Converter={StaticResource BoolToSimNao}}"
-                                    Width="60"/>
+                                    Width="80"/>
 
             </DataGrid.Columns>
         </DataGrid>
